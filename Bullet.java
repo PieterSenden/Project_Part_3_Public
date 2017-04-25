@@ -40,12 +40,12 @@ public class Bullet extends Entity {
 	 * 			The radius of this new bullet.
 	 * @param mass
 	 * 			The mass of this new bullet.
-	 * @effect	| super(xComPos, yComPos, xComVel, yComVel, radius, mass)
+	 * @effect	| super(xComPos, yComPos, xComVel, yComVel, radius, mass, MINIMAL_DENSITY, MINIMAL_RADIUS)
 	 */
 	@Raw
 	public Bullet(double xComPos, double yComPos, double xComVel, double yComVel, double radius,
 			double mass) throws IllegalComponentException, IllegalPositionException, IllegalRadiusException {
-		super(xComPos, yComPos, xComVel, yComVel, radius, mass);
+		super(xComPos, yComPos, xComVel, yComVel, radius, mass, MINIMAL_DENSITY, MINIMAL_RADIUS);
 	}
 	
 	/**
@@ -70,6 +70,18 @@ public class Bullet extends Entity {
 		//The value of the mass appears to be set to 10e=20. However, this value is changed to the only possible mass for a bullet
 		//with a given radius in the constructor of Entity.
 	}
+	
+	/**
+	 * A constant registering the minimal density for any bullet.
+	 */
+	private static final double MINIMAL_DENSITY = 7.8e12;
+	
+	/**
+	 * A constant  registering the minimal radius for any bullet. 
+	 */
+	private static final double MINIMAL_RADIUS = 1;
+	
+	
 	
 	/**
 	 * Return a copy of this bullet.
@@ -116,19 +128,6 @@ public class Bullet extends Entity {
 		return density == getMinimalDensity();
 	}
 	
-	/**
-	 * Return the minimal density of this bullet.
-	 */
-	@Override @Basic @Immutable @Raw
-	public double getMinimalDensity() {
-		return minimalDensity;
-	}
-	
-	/**
-	 * A variable registering the minimal density for any bullet. Note that a bullet's density cannot change and will always be equal
-	 * 	to the minimal density.
-	 */
-	private final double minimalDensity = 7.8e12;
 	
 	
 	/**
@@ -136,58 +135,36 @@ public class Bullet extends Entity {
 	 * 
 	 * @param radius
 	 * 			The radius to check.
-	 * @return @see implementation.
+	 * @return True iff this bullet can have the given radius as its initial radius and
+	 * 			the given radius is equal to the initial radius of this bullet.
+	 * 		  |	@see implementation.
 	 */
-	@Override @Raw
+	@Override
 	public boolean canHaveAsRadius(double radius) {
-		return radius >= getMinimalRadius();
+		return super.canHaveAsRadius(radius) && radius == getInitialRadius();
 	}
 	
-	/**
-	 * Return the minimal radius of any bullet.
-	 */
-	@Basic @Raw
-	public static double getMinimalRadius() {
-		return minimalRadius;
-	}
 	
-	/**
-	 * Check whether the given minimal radius is a valid minimal radius for any bullet.
-	 *  
-	 * @param  minimalRadius
-	 *         The minimal radius to check.
-	 * @return true iff the given minimal radius is positive and less than or equal to the current minimal radius.
-	 *       | result == (minimalRadius > 0) && (minimalRadius <= getMinimalRadius())
-	 * @note   The reason why only values less than or equal to the current minimal radius are valid, is that according to the class invariant
-	 * 			regarding the radius (in Entity), each bullet's radius must be greater than or equal to the minimal radius. This invariant
-	 * 			could be broken if we allowed the minimal radius to increase.
-	 */
-	public static boolean isValidMinimalRadius(double minimalRadius) {
-		return (minimalRadius > 0) && (minimalRadius <= Bullet.getMinimalRadius());
-	}
+//	/**
+//	 * Check whether this bullet can have the given radius as its initial radius.
+//	 * @param radius
+//	 * 			The radius to check.
+//	 * @return True iff the given radius is greater than or equal to the minimal radius of this bullet
+//	 * 			and the given radius is finite.
+//	 * 			| @see implementation
+//	 */
+//	@Override
+//	public boolean canHaveAsInitialRadius(double radius) {
+//		return radius >= getMinimalRadius() && Double.isFinite(radius);
+//	}
 	
-	/**
-	 * Set the minimal radius of any bullet to the given minimal radius.
-	 * 
-	 * @param  minimalRadius
-	 *         The new minimal radius for a bullet.
-	 * @post   The minimal radius of any bullet is equal to the given minimal radius.
-	 *       | Ship.getMinimalRadius() == minimalRadius
-	 * @throws IllegalArgumentException
-	 *         The given minimal radius is not a valid minimal radius for any bullet.
-	 *       | ! isValidMinimalRadius(getMinimalRadius())
-	 */
-	public static void setMinimalRadius(double minimalRadius) throws IllegalArgumentException {
-		if (! isValidMinimalRadius(minimalRadius))
-			throw new IllegalArgumentException();
-		Bullet.minimalRadius = minimalRadius;
-	}
-	
-	/**
-	 * Variable registering the minimal radius for any bullet.
-	 */
-	private static double minimalRadius = 1;
-	
+//	/**
+//	 * Return the minimal radius of any bullet.
+//	 */
+//	@Basic @Raw
+//	public static double getMinimalRadius() {
+//		return minimalRadius;
+//	}	
 	
 	/**
 	 * Return the number of bounces of this bullet against a boundary of its world.

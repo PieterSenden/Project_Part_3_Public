@@ -7,20 +7,22 @@ import be.kuleuven.cs.som.annotate.*;
  * A class representing an entity floating in outer space.
  * 
  * @invar  Each entity can have its position as position.
- *       	| canHaveAsPosition(getPosition())
+ *       	| canHaveAsPosition(this.getPosition())
  * @invar  Each entity can have its velocity as velocity.
- *       	| canHaveAsVelocity(getVelocity())
+ *       	| canHaveAsVelocity(this.getVelocity())
  * @invar  Each entity can have its density as density.
  *       	| canHaveAsDensity(this.getDensity())
  * @invar  Each entity can have its radius as radius.
  *       	| canHaveAsRadius(this.getRadius())
+ * @invar  Each entity can have its initial radius as initial radius.
+ * 			| canHaveAsInitialRadius(this.getInitialRadius())  
  * @invar  The speed limit of this entity is a valid speed limit for any entity.
  *     	    | isValidSpeedLimit(this.getSpeedLimit())
  * @invar  Each entity has a proper world.
  * 			| hasProperWorld()
  * 
  * @author Joris Ceulemans & Pieter Senden
- * @version 2.0
+ * @version 3.0
  */
 
 public abstract class Entity {
@@ -53,16 +55,25 @@ public abstract class Entity {
 	 * 			|	then setDensity(mass / new.getVolume())
 	 * 			| else setDensity(getMinimalDensity())
 	 * @throws IllegalRadiusException
-	 * 			The given radius is not a valid radius for any entity.
+	 * 			The given radius is not a valid radius for any entity
 	 * 			| ! isValidRadius(radius)
 	 */
-	public Entity(double xComPos, double yComPos, double xComVel, double yComVel, double radius, double mass)
+	//TODO : specs in orde brengen.
+	public Entity(double xComPos, double yComPos, double xComVel, double yComVel, double radius, double mass, double minimalDensity, double minimalRadius)
 			throws IllegalComponentException, IllegalPositionException, IllegalRadiusException {
 		setPosition(xComPos, yComPos);
 		setVelocity(xComVel, yComVel);
-		if (! canHaveAsRadius(radius))
+		
+		if (! canHaveAsMinimalRadius(minimalRadius))
 			throw new IllegalRadiusException();
-		this.radius = radius;
+		this.minimalRadius = minimalRadius;
+		if (! canHaveAsInitialRadius(radius))
+			throw new IllegalRadiusException();
+		this.initialRadius = radius;
+		setRadius(radius);
+		if (! canHaveAsMinimalDensity(minimalDensity))
+			minimalDensity = Double.isFinite(minimalDensity) ? -minimalDensity : 1;
+		this.minimalDensity = minimalDensity;
 		double density = mass / getVolume(); 
 		if (! canHaveAsDensity(density))
 			density = getMinimalDensity();
@@ -389,29 +400,67 @@ public abstract class Entity {
 	 * @param  density
 	 *         The density to check.
 	 * @return False if the given density is smaller than getMinimalDensity().
-	 *       | if density < getMinimalDensity()
+	 *       | if (density < getMinimalDensity())
 	 *       |	then result == false
-	*/
+	 * @return False if the given density is not finite.
+	 * 		 | if (!Double.isFinite(density))
+	 * 		 |	then result == false
+	 */
 	@Raw
-	public abstract boolean canHaveAsDensity(double density);
+	public boolean canHaveAsDensity(double density) {
+		return density >= getMinimalDensity() && Double.isFinite(density);
+	}
 	
 	/**
 	 * Variable registering the density of this entity.
 	 */
 	private double density;
 	
+	/**
+	 * Check whether this entity can have the given density as its minimal density.
+	 * 
+	 * @param density
+	 * 			The density to check.
+	 * @return True iff the given density is strictly positive.
+	 * 			| @see implementation
+	 */
+	public boolean canHaveAsMinimalDensity(double density) {
+		return density > 0;
+	}
 	
 	/**
 	 * Return the minimal density of this entity.
 	 */
-	@Basic @Raw
-	public abstract double getMinimalDensity();
+	@Basic @Raw @Immutable
+	public double getMinimalDensity() {
+		return this.minimalDensity;
+	}
 	
+	/**
+	 * Variable registering the minimal density of this ship. 
+	 */
+	private final double minimalDensity;
+	
+	/**
+	 * Set the radius of this entity to the given radius.
+	 * @param radius
+	 * 			The new radius of this entity.
+	 * @post The new radius of this entity is equal to the given radius.
+	 * 			| new.getRadius() == radius
+	 * @throws IllegalRadiusException
+	 * 			This entity cannot have the given radius as its radius.
+	 * 			| ! canHaveAsRadius(radius)
+	 */
+	protected void setRadius(double radius) throws IllegalRadiusException {
+		if (! canHaveAsRadius(radius))
+			throw new IllegalRadiusException();
+		this.radius = radius;
+	}
 	
 	/**
 	 * Return the radius of this entity.
 	 */
-	@Basic @Raw @Immutable
+	@Basic @Raw
 	public double getRadius() {
 		return this.radius;
 	}
@@ -439,12 +488,14 @@ public abstract class Entity {
 	 *  
 	 * @param  radius
 	 *         The radius to check.
-	 * @return false if radius is negative
-	 * 			| if (radius <= 0)
+	 * @return false if this entity cannot have the given radius as its initial radius.
+	 * 			| if (! canHaveAsInitialRadius(radius))
 	 * 			|	then result == false
 	 */
 	@Raw
-	public abstract boolean canHaveAsRadius(double radius);
+	public boolean canHaveAsRadius(double radius) {
+		return canHaveAsInitialRadius(radius);
+	}
 
 	
 	/**
@@ -459,8 +510,60 @@ public abstract class Entity {
 	/**
 	 * Variable registering the radius of this entity.
 	 */
-	private final double radius;
+	private double radius;
 	
+	/**
+	 * Return the initial radius of this entity.
+	 */
+	@Basic @Immutable @Raw
+	public double getInitialRadius() {
+		return this.initialRadius;
+	}
+	
+	/**
+	 * Check whether this entity can have the given radius as its initial radius.
+	 * @param radius
+	 * 			The radius to check.
+	 * @return False if the given radius is strictly less than the minimal radius of this entity.
+	 * 			| if (radius < getMinimalRadius())
+	 * 			|	then result == false
+	 * @return False if the radius is not finite
+	 * 			| if (!Double.isFinite(radius))
+	 * 			|	then result == false
+	 */
+	public boolean canHaveAsInitialRadius(double radius) {
+		return radius >= getMinimalRadius() && Double.isFinite(radius);
+	}
+	
+	/**
+	 * Variable registering the initial radius of this entity.
+	 */
+	private final double initialRadius;
+	
+	/**
+	 * Check whether this entity can have the given radius as its minimal radius.
+	 * 
+	 * @param radius
+	 * 			The radius to check.
+	 * @return True iff the given radius is strictly positive.
+	 * 			| @see implementation
+	 */
+	public boolean canHaveAsMinimalRadius(double radius) {
+		return radius > 0;
+	}
+	
+	/**
+	 * Return the minimal radius of this entity.
+	 */
+	@Basic @Raw @Immutable
+	public double getMinimalRadius() {
+		return this.minimalRadius;
+	}
+	
+	/**
+	 * Variable registering the minimal radius of this ship. 
+	 */
+	private final double minimalRadius;
 	
 	/**
 	 * Calculate the distance between the centres of two entities.

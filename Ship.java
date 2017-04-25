@@ -45,7 +45,7 @@ public class Ship extends Entity {
 	 * @param thrusterStatus
 	 * 			The thruster status of this new ship.
 	 * @effect The super constructor is called to initialize this new ship.
-	 * 			| super(xComPos, yComPos, xComVel, yComVel, radius, mass)
+	 * 			| super(xComPos, yComPos, xComVel, yComVel, radius, mass, MINIMAL_DENSITY, MINIMAL_RADIUS)
 	 * @effect The orientation of this new ship is set to the given orientation
 	 * 			| setOrientation(orientation)
 	 * @effect The thruster status of this new ship is set to the given thruster status.
@@ -54,13 +54,23 @@ public class Ship extends Entity {
 	@Raw
 	public Ship(double xComPos, double yComPos, double xComVel, double yComVel, double radius, double orientation,
 			double mass, boolean thrusterStatus) throws IllegalComponentException, IllegalRadiusException {
-		super(xComPos, yComPos, xComVel, yComVel, radius, mass);
+		super(xComPos, yComPos, xComVel, yComVel, radius, mass, MINIMAL_DENSITY, MINIMAL_RADIUS);
 		setThrust(thrusterStatus);
 		setOrientation(orientation);
 	}
 	
 	/**
-	 * Initialize this new ship with position with given position, velocity, radius, orientation and mass.
+	 * Constant registering the minimal density of any ship. 
+	 */
+	private static final double MINIMAL_DENSITY = 1.42e12;
+
+	/**
+	 * Constant registering the minimal radius of any ship. 
+	 */
+	private static final double MINIMAL_RADIUS = 10;
+	
+	/**
+	 * Initialize this new ship with given position, velocity, radius, orientation and mass.
 	 * 
 	 * @param xComPos
 	 * 			The xComponent of the position this new ship.
@@ -254,81 +264,29 @@ public class Ship extends Entity {
 	 * 
 	 * @param radius
 	 * 			The radius to check.
-	 * @return True iff the given radius is greater than or equal to the minimal radius of any ship.
+	 * @return True iff this ship can have the given radius as its initial radius and
+	 * 			this ship can have the given radius as its initial radius.
 	 * 		  |	@see implementation.
 	 */
 	@Override
 	public boolean canHaveAsRadius(double radius) {
-		return radius >= getMinimalRadius();
-	}
-	
-	/**
-	 * Return the minimal radius of any ship.
-	 */
-	@Basic
-	public static double getMinimalRadius() {
-		return minimalRadius;
-	}
-	
-	/**
-	 * Check whether the given minimal radius is a valid minimal radius for any ship.
-	 *  
-	 * @param  minimalRadius
-	 *         The minimal radius to check.
-	 * @return true iff the given minimal radius is greater than or equal to getMinimalRadius().
-	 *       | result == (minimalRadius >= getMinimalRadius())
-	 */
-	public static boolean isValidMinimalRadius(double minimalRadius) {
-		return minimalRadius >= Ship.getMinimalRadius();
-	}
-	
-	/**
-	 * Set the minimal radius of any ship to the given minimal radius.
-	 * 
-	 * @param  minimalRadius
-	 *         The new minimal radius for a ship.
-	 * @post   The minimal radius of any ship is equal to the given minimal radius.
-	 *       | Ship.getMinimalRadius() == minimalRadius
-	 * @throws IllegalArgumentException
-	 *         The given minimal radius is not a valid minimal radius for any ship.
-	 *       | ! isValidMinimalRadius(getMinimalRadius())
-	 */
-	public static void setMinimalRadius(double minimalRadius) throws IllegalArgumentException {
-		if (! isValidMinimalRadius(minimalRadius))
-			throw new IllegalArgumentException();
-		Ship.minimalRadius = minimalRadius;
-	}
-	
-	/**
-	 * Variable registering the minimal radius of this ship.
-	 */
-	private static double minimalRadius = 10;
-	
-	
-	/**
-	 * Check whether this ship can have the given density as its density.
-	 * 
-	 * @return True iff the given density is greater than or equal to the minimal density of this ship.
-	 * 			| @see implementation
-	 */
-	@Override
-	public boolean canHaveAsDensity(double density) {
-		return density >= getMinimalDensity();
-	}
-	
-	/**
-	 * Return the minimal density of this ship.
-	 */
-	@Override
-	public double getMinimalDensity() {
-		return minimalDensity;
+		return super.canHaveAsRadius(radius) && radius == getInitialRadius();
 	}
 	
 	
-	/**
-	 * Variable registering the minimal density of this ship. 
-	 */
-	private final double minimalDensity = 1.42e12;
+//	/**
+//	 * Check whether this ship can have the given radius as its initial radius.
+//	 * @param radius
+//	 * 			The radius to check.
+//	 * @return True iff the given radius is greater than or equal to the minimal radius of any ship
+//	 * 			and the given radius is finite.
+//	 * 		  |	@see implementation.
+//	 */
+//	@Override
+//	public boolean canHaveAsInitialRadius(double radius) {
+//		return radius >= getMinimalRadius() && Double.isFinite(radius);
+//	}
+	
 	
 	/**
 	 * Return the total mass of this ship.
@@ -942,5 +900,6 @@ public class Ship extends Entity {
 	 * 			as the ship by which it has been fired.
 	 * 		| for each bullet in firedBullets: bullet.getShip() == this
 	 */
-	private Set<Bullet> firedBullets = new HashSet<>();	
+	private Set<Bullet> firedBullets = new HashSet<>();
+
 }
