@@ -1,18 +1,11 @@
 package asteroids.model.representation;
 
-import asteroids.model.exceptions.IllegalComponentException;
-import asteroids.model.exceptions.IllegalMethodCallException;
-import asteroids.model.exceptions.IllegalPositionException;
-import asteroids.model.exceptions.IllegalRadiusException;
-import asteroids.model.exceptions.TerminatedException;
+import asteroids.model.exceptions.*;
 import be.kuleuven.cs.som.annotate.Raw;
 
 /**
  * A class representing a circular asteroid dealing with
  * position, velocity, radius, density and mass.
- * 
- * @invar  The minimal radius of each asteroid must be a valid minimal radius for any asteroid.
- *       | isValidMinimalRadius(getMinimalRadius())
  * 
  * @author Joris Ceulemans & Pieter Senden
  * @version 3.0
@@ -22,34 +15,59 @@ import be.kuleuven.cs.som.annotate.Raw;
 public class Asteroid extends MinorPlanet {
 	
 	/**
-	 * Initialize this new asteroid with given position, velocity, radius and mass.
+	 * Initialize this new asteroid with given position, velocity and radius.
 	 * 
 	 * @param xComPos
-	 * 			The xComponent of the position this new asteroid.
+	 * 			The xComponent of the position of this new asteroid.
 	 * @param yComPos
-	 * 			The yComponent of the position this new asteroid.
+	 * 			The yComponent of the position of this new asteroid.
 	 * @param xComVel
 	 * 			The xComponent of the velocity of this new asteroid.
 	 * @param yComVel
 	 * 			The yComponent of the velocity of this new asteroid.
 	 * @param radius
 	 * 			The radius of this new asteroid.
-	 * @param mass
-	 * 			The mass of this new asteroid.
-	 * @effect This new asteroid is initialized with the given position as its position, the given velocity as its velocity,
-	 * 			the given radius as its radius and the given mass as its mass.
-	 * 			| super(xComPos, yComPos, xComVel, yComVel, radius, mass)
+	 * @effect This new asteroid is initialized with the given position as its position, the given velocity as its velocity and
+	 * 			the given radius as its radius.
+	 * 			| super(xComPos, yComPos, xComVel, yComVel, radius)
 	 */
 	@Raw 
-	public Asteroid(double xComPos, double yComPos, double xComVel, double yComVel, double radius, double mass)
+	public Asteroid(double xComPos, double yComPos, double xComVel, double yComVel, double radius)
 			throws IllegalComponentException, IllegalPositionException, IllegalRadiusException {
-		super(xComPos, yComPos, xComVel, yComVel, radius, mass);
+		super(xComPos, yComPos, xComVel, yComVel, radius, MINIMAL_DENSITY);
 	}
+	
+	/**
+	 * Initialize this new asteroid with given position, velocity and radius.
+	 * 
+	 * @param position
+	 * 			The position of this new asteroid.
+	 * @param velocity
+	 * 			The velocity of this new asteroid.
+	 * @param radius
+	 * 			The radius of this new asteroid.
+	 * @effect This new asteroid is initialized with the given position as its position, the given velocity as its velocity and
+	 * 			the given radius as its radius.
+	 * 			| this(position.getxComponent(), position.getyComponent(), velocity.getxComponent(), velocity.getyComponent(), radius)
+	 * @throws NullPointerException
+	 * 			The given position or the given velocity is not effective.
+	 * 			| position == null || velocity == null
+	 */
+	@Raw 
+	public Asteroid(Position position, Velocity velocity, double radius)
+			throws IllegalComponentException, IllegalPositionException, IllegalRadiusException, NullPointerException {
+		this(position.getxComponent(), position.getyComponent(), velocity.getxComponent(), velocity.getyComponent(), radius);
+	}
+	
+	/**
+	 * Constant registering the minimal density of any asteroid. 
+	 */
+	private static final double MINIMAL_DENSITY = 2.65e12;
 	
 	/**
 	 * Return a copy of this asteroid.
 	 * 
-	 * @return A copy of this bullet.
+	 * @return A copy of this asteroid.
 	 * 			| @see implementation
 	 * @throws TerminatedException
 	 * 			| this.isTerminated()
@@ -59,30 +77,49 @@ public class Asteroid extends MinorPlanet {
 		if (isTerminated())
 			throw new TerminatedException();
 		return new Asteroid(getPosition().getxComponent(), getPosition().getyComponent(), getVelocity().getxComponent(),
-				getVelocity().getyComponent(), getRadius(), getMass());
+				getVelocity().getyComponent(), getRadius());
 	}
+	
 
-	@Override
-	public double getMinimalDensity() {
-		return minimalDensity;
-	}
-		
-		
 	/**
-	 * Variable registering the minimal density of this ship. 
+	 * Check whether this asteroid can have the given radius as its radius.
+	 * 
+	 * @param  radius
+	 *         The radius to check.
+	 * @return true iff this asteroid can have the given radius as its initial radius and the given radius is equal to the initial radius
+	 * 			of this asteroid.
+	 * 			| @see implementation
 	 */
-	private final double minimalDensity = 1.42e12;
-
 	@Override
 	public boolean canHaveAsRadius(double radius) {
-		// TODO Auto-generated method stub
-		return false;
+		return super.canHaveAsRadius(radius) && radius == getInitialRadius();
 	}
-
+	
+	/**
+	 * Resolve a collision between this asteroid and another entity.
+	 * 
+	 * @param  other
+	 * 			The entity to resolve a collision with.
+	 * @effect	| super.resolveCollision(other)
+	 * @effect	| if (other instanceof Ship)
+	 * 			|	then other.terminate()
+	 * @effect	| if (!(other instanceof Ship) && !(other instanceof Bullet) && !(other instanceof MinorPlanet))
+	 * 			|	then other.resolveCollision(this)
+	 * @throws IllegalMethodCallException
+	 * 			Either this asteroid or the other entity is not associated to a world, this asteroid and the other entity are not associated
+	 *			to the same world or this asteroid and the other entity do not apparently collide.
+	 * 			| (getWorld() == null) || (getWorld() != other.getWorld()) || !Entity.apparentlyCollide(this, other)
+	 * @throws TerminatedException
+	 * 			This asteroid or the other entity is terminated
+	 * 			| this.isTerminated() || other.isTerminated()
+	 */
 	@Override
 	public void resolveCollision(Entity other) throws IllegalMethodCallException, TerminatedException {
-		// TODO Auto-generated method stub
-
+		super.resolveCollision(other);
+		if (other instanceof Ship)
+			other.terminate();
+		else
+			other.resolveCollision(this);
 	}
-
+	
 }

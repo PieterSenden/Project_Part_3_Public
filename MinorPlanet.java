@@ -7,9 +7,6 @@ import be.kuleuven.cs.som.annotate.*;
  * A class representing a circular minor planet dealing with
  * position, velocity, radius, density and mass.
  * 
- * @invar  The minimal radius of each minor planet must be a valid minimal radius for any minor planet.
- *       | isValidMinimalRadius(getMinimalRadius())
- * 
  * @author Joris Ceulemans & Pieter Senden
  * @version 3.0
  */
@@ -17,29 +14,27 @@ import be.kuleuven.cs.som.annotate.*;
 public abstract class MinorPlanet extends Entity {
 	
 	/**
-	 * Initialize this new minor planet with given position, velocity, radius and mass.
+	 * Initialize this new minor planet with given position, velocity and radius.
 	 * 
 	 * @param xComPos
-	 * 			The xComponent of the position this new minor planet.
+	 * 			The xComponent of the position of this new minor planet.
 	 * @param yComPos
-	 * 			The yComponent of the position this new minor planet.
+	 * 			The yComponent of the position of this new minor planet.
 	 * @param xComVel
 	 * 			The xComponent of the velocity of this new minor planet.
 	 * @param yComVel
 	 * 			The yComponent of the velocity of this new minor planet.
 	 * @param radius
 	 * 			The radius of this new minor planet.
-	 * @param mass
-	 * 			The mass of this new minor planet.
-	 * @effect This new minor planet is initialized with the given position as its position, the given velocity as its velocity,
-	 * 			the given radius as its radius and the given mass as its mass.
+	 * @effect This new minor planet is initialized with the given position as its position, the given velocity as its velocity and
+	 * 			the given radius as its radius.
 	 * 			| super(xComPos, yComPos, xComVel, yComVel, radius, mass)
 	 */
 	// TODO: specs in orde brengen.
 	@Raw 
-	public MinorPlanet(double xComPos, double yComPos, double xComVel, double yComVel, double radius, double mass, double minimalDensity)
+	public MinorPlanet(double xComPos, double yComPos, double xComVel, double yComVel, double radius, double minimalDensity)
 			throws IllegalComponentException, IllegalPositionException, IllegalRadiusException {
-		super(xComPos, yComPos, xComVel, yComVel, radius, mass, minimalDensity, MINIMAL_RADIUS);
+		super(xComPos, yComPos, xComVel, yComVel, radius, minimalDensity, MINIMAL_RADIUS);
 	}
 	
 	/**
@@ -88,6 +83,12 @@ public abstract class MinorPlanet extends Entity {
 	/**
 	 * Resolve a collision between this minor planet and another entity.
 	 * 
+	 * @param  other
+	 * 			The entity to resolve a collision with.
+	 * @effect	| if (other instanceof Bullet)
+	 * 			|	then this.terminate() && other.terminate()
+	 * @effect	| if (other instanceof MinorPlanet)
+	 * 			|	then this.bounceOf(other)
 	 * @throws IllegalMethodCallException
 	 * 			Either this minor planet or the other entity is not associated to a world, this minor planet and the other entity are not associated
 	 *			to the same world or this minor planet and the other entity do not apparently collide.
@@ -97,7 +98,19 @@ public abstract class MinorPlanet extends Entity {
 	 * 			| this.isTerminated() || other.isTerminated()
 	 */
 	@Override
-	public abstract void resolveCollision(Entity other) throws IllegalMethodCallException, TerminatedException;
+	public void resolveCollision(Entity other) throws IllegalMethodCallException, TerminatedException {
+		if (isTerminated() || other.isTerminated())
+			throw new TerminatedException();
+		if (getWorld() == null || getWorld() != other.getWorld() || !Entity.apparentlyCollide(this, other))
+			throw new IllegalMethodCallException();
+		if (other instanceof Bullet) {
+			this.terminate();
+			other.terminate();
+		}
+		else if (other instanceof MinorPlanet) {
+			bounceOf(other);
+		}
+	}
 	
 	/**
 	 * Check whether, if a collision between this minor planet and the given other entity occurs, it must be shown.

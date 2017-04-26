@@ -406,9 +406,11 @@ public class World {
 	 * 			| !hasAsentity(entity)
 	 * @throws	TerminatedException
 	 * 			| isTerminated()
+	 * @throws  IllegalStateException
+	 * 			| !new.hasProperEntities()
 	 */
 	@Raw
-	public void updatePosition(Entity entity) throws IllegalMethodCallException, TerminatedException {
+	public void updatePosition(Entity entity) throws IllegalMethodCallException, TerminatedException, IllegalStateException {
 		if (isTerminated())
 			throw new TerminatedException();
 		if (!hasAsEntity(entity))
@@ -418,6 +420,8 @@ public class World {
 				entities.remove(pos);
 		}
 		entities.put(entity.getPosition(), entity);
+		if (!hasProperEntities())
+			throw new IllegalStateException();
 	}
 	
 	/**
@@ -592,7 +596,7 @@ public class World {
 	 * Advance this world with the given duration.
 	 * This means that all entities in this world are moved during the given duration. There is no collision checking in this method.
 	 */
-	private void advance(double duration) throws IllegalArgumentException, TerminatedException {
+	private void advance(double duration) throws IllegalArgumentException, TerminatedException, IllegalStateException {
 		if (isTerminated())
 			throw new TerminatedException();
 		double timeToFirstCollision = getTimeToFirstCollision();

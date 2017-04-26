@@ -325,6 +325,7 @@ public class Bullet extends Entity {
 		else {
 			other.resolveCollision(this);
 		}
+		//TODO: De opgave zegt dat bij een botsing met een bullet altijd beide entities getermineerd worden...
 	}
 	
 	/**

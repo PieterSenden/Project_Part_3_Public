@@ -12,10 +12,14 @@ import be.kuleuven.cs.som.annotate.*;
  *       	| canHaveAsVelocity(this.getVelocity())
  * @invar  Each entity can have its density as density.
  *       	| canHaveAsDensity(this.getDensity())
+ * @invar  The minimal density of this entity must be a valid minimal density for any entity.
+ * 			| isValidMinimalDensity(this.getMinimalDensity())
  * @invar  Each entity can have its radius as radius.
  *       	| canHaveAsRadius(this.getRadius())
  * @invar  Each entity can have its initial radius as initial radius.
  * 			| canHaveAsInitialRadius(this.getInitialRadius())  
+ * @invar  The minimal radius of this entity must be a valid minimal radius for any entity.
+ * 			| isValidMinimalRadius(this.getMinimalRadius())
  * @invar  The speed limit of this entity is a valid speed limit for any entity.
  *     	    | isValidSpeedLimit(this.getSpeedLimit())
  * @invar  Each entity has a proper world.
@@ -59,25 +63,62 @@ public abstract class Entity {
 	 * 			| ! isValidRadius(radius)
 	 */
 	//TODO : specs in orde brengen.
-	public Entity(double xComPos, double yComPos, double xComVel, double yComVel, double radius, double mass, double minimalDensity, double minimalRadius)
-			throws IllegalComponentException, IllegalPositionException, IllegalRadiusException {
+	public Entity(double xComPos, double yComPos, double xComVel, double yComVel, double radius, double mass, double minimalDensity,
+			double minimalRadius) throws IllegalComponentException, IllegalPositionException, IllegalRadiusException {
 		setPosition(xComPos, yComPos);
 		setVelocity(xComVel, yComVel);
 		
-		if (! canHaveAsMinimalRadius(minimalRadius))
+		if (! isValidMinimalRadius(minimalRadius))
 			throw new IllegalRadiusException();
 		this.minimalRadius = minimalRadius;
 		if (! canHaveAsInitialRadius(radius))
 			throw new IllegalRadiusException();
 		this.initialRadius = radius;
 		setRadius(radius);
-		if (! canHaveAsMinimalDensity(minimalDensity))
+		if (! isValidMinimalDensity(minimalDensity))
 			minimalDensity = Double.isFinite(minimalDensity) ? -minimalDensity : 1;
 		this.minimalDensity = minimalDensity;
 		double density = mass / getVolume(); 
 		if (! canHaveAsDensity(density))
 			density = getMinimalDensity();
 		setDensity(density);
+	}
+	
+	/**
+	 * Initialize this new entity with given position, velocity and radius.
+	 * 
+	 * @param xComPos
+	 * 			The xComponent of the position of this new entity.
+	 * @param yComPos
+	 * 			The yComponent of the position of this new entity.
+	 * @param xComVel
+	 * 			The xComponent of the velocity of this new entity.
+	 * @param yComVel
+	 * 			The yComponent of the velocity of this new entity.
+	 * @param radius
+	 * 			The radius of this new entity.
+	 * @param mass
+	 * 			The mass of this new entity.
+	 * @effect The position of this new entity is set to the position with given xComponent and yComponent.
+	 * 			| setPosition(xComPos, yComPos)
+	 * @effect The velocity of this new entity is set to the velocity with given xComponent and yComponent.
+	 * 			| setVelocity(xComVel, yComVel)
+	 * @post The radius of this new entity is equal to the given radius.
+	 * 			| new.getRadius() == radius
+	 * @effect If this entity can have the density given by the given mass divided by the volume of this new entity as its density, then 
+	 * 			the density of this new entity is set to the density given by the given mass divided by the volume of this new entity.
+	 * 		   Else, the density of this new entity is set to getMinimalDensity() 
+	 * 			| if canHaveAsDensity(mass / new.getVolume())
+	 * 			|	then setDensity(mass / new.getVolume())
+	 * 			| else setDensity(getMinimalDensity())
+	 * @throws IllegalRadiusException
+	 * 			The given radius is not a valid radius for any entity
+	 * 			| ! isValidRadius(radius)
+	 */
+	//TODO : specs in orde brengen.
+	public Entity(double xComPos, double yComPos, double xComVel, double yComVel, double radius, double minimalDensity,
+			double minimalRadius) throws IllegalComponentException, IllegalPositionException, IllegalRadiusException {
+		this(xComPos, yComPos, xComVel, yComVel, radius, minimalDensity * (4.0 / 3) * Math.pow(radius, 3), minimalDensity, minimalRadius);
 	}
 	
 	/**
@@ -187,15 +228,49 @@ public abstract class Entity {
 	 * 			| this.isTerminated()
 	 */
 	public void move(double duration) throws IllegalArgumentException, IllegalComponentException, TerminatedException,
-															IllegalPositionException {
+															IllegalPositionException, IllegalStateException {
 		if (isTerminated())
 			throw new TerminatedException();
 		setPosition(getPosition().move(getVelocity(), duration));
 		if (getWorld() != null){
 			getWorld().updatePosition(this);
 		}
+		addToTotalTravelledDistance(duration * getSpeed());
 	}
 	
+	/**
+	 * Teleport this entity to a random place in its world.
+	 * 
+	 * @effect The position of this entity is set to a random position in its world such that the boundaries of the world of this entity
+	 * 			still surround this entity. If, after this process, this entity overlaps with some other entity in its world, this
+	 * 			entity is terminated.
+	 * 			| let
+	 * 			|	newxComponent = getRadius() + Math.random() * (getWorld().getWidth() - 2 * getRadius())
+	 * 			|	newyComponent = getRadius() + Math.random() * (getWorld().getHeight() - 2 * getRadius())
+	 * 			| in
+	 * 			|	setPosition(newxComponent, newyComponent) ^ this.terminate()
+	 * @throws TerminatedException
+	 * 			This entity is terminated.
+	 * 			| this.isTerminated()
+	 * @throws IllegalMethodCallException
+	 * 			This entity is not contained in a world.
+	 * 			| getWorld() == null
+	 */
+	public void teleport() throws TerminatedException, IllegalMethodCallException {
+		if (isTerminated())
+			throw new TerminatedException();
+		if (getWorld() == null)
+			throw new IllegalMethodCallException();
+		double newxComponent = getRadius() + Math.random() * (getWorld().getWidth() - 2 * getRadius());
+		double newyComponent = getRadius() + Math.random() * (getWorld().getHeight() - 2 * getRadius());
+		try {
+			setPosition(newxComponent, newyComponent);
+			getWorld().updatePosition(this);
+		}
+		catch (IllegalStateException exc) {
+			terminate();
+		}
+	}
 	
 	/**
 	 * Set the position of this entity to the position with given components.
@@ -237,6 +312,60 @@ public abstract class Entity {
 	
 	
 	/**
+	 * Return the total travelled distance by this entity.
+	 */
+	@Basic @Raw
+	public double getTotalTravelledDistance() {
+		return totalTravelledDistance;
+	}
+	
+	/**
+	 * Check whether the given distance is a valid distance for any entity.
+	 * @param distance
+	 * 			The distance to check.
+	 * @return	true iff the given distance is greater than or equal to the current total travelled distance and finite.
+	 */
+	@Raw
+	public boolean isValidTotalTravelledDistance(double distance) {
+		return distance >= getTotalTravelledDistance() && Double.isFinite(distance);
+	}
+	
+	/**
+	 * Add the given distance to the total travelled distance of this entity.
+	 * 
+	 * @param distance
+	 * 			The distance to add to the total travelled distance of this entity.
+	 * @effect	If the current total travelled distance increased with the given distance is not a valid total travelled distance for any
+	 * 			entity, the total travelled distance of this entity is increased with the given distance.
+	 * 			| if (isValidTotalTravelledDistance(getTotalTravelledDistance() + distance))
+	 * 			|	then setTotalTravelledDistance(getTotalTravelledDistance() + distance)
+	 */
+	protected void addToTotalTravelledDistance(double distance) {
+		if (isValidTotalTravelledDistance(getTotalTravelledDistance() + distance))
+			setTotalTravelledDistance(getTotalTravelledDistance() + distance);
+	}
+	
+	/**
+	 * Set the total travelled distance of this entity to the given distance.
+	 * 
+	 * @param distance
+	 * 			The new total travelled distance for this entity.
+	 * @post	If the given distance is a valid distance for any entity, the total travelled distance is equal to the given distance.
+	 * 			| if (isValidTotalTravelledDistance(distance))
+	 * 			|	then new.getTotalTravelledDistance == distance
+	 */
+	private void setTotalTravelledDistance(double distance) {
+		if (isValidTotalTravelledDistance(distance))
+			totalTravelledDistance = distance;
+	}
+	
+	/**
+	 * Variable registering the total travelled distance by this entity.
+	 */
+	private double totalTravelledDistance = 0;
+	
+	
+	/**
 	 * Return the velocity of this entity.
 	 */
 	@Basic @Raw
@@ -244,6 +373,22 @@ public abstract class Entity {
 		if (this.velocity == null)
 			return null;
 		return this.velocity;
+	}
+	
+	/**
+	 * Return the speed of this entity.
+	 * 
+	 * @return The speed of this entity. If the velocity of this entity is not effective, zero is returned as speed.
+	 * 			| if (getVelocity() == null)
+	 * 			|	then result == 0
+	 * 			| else
+	 * 			|	result == getVelocity().getSpeed()
+	 */
+	//TODO: big search in our crazy, fantastic project where we can use this method.
+	public double getSpeed() {
+		if (getVelocity() == null)
+			return 0;
+		return getVelocity().getSpeed();
 	}
 	
 	/**
@@ -424,7 +569,7 @@ public abstract class Entity {
 	 * @return True iff the given density is strictly positive.
 	 * 			| @see implementation
 	 */
-	public boolean canHaveAsMinimalDensity(double density) {
+	public static boolean isValidMinimalDensity(double density) {
 		return density > 0;
 	}
 	
@@ -548,7 +693,7 @@ public abstract class Entity {
 	 * @return True iff the given radius is strictly positive.
 	 * 			| @see implementation
 	 */
-	public boolean canHaveAsMinimalRadius(double radius) {
+	public static boolean isValidMinimalRadius(double radius) {
 		return radius > 0;
 	}
 	
@@ -1037,7 +1182,7 @@ public abstract class Entity {
 	 * Resolve a collision between this entity and another entity.
 	 * 
 	 * @param other
-	 * 			The entity to resolve a collision with 
+	 * 			The entity to resolve a collision with. 
 	 * @throws IllegalMethodCallException
 	 * 			Either this entity or the other entity is not associated to a world, this entity and the other entity are not associated
 	 *			to the same world or this entity and the other entity do not apparently collide.
@@ -1115,6 +1260,15 @@ public abstract class Entity {
 	}
 	
 	/**
+	 * Check whether if a collision between this entity and the given other entity occurs, it must be shown.
+	 * This method does not check if this entity and the other entity collide, only whether the collision must be shown if they do.
+	 * 
+	 * @param other
+	 * 			The other entity.
+	 */
+	public abstract boolean mustShowCollisionWith(Entity other);
+	
+	/**
 	 * Check whether this entity can have the given world as world.
 	 * 
 	 * @param world
@@ -1131,18 +1285,10 @@ public abstract class Entity {
 		return (world == null) || world.canHaveAsEntity(this);
 	}
 	
-	/**
-	 * Check whether if a collision between this entity and the given other entity occurs, it must be shown.
-	 * This method does not check if this entity and the other entity collide, only whether the collision must be shown if they do.
-	 * 
-	 * @param other
-	 * 			The other entity.
-	 */
-	public abstract boolean mustShowCollisionWith(Entity other);
 	
 	/**
 	 * Check whether this entity has a proper world.
-   *
+     *
 	 * @return If this entity is terminated, true iff the world associated to this entity is null.
 	 * 			| if (this.isTerminated())
 	 * 			|	then result == (getWorld() == null)

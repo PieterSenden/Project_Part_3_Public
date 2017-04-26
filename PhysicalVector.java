@@ -131,4 +131,33 @@ abstract class PhysicalVector {
 	 */
 	public abstract PhysicalVector vectorMinus(PhysicalVector other) throws NullPointerException, IllegalComponentException,
 																						IllegalArgumentException;
+	
+	/**
+	 * Return the sum of this physical vector with the given other physical vector.
+	 * 
+	 * @param other
+	 * 			The second physical vector.
+	 * @throws NullPointerException
+	 * 			The given other physical vector is not effective.
+	 * 			| other == null
+	 * @throws IllegalArgumentException
+	 * 			The given other physical vector does not have the same dynamic type as this physical vector.
+	 * 			| this.getClass() != other.getClass()
+	 */
+	public abstract PhysicalVector vectorPlus(PhysicalVector other) throws NullPointerException, IllegalComponentException,
+																						IllegalArgumentException;
+	
+	/**
+	 * Return the scalar multiple of this physical vector with the given factor.
+	 * 
+	 * @param factor
+	 * 			The scalar factor.
+	 * @throws IllegalArgumentException
+	 * 			The given factor is not finite.
+	 * 			| !Double.isFinite(factor)
+	 */
+	public abstract PhysicalVector scalarMultiple(double factor) throws IllegalComponentException, IllegalArgumentException;
+	
+	
+	
 }

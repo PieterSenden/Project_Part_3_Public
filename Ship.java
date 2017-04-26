@@ -73,9 +73,9 @@ public class Ship extends Entity {
 	 * Initialize this new ship with given position, velocity, radius, orientation and mass.
 	 * 
 	 * @param xComPos
-	 * 			The xComponent of the position this new ship.
+	 * 			The xComponent of the position of this new ship.
 	 * @param yComPos
-	 * 			The yComponent of the position this new ship.
+	 * 			The yComponent of the position of this new ship.
 	 * @param xComVel
 	 * 			The xComponent of the velocity of this new ship.
 	 * @param yComVel
