@@ -74,12 +74,12 @@ public class Bullet extends Entity {
 	/**
 	 * A constant registering the minimal density for any bullet.
 	 */
-	private static final double MINIMAL_DENSITY = 7.8e12;
+	public static final double MINIMAL_DENSITY = 7.8e12;
 	
 	/**
 	 * A constant  registering the minimal radius for any bullet. 
 	 */
-	private static final double MINIMAL_RADIUS = 1;
+	public static final double MINIMAL_RADIUS = 1;
 	
 	
 	

@@ -40,7 +40,7 @@ public abstract class MinorPlanet extends Entity {
 	/**
 	 * Constant registering the minimal radius of any minor planet.
 	 */
-	private static double MINIMAL_RADIUS = 5;
+	public static double MINIMAL_RADIUS = 5;
 	
 	/**
 	 * Return a copy of this minor planet.

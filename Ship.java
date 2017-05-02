@@ -62,12 +62,12 @@ public class Ship extends Entity {
 	/**
 	 * Constant registering the minimal density of any ship. 
 	 */
-	private static final double MINIMAL_DENSITY = 1.42e12;
+	public static final double MINIMAL_DENSITY = 1.42e12;
 
 	/**
 	 * Constant registering the minimal radius of any ship. 
 	 */
-	private static final double MINIMAL_RADIUS = 10;
+	public static final double MINIMAL_RADIUS = 10;
 	
 	/**
 	 * Initialize this new ship with given position, velocity, radius, orientation and mass.

@@ -65,7 +65,7 @@ public class Planetoid extends MinorPlanet {
 	/**
 	 * Constant registering the minimal density of any planetoid. 
 	 */
-	private static final double MINIMAL_DENSITY = 0.917e12;
+	public static final double MINIMAL_DENSITY = 0.917e12;
 	
 	/**
 	 * Terminate this planetoid.

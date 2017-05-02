@@ -62,7 +62,7 @@ public class Asteroid extends MinorPlanet {
 	/**
 	 * Constant registering the minimal density of any asteroid. 
 	 */
-	private static final double MINIMAL_DENSITY = 2.65e12;
+	public static final double MINIMAL_DENSITY = 2.65e12;
 	
 	/**
 	 * Return a copy of this asteroid.

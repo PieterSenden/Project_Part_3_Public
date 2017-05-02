@@ -66,7 +66,7 @@ public class World {
 	public void terminate() {
 		if (!isTerminated()) {
 			//Before removing all ships and bullets, the association between ships and fired bullets must be torn down.
-			for (Ship ship: getShips()) {
+			for (Ship ship: getSpecificEntities(Ship.class)) {
 				for (Bullet bullet: ship.getFiredBullets()) {
 					ship.removeBullet(bullet);
 				}
@@ -297,46 +297,51 @@ public class World {
 		return new HashSet<Entity>(entities.values());
 	}
 	
-//	public <T> Set<T> getSpecificEntities(Class<T> T) {
-//		Set<T> result = new HashSet<>();
-//		for (Entity entity: getEntities()) {
-//			if (entity.getClass() == T)
-//				result.add((T)entity);
-//		}
-//		return result;
-//	}
-	
 	/**
-	 * Returns a set of all ships contained in this world.
+	 * Returns a set of all entities of the given classType (or a subclass of this classType) contained in this world.
 	 * 
-	 * @return	| result == { e in getEntities() | (e instanceof Ship) : (Ship)e }
+	 * @return	| result == { e in getEntities() | (classType.isAssignableFrom(e.getClass()) : (classType)e }
 	 */
-	public Set<Ship> getShips() {
-		Set<Ship> result = new HashSet<>();
+	public <T> Set<T> getSpecificEntities(Class<T> classType) {
+		Set<T> result = new HashSet<>();
 		for (Entity entity: getEntities()) {
-			if (entity instanceof Ship)
-				result.add((Ship)entity);
+			if (classType.isAssignableFrom(entity.getClass()))
+				result.add((T)entity);
 		}
 		return result;
 	}
+	
+//	/**
+//	 * Returns a set of all ships contained in this world.
+//	 * 
+//	 * @return	| result == { e in getEntities() | (e instanceof Ship) : (Ship)e }
+//	 */
+//	public Set<Ship> getShips() {
+//		Set<Ship> result = new HashSet<>();
+//		for (Entity entity: getEntities()) {
+//			if (entity instanceof Ship)
+//				result.add((Ship)entity);
+//		}
+//		return result;
+//	}
 	
 //	public Set<Ship> getShips() {
 //		return getSpecificEntities(Ship.class);
 //	}
 	
-	/**
-	 * Returns a set of all bullets contained in this world.
-	 * 
-	 * @return	| result == { e in getEntities() | (e instanceof Bullet) : (Bullet)e }
-	 */
-	public Set<Bullet> getBullets() {
-		Set<Bullet> result = new HashSet<>();
-		for (Entity entity: getEntities()) {
-			if (entity instanceof Bullet)
-				result.add((Bullet)entity);
-		}
-		return result;
-	}
+//	/**
+//	 * Returns a set of all bullets contained in this world.
+//	 * 
+//	 * @return	| result == { e in getEntities() | (e instanceof Bullet) : (Bullet)e }
+//	 */
+//	public Set<Bullet> getBullets() {
+//		Set<Bullet> result = new HashSet<>();
+//		for (Entity entity: getEntities()) {
+//			if (entity instanceof Bullet)
+//				result.add((Bullet)entity);
+//		}
+//		return result;
+//	}
 	
 	/**
 	 * Add a given entity to this world.
@@ -577,7 +582,7 @@ public class World {
 	public void evolve(double duration, CollisionListener collisionListener) throws IllegalArgumentException, TerminatedException {
 		if (isTerminated())
 			throw new TerminatedException();
-		if (duration < 0)
+		if (duration < 0 || !Double.isFinite(duration))
 			throw new IllegalArgumentException();
 		if (getEntities().isEmpty())
 			return;
@@ -600,7 +605,7 @@ public class World {
 		if (isTerminated())
 			throw new TerminatedException();
 		double timeToFirstCollision = getTimeToFirstCollision();
-		if (duration > timeToFirstCollision && timeToFirstCollision >= 1e-10)
+		if ((duration > timeToFirstCollision && timeToFirstCollision >= 1e-10) || !Double.isFinite(duration))
 			//It is possible that due to rounding issues, timeToFirstCollision is smaller than 1e-10 and we still want to advance this world.
 			throw new IllegalArgumentException(Double.toString(getTimeToFirstCollision()));
 		for (Entity entity: getEntities()) {
