@@ -1,12 +1,18 @@
 package asteroids.model.programs;
 
-public interface ComposedStatement {
+interface ComposedStatement {
 	
 	boolean hasAsSubStatement(Statement statement);
 	
 	boolean hasAsEnclosedStatement(Statement statement);
 	
-	boolean canHaveAsEnclosedStatement(Statement statement);
+	default boolean canHaveAsEnclosedStatement(Statement statement) {
+		if (statement == null || statement == this)
+			return false;
+		if (statement instanceof ComposedStatement)
+			return !((ComposedStatement)statement).hasAsSubStatement((Statement)this);
+		return true;
+	}
 	
 	boolean hasProperEnclosedStatements();
 }

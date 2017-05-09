@@ -2,7 +2,7 @@ package asteroids.model.programs;
 
 public abstract class SingleExpressionStatement<T> extends Statement {
 	
-	public SingleExpressionStatement(Expression<T> expression) {
+	public SingleExpressionStatement(Expression<T> expression) throws IllegalArgumentException {
 		if (! canHaveAsExpression(expression))
 			throw new IllegalArgumentException();
 		this.expression = expression;
