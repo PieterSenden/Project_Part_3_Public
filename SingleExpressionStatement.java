@@ -1,4 +1,6 @@
-package asteroids.model.programs;
+package asteroids.model.programs.statements;
+
+import asteroids.model.programs.expressions.Expression;
 
 public abstract class SingleExpressionStatement<T> extends Statement {
 	

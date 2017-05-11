@@ -1,4 +1,6 @@
-package asteroids.model.programs;
+package asteroids.model.programs.statements;
+
+import asteroids.model.programs.Executable;
 
 interface ComposedStatement {
 	
@@ -15,4 +17,8 @@ interface ComposedStatement {
 	}
 	
 	boolean hasProperEnclosedStatements();
+	
+	Executable getExecutable();
+	
+	int getDepth();
 }

@@ -1,6 +1,8 @@
-package asteroids.model.programs;
+package asteroids.model.programs.statements;
 
 import asteroids.model.exceptions.programExceptions.*;
+import asteroids.model.programs.ProgramExecutor;
+import asteroids.model.programs.expressions.Expression;
 import be.kuleuven.cs.som.annotate.*;
 
 public class WhileStatement extends SingleExpressionStatement<Boolean> implements ComposedStatement {
@@ -14,30 +16,38 @@ public class WhileStatement extends SingleExpressionStatement<Boolean> implement
 	}
 	
 	@Override
-	public void execute() {
-		while (evaluateExpression() || isExecutingBody()) {
-			setIsExecutingBody(true);
+	public void execute(ProgramExecutor executor) {
+		if (executor.getExecutionStackDepth() < getDepth())
+			executor.setExecutionPositionAt(getDepth(), NOT_EXECUTING_BODY);
+		while (evaluateExpression() || executor.getExecutionPositionAt(getDepth()) == EXECUTING_BODY) {
+			setIsExecutingBody(EXECUTING_BODY, executor);
 			try {
-				getBodyStatement().execute();
+				getBodyStatement().execute(executor);
 			}
 			catch (BreakException exc) {
 				break;
 			}
-			setIsExecutingBody(false);
+			setIsExecutingBody(NOT_EXECUTING_BODY, executor);
 		}
-		setIsExecutingBody(false);	
+		setIsExecutingBody(NOT_EXECUTING_BODY, executor);	
 	}
 	
-	@Basic
-	public boolean isExecutingBody() {
-		return this.isExecutingBody;
-	}
+	private static final int EXECUTING_BODY = 1;
+	private static final int NOT_EXECUTING_BODY = 0;
 	
-	private void setIsExecutingBody(boolean flag) {
-		this.isExecutingBody = flag;
-	}
 	
-	private boolean isExecutingBody;
+//	@Basic
+//	public boolean isExecutingBody() {
+//		return this.isExecutingBody;
+//	}
+//	
+	private void setIsExecutingBody(int state, ProgramExecutor executor) throws IllegalArgumentException {
+		if (state != EXECUTING_BODY && state != NOT_EXECUTING_BODY)
+			throw new IllegalArgumentException();
+		executor.setExecutionPositionAt(getDepth(), state);
+	}
+//	
+//	private boolean isExecutingBody;
 	
 	@Override
 	public boolean hasAsSubStatement(Statement statement) {

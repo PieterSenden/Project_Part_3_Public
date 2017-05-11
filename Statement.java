@@ -1,6 +1,7 @@
-package asteroids.model.programs;
+package asteroids.model.programs.statements;
 
 import asteroids.model.exceptions.IllegalMethodCallException;
+import asteroids.model.programs.*;
 import be.kuleuven.cs.som.annotate.*;
 
 /**
@@ -13,12 +14,16 @@ import be.kuleuven.cs.som.annotate.*;
  */
 public abstract class Statement {
 	
-	public abstract void execute();
+	public abstract void execute(ProgramExecutor executor);//TODO: evt nog zeggen dat niet uitgevoerd kan worden als statement niet in progr. of functie zit.
 	
 	public Executable getExecutable() {
 		if (getEnclosingStatement() == null)
 			return getEric();
 		return getEnclosingStatement().getExecutable();
+	}
+	
+	public Program getProgram() {
+		return (getExecutable() == null ? null : getExecutable().getProgram());
 	}
 	
 	public boolean canHaveAsEric(Executable exe) {
@@ -76,4 +81,10 @@ public abstract class Statement {
 	}
 	
 	private ComposedStatement enclosingStatement;
+	
+	public int getDepth() {
+		if (getEnclosingStatement() == null)
+			return 0;
+		return 1 + getEnclosingStatement().getDepth();
+	}
 }

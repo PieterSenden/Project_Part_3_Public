@@ -1,5 +1,7 @@
-package asteroids.model.programs;
+package asteroids.model.programs.statements;
 
+import asteroids.model.programs.ProgramExecutor;
+import asteroids.model.programs.expressions.Expression;
 import be.kuleuven.cs.som.annotate.*;
 
 public class IfThenElseStatement extends SingleExpressionStatement<Boolean> implements ComposedStatement {
@@ -13,32 +15,41 @@ public class IfThenElseStatement extends SingleExpressionStatement<Boolean> impl
 	}
 	
 	@Override
-	public void execute() {
-		if (evaluateExpression() || getExecutionPosition() == ExecutionPosition.IF) {
-			setExecutionPosition(ExecutionPosition.IF);
-			getIfStatement().execute();
-			setExecutionPosition(ExecutionPosition.CONDITION);
+	public void execute(ProgramExecutor executor) {
+		if (executor.getExecutionStackDepth() < getDepth())
+			executor.setExecutionPositionAt(getDepth(), CONDITION);
+		if (evaluateExpression() || executor.getExecutionPositionAt(getDepth()) == IF) {
+			setExecutionPosition(IF, executor);
+			getIfStatement().execute(executor);
+			setExecutionPosition(CONDITION, executor);
 		}
-		else if (getElseStatement() != null || getExecutionPosition() == ExecutionPosition.ELSE) {
-			setExecutionPosition(ExecutionPosition.ELSE);			
-			getElseStatement().execute();
-			setExecutionPosition(ExecutionPosition.CONDITION);
+		else if (getElseStatement() != null || executor.getExecutionPositionAt(getDepth()) == ELSE) {
+			setExecutionPosition(ELSE, executor);			
+			getElseStatement().execute(executor);
+			setExecutionPosition(CONDITION, executor);
 		}
-	}
-		
-	public ExecutionPosition getExecutionPosition() {
-		return this.executionPosition;
+		executor.removeExecutionPosition();
 	}
 	
-	private void setExecutionPosition(ExecutionPosition executionPosition) {
-		this.executionPosition = executionPosition;
-	}
+	private static final int CONDITION = 0;
+	private static final int IF = 1;
+	private static final int ELSE = 2;
 	
-	@Value
-	enum ExecutionPosition {
-		CONDITION, IF, ELSE
+//	public ExecutionPosition getExecutionPosition() {
+//		return this.executionPosition;
+//	}
+//	
+	private void setExecutionPosition(int executionPosition, ProgramExecutor executor) throws IllegalArgumentException {
+		if (executionPosition != CONDITION || executionPosition != IF || executionPosition != CONDITION)
+			throw new IllegalArgumentException();
+		executor.setExecutionPositionAt(getDepth(), executionPosition);
 	}
-	private ExecutionPosition executionPosition = ExecutionPosition.CONDITION;
+//	
+//	@Value
+//	enum ExecutionPosition {
+//		CONDITION, IF, ELSE
+//	}
+//	private ExecutionPosition executionPosition = ExecutionPosition.CONDITION;
 	
 	
 	@Override

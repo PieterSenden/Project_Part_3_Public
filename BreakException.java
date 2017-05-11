@@ -1,7 +1,7 @@
 package asteroids.model.exceptions.programExceptions;
 
 /**
- * A class for signaling exceptions regarding break statements.
+ * A class for signaling break statements.
  * 
  * @author Joris Ceulemans & Pieter Senden
  * @version 3.0

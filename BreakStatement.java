@@ -1,6 +1,7 @@
-package asteroids.model.programs;
+package asteroids.model.programs.statements;
 
 import asteroids.model.exceptions.programExceptions.BreakException;
+import asteroids.model.programs.ProgramExecutor;
 
 public class BreakStatement extends Statement {
 	
@@ -9,7 +10,7 @@ public class BreakStatement extends Statement {
 	}
 	
 	@Override
-	public void execute() throws BreakException {
+	public void execute(ProgramExecutor executor) throws BreakException {
 		throw new BreakException();
 	}
 

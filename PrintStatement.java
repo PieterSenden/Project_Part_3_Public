@@ -1,6 +1,9 @@
-package asteroids.model.programs;
+package asteroids.model.programs.statements;
 
 import asteroids.model.exceptions.IllegalMethodCallException;
+import asteroids.model.programs.Program;
+import asteroids.model.programs.ProgramExecutor;
+import asteroids.model.programs.expressions.Expression;
 
 public class PrintStatement extends SingleExpressionStatement<Object> {
 	
@@ -9,12 +12,12 @@ public class PrintStatement extends SingleExpressionStatement<Object> {
 	}
 	
 	@Override
-	public void execute() throws IllegalMethodCallException {
+	public void execute(ProgramExecutor executor) throws IllegalMethodCallException {
 		if (! (getExecutable() instanceof Program))
 			throw new IllegalMethodCallException();
 		Object evaluation = getExpression().evaluate();
 		System.out.println(evaluation.toString());
-		((Program)getExecutable()).addToPrintList(evaluation);
+		executor.addToPrintList(evaluation);
 	}
 
 }

@@ -1,4 +1,4 @@
-package asteroids.model.programs;
+package asteroids.model.programs.statements;
 
 public class AssignmentStatement extends SingleExpressionStatement<T> {
 	

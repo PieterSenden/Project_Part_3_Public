@@ -303,7 +303,7 @@ public class World {
 	 * @return	| result == { e in getEntities() | (classType.isAssignableFrom(e.getClass()) : (classType)e }
 	 */
 	@SuppressWarnings("unchecked")
-	public <T> Set<T> getSpecificEntities(Class<T> classType) {
+	public <T extends Entity> Set<T> getSpecificEntities(Class<T> classType) {
 		Set<T> result = new HashSet<>();
 		for (Entity entity: getEntities()) {
 			if (classType.isAssignableFrom(entity.getClass()))

@@ -1,4 +1,4 @@
-package asteroids.model.programs;
+package asteroids.model.programs.expressions;
 
 public abstract class Expression<T> {
 	
