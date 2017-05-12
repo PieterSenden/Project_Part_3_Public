@@ -11,6 +11,7 @@ public class ProgramExecutor {
 	
 	private Ship ship;
 	
+	//TODO Evt list van stacks omwille van statements in function calls
 	public int getExecutionStackDepth() {
 		//TODO
 		return 0;
