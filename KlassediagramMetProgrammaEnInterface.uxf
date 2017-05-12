@@ -4,8 +4,8 @@
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>826</x>
-      <y>224</y>
+      <x>847</x>
+      <y>168</y>
       <w>70</w>
       <h>91</h>
     </coordinates>
@@ -172,16 +172,16 @@ getAsArray()</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>889</x>
-      <y>224</y>
-      <w>287</w>
-      <h>105</h>
+      <x>910</x>
+      <y>168</y>
+      <w>266</w>
+      <h>161</h>
     </coordinates>
     <panel_attributes>lt=&lt;-&gt;
 m1=0..1
 m2=0..*
 contains &gt;</panel_attributes>
-    <additional_attributes>10.0;10.0;120.0;10.0;120.0;120.0;390.0;120.0</additional_attributes>
+    <additional_attributes>10.0;10.0;90.0;10.0;90.0;200.0;360.0;200.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
@@ -314,9 +314,8 @@ shrink()</panel_attributes>
       <w>133</w>
       <h>28</h>
     </coordinates>
-    <panel_attributes>lt=&lt;-&gt;
-m1=0..1
-m2=1</panel_attributes>
+    <panel_attributes>lt=&lt;-
+m1=0..1</panel_attributes>
     <additional_attributes>10.0;10.0;170.0;10.0</additional_attributes>
   </element>
   <element>
@@ -592,8 +591,8 @@ hasAsSubstatement</panel_attributes>
     <panel_attributes>/SingleExpressionStatement/
 -
 -
-getExpression
-evaluateExpression</panel_attributes>
+getExpression()
+evaluateExpression()</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
@@ -752,5 +751,65 @@ evaluateExpression</panel_attributes>
 &lt; has as expression
 m1=1</panel_attributes>
     <additional_attributes>10.0;10.0;110.0;10.0;110.0;480.0;220.0;480.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>819</x>
+      <y>294</y>
+      <w>133</w>
+      <h>84</h>
+    </coordinates>
+    <panel_attributes>ProgramExecutor
+-
+printList
+remainingTime
+-
+getExecutionPositionAt()
+getRemainingTime()
+addToPrintList()</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>945</x>
+      <y>329</y>
+      <w>63</w>
+      <h>168</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-&gt;
+m1=0..1
+m2=1</panel_attributes>
+    <additional_attributes>10.0;10.0;70.0;10.0;70.0;220.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>609</x>
+      <y>294</y>
+      <w>105</w>
+      <h>77</h>
+    </coordinates>
+    <panel_attributes>VariableContainer
+-
+-
+getValueOfVariable()
+setValueOfVariable()
+hasAsVariable()
+getTypeOfVariable()</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>707</x>
+      <y>294</y>
+      <w>126</w>
+      <h>28</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+m1=1</panel_attributes>
+    <additional_attributes>10.0;10.0;160.0;10.0</additional_attributes>
   </element>
 </diagram>
