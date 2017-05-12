@@ -29,7 +29,7 @@ public class WhileStatement extends SingleExpressionStatement<Boolean> implement
 			}
 			setIsExecutingBody(NOT_EXECUTING_BODY, executor);
 		}
-		setIsExecutingBody(NOT_EXECUTING_BODY, executor);	
+		setIsExecutingBody(NOT_EXECUTING_BODY, executor);
 	}
 	
 	private static final int EXECUTING_BODY = 1;
