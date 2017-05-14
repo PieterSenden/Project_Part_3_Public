@@ -437,25 +437,25 @@ public abstract class Entity {
 	 */
 	@Raw @Model
 	protected void setVelocity(double xComponent, double yComponent) {
-			Velocity tempVelocity;
-			try {
-				tempVelocity = new Velocity(xComponent, yComponent);
-			}
-			catch(IllegalComponentException exc) {
-				if (getVelocity() == null)
-					tempVelocity = new Velocity(0, 0);
-				else
-					tempVelocity = getVelocity();
-			}
-			if (!canHaveAsVelocity(tempVelocity)) {
-				double speed = tempVelocity.getSpeed();
-				xComponent = xComponent * getSpeedLimit() / speed;
-				yComponent = yComponent * getSpeedLimit() / speed;
-				tempVelocity = new Velocity(xComponent, yComponent);
-				//No exceptions are thrown here, because if xComponent or yComponent would be an invalid component, an exception would already
-				//have been thrown and caught such that canHaveAsVelocity(tempVelocity) is always true.
-			}
-			this.velocity = tempVelocity;
+		Velocity tempVelocity;
+		try {
+			tempVelocity = new Velocity(xComponent, yComponent);
+		}
+		catch(IllegalComponentException exc) {
+			if (getVelocity() == null)
+				tempVelocity = new Velocity(0, 0);
+			else
+				tempVelocity = getVelocity();
+		}
+		if (!canHaveAsVelocity(tempVelocity)) {
+			double speed = tempVelocity.getSpeed();
+			xComponent = xComponent * getSpeedLimit() / speed;
+			yComponent = yComponent * getSpeedLimit() / speed;
+			tempVelocity = new Velocity(xComponent, yComponent);
+			//No exceptions are thrown here, because if xComponent or yComponent would be an invalid component, an exception would already
+			//have been thrown and caught such that canHaveAsVelocity(tempVelocity) is always true.
+		}
+		this.velocity = tempVelocity;
 	}
 	
 	/**
@@ -825,8 +825,6 @@ public abstract class Entity {
 	}
 	
 	
-	
-	
 	/**
 	 * Check whether two entities apparently collide.
 	 * 
@@ -1190,8 +1188,11 @@ public abstract class Entity {
 	 * @throws TerminatedException
 	 * 			One of the entities is terminated
 	 * 			| this.isTerminated() || other.isTerminated()
+	 * @throws NullPointerException
+	 * 			The given other entity is not effective.
+	 * 			| other == null
 	 */
-	public abstract void resolveCollision(Entity other) throws IllegalMethodCallException, TerminatedException;
+	public abstract void resolveCollision(Entity other) throws IllegalMethodCallException, TerminatedException, NullPointerException;
 	
 	/**
 	 * Let this entity bounce of the other given entity.

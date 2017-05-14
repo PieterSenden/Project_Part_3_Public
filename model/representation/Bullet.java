@@ -137,11 +137,11 @@ public class Bullet extends Entity {
 	 * 			The radius to check.
 	 * @return True iff this bullet can have the given radius as its initial radius and
 	 * 			the given radius is equal to the initial radius of this bullet.
-	 * 		  |	@see implementation.
+	 * 		  |	super.canHaveAsRadius(radius) && (radius == getInitialRadius())
 	 */
 	@Override
 	public boolean canHaveAsRadius(double radius) {
-		return super.canHaveAsRadius(radius) && radius == getInitialRadius();
+		return super.canHaveAsRadius(radius) && (radius == getInitialRadius());
 	}
 	
 	
@@ -291,6 +291,8 @@ public class Bullet extends Entity {
 	/**
 	 * Resolve a collision between a bullet and another entity.
 	 * 
+	 * @param other
+	 * 			The entity to resolve a collision with.
 	 * @effect	| if (other instanceof Ship)
 	 * 			|	then if ((Ship)other).hasFired(this))
 	 * 			|		then ((Ship)other).loadBullet(this)
@@ -304,9 +306,12 @@ public class Bullet extends Entity {
 	 * 			| this.isTerminated() || other.isTerminated()
 	 * @throws	IllegalMethodCallException
 	 * 			| (getWorld() == null) || (getWorld() != other.getWorld()) || !Entity.apparentlyCollide(this, other)
+	 * @throws NullPointerException
+	 * 			The given other entity is not effective.
+	 * 			| other == null
 	 */
 	@Override
-	public void resolveCollision(Entity other) throws IllegalMethodCallException, TerminatedException {
+	public void resolveCollision(Entity other) throws IllegalMethodCallException, TerminatedException, NullPointerException {
 		if (isTerminated() || other.isTerminated())
 			throw new TerminatedException();
 		if (getWorld() == null || getWorld() != other.getWorld() || !Entity.apparentlyCollide(this, other))

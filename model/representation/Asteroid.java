@@ -88,11 +88,11 @@ public class Asteroid extends MinorPlanet {
 	 *         The radius to check.
 	 * @return true iff this asteroid can have the given radius as its initial radius and the given radius is equal to the initial radius
 	 * 			of this asteroid.
-	 * 			| @see implementation
+	 * 			| super.canHaveAsRadius(radius) && (radius == getInitialRadius())
 	 */
 	@Override
 	public boolean canHaveAsRadius(double radius) {
-		return super.canHaveAsRadius(radius) && radius == getInitialRadius();
+		return super.canHaveAsRadius(radius) && (radius == getInitialRadius());
 	}
 	
 	/**
@@ -112,9 +112,12 @@ public class Asteroid extends MinorPlanet {
 	 * @throws TerminatedException
 	 * 			This asteroid or the other entity is terminated
 	 * 			| this.isTerminated() || other.isTerminated()
+	 * @throws NullPointerException
+	 * 			The given other entity is not effective.
+	 * 			| other == null
 	 */
 	@Override
-	public void resolveCollision(Entity other) throws IllegalMethodCallException, TerminatedException {
+	public void resolveCollision(Entity other) throws IllegalMethodCallException, TerminatedException, NullPointerException {
 		super.resolveCollision(other);
 		if (other instanceof Ship)
 			other.terminate();

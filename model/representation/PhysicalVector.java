@@ -129,8 +129,10 @@ abstract class PhysicalVector {
 	 * 			The given other physical vector does not have the same dynamic type as this physical vector.
 	 * 			| this.getClass() != other.getClass()
 	 */
-	public abstract PhysicalVector vectorMinus(PhysicalVector other) throws NullPointerException, IllegalComponentException,
-																						IllegalArgumentException;
+	public <T extends PhysicalVector> T vectorMinus(T other) throws NullPointerException, IllegalComponentException,
+																						IllegalArgumentException {
+		
+	}
 	
 	/**
 	 * Return the sum of this physical vector with the given other physical vector.
@@ -144,8 +146,10 @@ abstract class PhysicalVector {
 	 * 			The given other physical vector does not have the same dynamic type as this physical vector.
 	 * 			| this.getClass() != other.getClass()
 	 */
-	public abstract PhysicalVector vectorPlus(PhysicalVector other) throws NullPointerException, IllegalComponentException,
-																						IllegalArgumentException;
+	public <T extends PhysicalVector> T vectorPlus(PhysicalVector other) throws NullPointerException, IllegalComponentException,
+																						IllegalArgumentException {
+		return new T(getxComponent() + other.getxComponent(), getyComponent() + other.getyComponent());
+	}
 	
 	/**
 	 * Return the scalar multiple of this physical vector with the given factor.

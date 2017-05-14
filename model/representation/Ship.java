@@ -265,12 +265,12 @@ public class Ship extends Entity {
 	 * @param radius
 	 * 			The radius to check.
 	 * @return True iff this ship can have the given radius as its initial radius and
-	 * 			this ship can have the given radius as its initial radius.
-	 * 		  |	@see implementation.
+	 * 			the given radius is equal to the initial radius of this ship.
+	 * 		  |	super.canHaveAsRadius(radius) && (radius == getInitialRadius())
 	 */
 	@Override
 	public boolean canHaveAsRadius(double radius) {
-		return super.canHaveAsRadius(radius) && radius == getInitialRadius();
+		return super.canHaveAsRadius(radius) && (radius == getInitialRadius());
 	}
 	
 	
@@ -446,6 +446,8 @@ public class Ship extends Entity {
 	/**
 	 * Resolve a collision between this ship and another entity.
 	 * 
+	 * @param other
+	 * 			The entity to resolve a collision with.
 	 * @effect	If the other entity is a ship, this ship bounces of the other ship.
 	 * 			| if (other instanceof Ship)
 	 * 			|	then this.bounceOf(other)
@@ -459,15 +461,20 @@ public class Ship extends Entity {
 	 * @throws TerminatedException
 	 * 			One of the entities is terminated
 	 * 			| this.isTerminated() || other.isTerminated()
+	 * @throws NullPointerException
+	 * 			The given other entity is not effective.
+	 * 			| other == null
 	 */
 	@Override
-	public void resolveCollision(Entity other) throws IllegalMethodCallException, TerminatedException {
+	public void resolveCollision(Entity other) throws IllegalMethodCallException, TerminatedException, NullPointerException {
 		if (isTerminated() || other.isTerminated())
 			throw new TerminatedException();
 		if (getWorld() == null || getWorld() != other.getWorld() || !Entity.apparentlyCollide(this, other))
 			throw new IllegalMethodCallException();
 		if (other instanceof Ship)
 			this.bounceOf(other);
+			//The method bounceOf only throws an exception under the conditions specified in the throws clauses
+			// in the documentation of this method.
 		else {
 			other.resolveCollision(this);
 		}
@@ -810,7 +817,7 @@ public class Ship extends Entity {
 					}
 				} catch (IllegalComponentException exc) {
 					/* An IllegalComponentException can only thrown if the method setToFireConfiguration tried to set a component of the position
-					 * of the bullet to fire to infinity or NaN. This can never be a valid position for a world so the bullet to fire must be
+					 * of the bullet to fire to infinity or NaN. This can never be a valid position inside a world so the bullet to fire must be
 					 * destroyed (note that a bullet can only be fired by a ship that is contained in a world).
 					 */
 					bulletToFire.terminate();
