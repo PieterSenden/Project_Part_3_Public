@@ -42,4 +42,9 @@ public class ProgramExecutor {
 	public void addToPrintList(Object item) {
 		//TODO
 	}
+	
+	public VariableContainer getVariableContainer() {
+		//TODO
+		return null;
+	}
 }

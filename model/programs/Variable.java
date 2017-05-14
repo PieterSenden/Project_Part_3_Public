@@ -13,10 +13,31 @@ import be.kuleuven.cs.som.annotate.*;
 @Value
 public class Variable {
 	@Raw
-	public <T> Variable(T value, Class<T> type) throws IllegalArgumentException {
+	public Variable(Object value, Class<?> type) throws IllegalArgumentException {
 		if (! isValidType(type))
 			throw new IllegalArgumentException();
 		this.type = type;
+		if (!canHaveAsValue(value))
+			throw new IllegalArgumentException();
+		this.value = value;
+	}
+	
+	@Raw
+	public Variable(Object value) throws IllegalArgumentException {
+		if (value == null)
+			throw new IllegalArgumentException("A variable containing null must be constructed with a given type");
+		Class<?> variableType = value.getClass();
+		boolean supportedTypeFound = false;
+		//We look for the most general supported type that the given value belongs to.
+		for (Class<?> supportedType : Program.getSupportedTypes()) {
+			if (supportedType.isAssignableFrom(variableType)) {
+				variableType = supportedType;
+				supportedTypeFound = true;
+			}
+		}
+		if (!supportedTypeFound)
+			throw new IllegalArgumentException("Variables of this type are not supported.");
+		this.type = variableType;
 		if (!canHaveAsValue(value))
 			throw new IllegalArgumentException();
 		this.value = value;
@@ -40,9 +61,11 @@ public class Variable {
 		return this.type;
 	}
 	
-	public boolean isValidType(Class<?> type) {
-		return type != null;
+	public static boolean isValidType(Class<?> type) {
+		return Program.hasAsSupportedType(type);
 	}
 	
 	private final Class<?> type;
+	
+	//TODO: equals en hashcode overriden?
 }
