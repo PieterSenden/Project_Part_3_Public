@@ -194,6 +194,9 @@ public class Ship extends Entity {
 	 * @post Each bullet in the magazine of this ship has the given position as its position.
 	 * 		| for each bullet in getMagazine():
 	 * 		|	bullet.getPosition().equals(position)
+	 * @throws IllegalPositionException
+	 * 		 This ship cannot have this position as its position.
+	 * 		| ! canHaveAsPosition(position)
 	 */
 	@Override
 	protected void setPosition(Position position) throws IllegalPositionException {
@@ -291,6 +294,7 @@ public class Ship extends Entity {
 	/**
 	 * Return the total mass of this ship.
 	 * The total mass of a ship is the sum of its mass and the mass of the objects carried by that ship.
+	 * 
 	 * @return The total mass of this ship.
 	 * 			| result = getMass() + sum( { x in getMagazine() | true : x.getMass() } )
 	 */

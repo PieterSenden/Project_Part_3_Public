@@ -507,6 +507,7 @@ public abstract class Entity {
 	
 	/**
 	 * Return the total mass of this entity.
+	 * The total mass of an entity is the sum of its mass and the mass of the objects carried by that entity.
 	 * 
 	 * @return The total mass of this entity, which is greater than or equal to this entity's mass.
 	 * 			| result >= getMass()
@@ -544,7 +545,7 @@ public abstract class Entity {
 	 *  
 	 * @param  density
 	 *         The density to check.
-	 * @return False if the given density is smaller than getMinimalDensity().
+	 * @return False if the given density is strictly smaller than getMinimalDensity().
 	 *       | if (density < getMinimalDensity())
 	 *       |	then result == false
 	 * @return False if the given density is not finite.
@@ -566,11 +567,11 @@ public abstract class Entity {
 	 * 
 	 * @param density
 	 * 			The density to check.
-	 * @return True iff the given density is strictly positive.
+	 * @return True iff the given density is strictly positive and finite.
 	 * 			| @see implementation
 	 */
 	public static boolean isValidMinimalDensity(double density) {
-		return density > 0;
+		return density > 0 && Double.isFinite(density);
 	}
 	
 	/**
