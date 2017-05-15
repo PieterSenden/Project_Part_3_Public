@@ -166,6 +166,8 @@ public class Planetoid extends MinorPlanet {
 	 * 			The length of the time interval during which the planetoid is moved.
 	 * @effect	| super.move(duration)
 	 * @effect	| shrink(duration * getSpeed() * SHRINK_FACTOR)
+	 * @note	shrink(duration * getSpeed() * SHRINK_FACTOR) will never throw an exception, since getSpeed() >= 0, SHRINK_FACTOR > 0
+	 * 			and duration >= 0 since this was already checked by super.move(duration) 
 	 * @throws IllegalArgumentException
 	 * 			The given duration is strictly less than 0.
 	 * 			| duration < 0

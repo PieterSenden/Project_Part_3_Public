@@ -69,7 +69,7 @@ public class Position extends PhysicalVector {
 	
 	
 	/**
-	 * Return the difference of this position vector with the given other position vector.
+	 * Return the difference of this position vector with the given other physical vector.
 	 * 
 	 * @param other
 	 * 			The second physical vector (after minus sign).
@@ -88,16 +88,16 @@ public class Position extends PhysicalVector {
 	@Override
 	public Position vectorMinus(PhysicalVector other) throws NullPointerException, IllegalComponentException,
 																					IllegalArgumentException {
-		return this.vectorPlus(other.scalarMultiple(-1));
+		return (Position)(super.vectorMinus(other));
 	}
 	
 	/**
-	 * Return the sum of this position vector with the given other position vector.
+	 * Return the sum of this position vector with the given other physical vector.
 	 * 
 	 * @param other
 	 * 			The second position vector.
 	 * @return The sum of this position vector an the given other position vector.
-	 * 			| result == new Position(getxComponent() + other.getxComponent(), getyComponent() + other.getyComponent())
+	 * 			| result == (Position)(super.vectorPlus(other))
 	 * @throws NullPointerException
 	 * 			The given other physical vector is not effective.
 	 * 			| other == null
@@ -111,18 +111,16 @@ public class Position extends PhysicalVector {
 	@Override
 	public Position vectorPlus(PhysicalVector other) throws NullPointerException, IllegalComponentException,
 	IllegalArgumentException {
-		if (! (other instanceof Position))
-			throw new IllegalArgumentException();
-		return new Position(getxComponent() + other.getxComponent(), getyComponent() + other.getyComponent());
+		return (Position)(super.vectorPlus(other));
 	}
 	
 	/**
-	 * Return the scalar multiple of this physical vector with the given factor.
+	 * Return the scalar multiple of this position vector with the given factor.
 	 * 
 	 * @param factor
 	 * 			The scalar factor.
-	 * @return The sum of this position vector an the given other position vector.
-	 * 			| result == new Position(getxComponent() * factor, getyComponent() * factor)
+	 * @return The scalar multiple of this position vector with the given factor.
+	 * 			| result == (Position)(super.scalarMultiple(factor))
 	 * @throws IllegalComponentException
 	 * 			getxComponent() * factor or getyComponent() * factor is not a valid component for any position.
 	 * 			| !isValidComponent(getxComponent() * factor) || !isValidComponent(getyComponent() * factor)
@@ -132,9 +130,7 @@ public class Position extends PhysicalVector {
 	 */
 	@Override
 	public Position scalarMultiple(double factor) throws IllegalComponentException,	IllegalArgumentException {
-		if (! Double.isFinite(factor))
-			throw new IllegalArgumentException();
-		return new Position(getxComponent() * factor, getyComponent() * factor);
+		return (Position)(super.scalarMultiple(factor));
 	}
 	
 	/**

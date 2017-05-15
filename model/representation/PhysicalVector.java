@@ -16,7 +16,7 @@ import be.kuleuven.cs.som.annotate.*;
  * @author Joris Ceulemans & Pieter Senden
  */
 @Value
-abstract class PhysicalVector {
+class PhysicalVector {
 
 
 	/**
@@ -107,7 +107,7 @@ abstract class PhysicalVector {
 	 * 			The given other physical vector is not effective.
 	 * 			| other == null
 	 * @throws NotFiniteException
-	 * 			The computation of the scalar product results in an infinite number or Nan.
+	 * 			The computation of the scalar product results in an infinite number or NaN.
 	 * 			| !Double.isFinite(getxComponent() * other.getxComponent() + getyComponent() * other.getyComponent())
 	 */
 	public double scalarProductWith(PhysicalVector other) throws NullPointerException, NotFiniteException {
@@ -122,42 +122,62 @@ abstract class PhysicalVector {
 	 * 
 	 * @param other
 	 * 			The second physical vector (after minus sign).
+	 * @return 	The difference of this physical vector and the given other physical vector.
+	 * 			| @see implementation
 	 * @throws NullPointerException
 	 * 			The given other physical vector is not effective.
 	 * 			| other == null
+	 * @throws IllegalComponentException
+	 * 			getxComponent() - other.getxComponent() or getyComponent() - other.getyComponent() is not a valid component for any physical vector.
+	 * 			| !isValidComponent(getxComponent() - other.getxComponent()) || !isValidComponent(getyComponent() - other.getyComponent())
 	 * @throws IllegalArgumentException
 	 * 			The given other physical vector does not have the same dynamic type as this physical vector.
 	 * 			| this.getClass() != other.getClass()
 	 */
-	public abstract PhysicalVector vectorMinus(PhysicalVector other) throws NullPointerException, IllegalComponentException,
-																						IllegalArgumentException;
+	public PhysicalVector vectorMinus(PhysicalVector other) throws NullPointerException, IllegalComponentException,
+																						IllegalArgumentException {
+		return this.vectorPlus(other.scalarMultiple(-1));
+	}
 	
 	/**
 	 * Return the sum of this physical vector with the given other physical vector.
 	 * 
 	 * @param other
 	 * 			The second physical vector.
+	 * @return The sum of this physical vector an the given other physical vector.
+	 * 			| result == new PhysicalVector(getxComponent() + other.getxComponent(), getyComponent() + other.getyComponent())
 	 * @throws NullPointerException
 	 * 			The given other physical vector is not effective.
 	 * 			| other == null
+	 * @throws IllegalComponentException
+	 * 			getxComponent() + other.getxComponent() or getyComponent() + other.getyComponent() is not a valid component for any physical vector.
+	 * 			| !isValidComponent(getxComponent() + other.getxComponent()) || !isValidComponent(getyComponent() + other.getyComponent())
 	 * @throws IllegalArgumentException
 	 * 			The given other physical vector does not have the same dynamic type as this physical vector.
 	 * 			| this.getClass() != other.getClass()
 	 */
-	public abstract PhysicalVector vectorPlus(PhysicalVector other) throws NullPointerException, IllegalComponentException,
-																						IllegalArgumentException;
+	public PhysicalVector vectorPlus(PhysicalVector other) throws NullPointerException, IllegalComponentException,
+																						IllegalArgumentException {
+		if (this.getClass() != other.getClass())
+			throw new IllegalArgumentException();
+		return new PhysicalVector(getxComponent() + other.getxComponent(), getyComponent() + other.getyComponent());
+	}
 	
 	/**
 	 * Return the scalar multiple of this physical vector with the given factor.
 	 * 
 	 * @param factor
 	 * 			The scalar factor.
+	 * @throws IllegalComponentException
+	 * 			getxComponent() * factor or getyComponent() * factor is not a valid component for any velocity.
+	 * 			| !isValidComponent(getxComponent() * factor) || !isValidComponent(getyComponent() * factor)
 	 * @throws IllegalArgumentException
 	 * 			The given factor is not finite.
 	 * 			| !Double.isFinite(factor)
 	 */
-	public abstract PhysicalVector scalarMultiple(double factor) throws IllegalComponentException, IllegalArgumentException;
-	
-	
-	
+	public PhysicalVector scalarMultiple(double factor) throws IllegalComponentException, IllegalArgumentException {
+		if (! Double.isFinite(factor))
+			throw new IllegalArgumentException();
+		return new PhysicalVector(getxComponent() * factor, getyComponent() * factor);
+	}
 }

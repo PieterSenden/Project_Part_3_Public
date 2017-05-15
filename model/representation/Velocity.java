@@ -39,7 +39,7 @@ public class Velocity extends PhysicalVector {
 	
 	
 	/**
-	 * Return the difference of this velocity vector with the given other velocity vector.
+	 * Return the difference of this velocity vector with the given other physical vector.
 	 * 
 	 * @param other
 	 * 			The second physical vector (after minus sign).
@@ -58,7 +58,7 @@ public class Velocity extends PhysicalVector {
 	@Override
 	public Velocity vectorMinus(PhysicalVector other) throws NullPointerException, IllegalComponentException,
 																					IllegalArgumentException {
-		return this.vectorPlus(other.scalarMultiple(-1));
+		return (Velocity)(super.vectorMinus(other));
 	}
 	
 	/**
@@ -81,9 +81,7 @@ public class Velocity extends PhysicalVector {
 	@Override
 	public Velocity vectorPlus(PhysicalVector other) throws NullPointerException, IllegalComponentException,
 	IllegalArgumentException {
-		if (! (other instanceof Velocity))
-			throw new IllegalArgumentException();
-		return new Velocity(getxComponent() + other.getxComponent(), getyComponent() + other.getyComponent());
+		return (Velocity)(super.vectorPlus(other));
 	}
 	
 	/**
@@ -91,7 +89,7 @@ public class Velocity extends PhysicalVector {
 	 * 
 	 * @param factor
 	 * 			The scalar factor.
-	 * @return The sum of this velocity vector an the given other velocity vector.
+	 * @return The scalar multiple of this velocity vector with the given factor.
 	 * 			| result == new Velocity(getxComponent() * factor, getyComponent() * factor)
 	 * @throws IllegalComponentException
 	 * 			getxComponent() * factor or getyComponent() * factor is not a valid component for any velocity.
@@ -102,9 +100,7 @@ public class Velocity extends PhysicalVector {
 	 */
 	@Override
 	public Velocity scalarMultiple(double factor) throws IllegalComponentException,	IllegalArgumentException {
-		if (! Double.isFinite(factor))
-			throw new IllegalArgumentException();
-		return new Velocity(getxComponent() * factor, getyComponent() * factor);
+		return (Velocity)(super.scalarMultiple(factor));
 	}
 	
 	/**
