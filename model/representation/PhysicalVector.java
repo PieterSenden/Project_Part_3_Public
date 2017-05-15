@@ -136,6 +136,8 @@ class PhysicalVector {
 	 */
 	public PhysicalVector vectorMinus(PhysicalVector other) throws NullPointerException, IllegalComponentException,
 																						IllegalArgumentException {
+		if (this.getClass() != other.getClass())
+			throw new IllegalArgumentException();
 		return this.vectorPlus(other.scalarMultiple(-1));
 	}
 	
