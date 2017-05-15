@@ -11,7 +11,7 @@ public class ProgramExecutor {
 	
 	private Ship ship;
 	
-	//TODO Evt list van stacks omwille van statements in function calls
+	//TODO Evt stack van lists omwille van statements in function calls
 	public int getExecutionStackDepth() {
 		//TODO
 		return 0;
@@ -47,4 +47,12 @@ public class ProgramExecutor {
 		//TODO
 		return null;
 	}
+	
+	@Basic
+	public Program getProgram() {
+		return this.program;
+	}
+	
+	private Program program;
+	
 }

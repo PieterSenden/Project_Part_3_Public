@@ -25,7 +25,7 @@ public class Variable {
 	@Raw
 	public Variable(Object value) throws IllegalArgumentException {
 		if (value == null)
-			throw new IllegalArgumentException("A variable containing null must be constructed with a given type");
+			throw new IllegalArgumentException("A variable containing null must be constructed with a given type.");
 		Class<?> variableType = value.getClass();
 		boolean supportedTypeFound = false;
 		//We look for the most general supported type that the given value belongs to.
