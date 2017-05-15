@@ -18,6 +18,14 @@ public abstract class UnaryExpression<T, S> extends ComposedExpression<T> {
 		this.subExpression = subExpression;
 	}
 	
+	public boolean hasAsSubExpression(Expression<?> expression) {
+		if (getSubExpression() == expression)
+			return true;
+		if (getSubExpression() instanceof ComposedExpression<?> && ((ComposedExpression<?>)getSubExpression()).hasAsSubExpression(expression))
+			return true;
+		return false;
+	}
+	
 	public S evaluateSubExpression(ProgramExecutor executor) {
 		return getSubExpression().evaluate(executor);
 	}

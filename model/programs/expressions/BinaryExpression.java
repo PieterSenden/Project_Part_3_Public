@@ -21,6 +21,15 @@ public abstract class BinaryExpression<T, L, R> extends ComposedExpression<T> {
 		this.rightSubExpression = rightSubExpression;
 	}
 	
+	public boolean hasAsSubExpression(Expression<?> expression) {
+		if (getLeftSubExpression() == expression || getRightSubExpression() == expression)
+			return true;
+		if (getLeftSubExpression() instanceof ComposedExpression<?> && ((ComposedExpression<?>)getLeftSubExpression()).hasAsSubExpression(expression))
+			return true;
+		if (getRightSubExpression() instanceof ComposedExpression<?> && ((ComposedExpression<?>)getRightSubExpression()).hasAsSubExpression(expression))
+			return true;
+		return false;
+	}
 	
 	public Expression<? extends L> getLeftSubExpression() {
 		return this.leftSubExpression;
