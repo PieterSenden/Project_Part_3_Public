@@ -120,7 +120,7 @@ public class Bullet extends Entity {
 	/** 
 	 * Check whether this bullet can have the given density as its density
 	 * 
-	 * @return True iff the given density is equal to the minimal density
+	 * @return True iff the given density is equal to getMinimalDensity()
 	 * 			| @see implementation
 	 */
 	@Override @Raw
