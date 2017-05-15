@@ -437,25 +437,25 @@ public abstract class Entity {
 	 */
 	@Raw @Model
 	protected void setVelocity(double xComponent, double yComponent) {
-			Velocity tempVelocity;
-			try {
-				tempVelocity = new Velocity(xComponent, yComponent);
-			}
-			catch(IllegalComponentException exc) {
-				if (getVelocity() == null)
-					tempVelocity = new Velocity(0, 0);
-				else
-					tempVelocity = getVelocity();
-			}
-			if (!canHaveAsVelocity(tempVelocity)) {
-				double speed = tempVelocity.getSpeed();
-				xComponent = xComponent * getSpeedLimit() / speed;
-				yComponent = yComponent * getSpeedLimit() / speed;
-				tempVelocity = new Velocity(xComponent, yComponent);
-				//No exceptions are thrown here, because if xComponent or yComponent would be an invalid component, an exception would already
-				//have been thrown and caught such that canHaveAsVelocity(tempVelocity) is always true.
-			}
-			this.velocity = tempVelocity;
+		Velocity tempVelocity;
+		try {
+			tempVelocity = new Velocity(xComponent, yComponent);
+		}
+		catch(IllegalComponentException exc) {
+			if (getVelocity() == null)
+				tempVelocity = new Velocity(0, 0);
+			else
+				tempVelocity = getVelocity();
+		}
+		if (!canHaveAsVelocity(tempVelocity)) {
+			double speed = tempVelocity.getSpeed();
+			xComponent = xComponent * getSpeedLimit() / speed;
+			yComponent = yComponent * getSpeedLimit() / speed;
+			tempVelocity = new Velocity(xComponent, yComponent);
+			//No exceptions are thrown here, because if xComponent or yComponent would be an invalid component, an exception would already
+			//have been thrown and caught such that canHaveAsVelocity(tempVelocity) is always true.
+		}
+		this.velocity = tempVelocity;
 	}
 	
 	/**
@@ -587,21 +587,6 @@ public abstract class Entity {
 	 */
 	private final double minimalDensity;
 	
-	/**
-	 * Set the radius of this entity to the given radius.
-	 * @param radius
-	 * 			The new radius of this entity.
-	 * @post The new radius of this entity is equal to the given radius.
-	 * 			| new.getRadius() == radius
-	 * @throws IllegalRadiusException
-	 * 			This entity cannot have the given radius as its radius.
-	 * 			| ! canHaveAsRadius(radius)
-	 */
-	protected void setRadius(double radius) throws IllegalRadiusException {
-		if (! canHaveAsRadius(radius))
-			throw new IllegalRadiusException();
-		this.radius = radius;
-	}
 	
 	/**
 	 * Return the radius of this entity.
@@ -642,7 +627,6 @@ public abstract class Entity {
 	public boolean canHaveAsRadius(double radius) {
 		return canHaveAsInitialRadius(radius);
 	}
-
 	
 	/**
 	 * @return The volume of this entity.
@@ -651,6 +635,22 @@ public abstract class Entity {
 	@Raw
 	public double getVolume() {
 		return 4.0 / 3 * Math.PI * Math.pow(getRadius(), 3);
+	}
+	
+	/**
+	 * Set the radius of this entity to the given radius.
+	 * @param radius
+	 * 			The new radius of this entity.
+	 * @post The new radius of this entity is equal to the given radius.
+	 * 			| new.getRadius() == radius
+	 * @throws IllegalRadiusException
+	 * 			This entity cannot have the given radius as its radius.
+	 * 			| ! canHaveAsRadius(radius)
+	 */
+	protected void setRadius(double radius) throws IllegalRadiusException {
+		if (! canHaveAsRadius(radius))
+			throw new IllegalRadiusException();
+		this.radius = radius;
 	}
 	
 	/**
@@ -824,8 +824,6 @@ public abstract class Entity {
 			throw new TerminatedException();
 		return (getRadius() >= other.getRadius());
 	}
-	
-	
 	
 	
 	/**
@@ -1191,8 +1189,11 @@ public abstract class Entity {
 	 * @throws TerminatedException
 	 * 			One of the entities is terminated
 	 * 			| this.isTerminated() || other.isTerminated()
+	 * @throws NullPointerException
+	 * 			The given other entity is not effective.
+	 * 			| other == null
 	 */
-	public abstract void resolveCollision(Entity other) throws IllegalMethodCallException, TerminatedException;
+	public abstract void resolveCollision(Entity other) throws IllegalMethodCallException, TerminatedException, NullPointerException;
 	
 	/**
 	 * Let this entity bounce of the other given entity.
@@ -1248,6 +1249,7 @@ public abstract class Entity {
 	 * @throws	IllegalMethodCallException
 	 * 			This entity is not associated to a world or this entity does not collide with the boundary of its world.
 	 * 			| getWorld() == null || !apparentlyCollidesWithBoundary()
+	 * TODO Liskov met Bullet in orde brengen (terminate()...)
 	 */
 	public void bounceOfBoundary() throws IllegalMethodCallException, TerminatedException {
 		if (isTerminated())

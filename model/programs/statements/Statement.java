@@ -7,6 +7,7 @@ import be.kuleuven.cs.som.annotate.*;
 /**
  * @invar | hasProperEnclosingStatement()
  * @invar | hasProperExecutable()
+ * TODO invar: canHaveAsEric
  * 
  * @author Joris Ceulemans & Pieter Senden
  * @version 3.0

@@ -158,12 +158,12 @@ class PhysicalVector {
 	 * 			The given other physical vector does not have the same dynamic type as this physical vector.
 	 * 			| this.getClass() != other.getClass()
 	 */
-	public PhysicalVector vectorPlus(PhysicalVector other) throws NullPointerException, IllegalComponentException,
+public PhysicalVector vectorPlus(PhysicalVector other) throws NullPointerException, IllegalComponentException,
 																						IllegalArgumentException {
 		if (this.getClass() != other.getClass())
 			throw new IllegalArgumentException();
 		return new PhysicalVector(getxComponent() + other.getxComponent(), getyComponent() + other.getyComponent());
-	}
+}
 	
 	/**
 	 * Return the scalar multiple of this physical vector with the given factor.

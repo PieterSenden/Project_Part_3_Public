@@ -44,4 +44,10 @@ public class Program extends Executable {
 	public static boolean hasAsSupportedType(Class<?> type) {
 		return (hasAsSupportedValueType(type) || hasAsSupportedReferenceType(type));
 	}
+	
+	public static Set<Class<?>> getSupportedTypes() {
+		Set<Class<?>> result = new HashSet<>(supportedValueTypes);
+		result.addAll(supportedReferenceTypes);
+		return result;
+	}
 }

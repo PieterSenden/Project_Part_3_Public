@@ -4,17 +4,17 @@ import asteroids.model.programs.expressions.Expression;
 
 public abstract class SingleExpressionStatement<T> extends Statement {
 	
-	public SingleExpressionStatement(Expression<T> expression) throws IllegalArgumentException {
+	public SingleExpressionStatement(Expression<? extends T> expression) throws IllegalArgumentException {
 		if (! canHaveAsExpression(expression))
 			throw new IllegalArgumentException();
 		this.expression = expression;
 	}
 	
-	public Expression<T> getExpression() {
+	public Expression<? extends T> getExpression() {
 		return this.expression;
 	}
 	
-	public boolean canHaveAsExpression(Expression<T> expression) {
+	public boolean canHaveAsExpression(Expression<?> expression) {
 		return expression != null;
 	}
 	
@@ -23,5 +23,5 @@ public abstract class SingleExpressionStatement<T> extends Statement {
 	}
 	
 	
-	private final Expression<T> expression;
+	private final Expression<? extends T> expression;
 }

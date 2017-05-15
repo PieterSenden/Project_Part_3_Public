@@ -66,19 +66,6 @@ public abstract class MinorPlanet extends Entity {
 		return density == getMinimalDensity();
 	}
 	
-	/**
-	 * Check whether this minor planet can have the given radius as its initial radius.
-	 * 
-	 * @param radius
-	 * 		  The radius to check.
-	 * @return True iff the given radius is greater than or equal to the minimal radius of this minor planet.
-	 * 			| result == (radius >= getMinimalRadius())
-	 */
-	@Override
-	public boolean canHaveAsInitialRadius(double radius) {
-		return radius >= getMinimalRadius();
-	}
-	
 	
 	/**
 	 * Resolve a collision between this minor planet and another entity.
@@ -96,9 +83,12 @@ public abstract class MinorPlanet extends Entity {
 	 * @throws TerminatedException
 	 * 			This minor planet or the other entity is terminated
 	 * 			| this.isTerminated() || other.isTerminated()
+	 * @throws NullPointerException
+	 * 			The given other entity is not effective.
+	 * 			| other == null
 	 */
 	@Override
-	public void resolveCollision(Entity other) throws IllegalMethodCallException, TerminatedException {
+	public void resolveCollision(Entity other) throws IllegalMethodCallException, TerminatedException, NullPointerException {
 		if (isTerminated() || other.isTerminated())
 			throw new TerminatedException();
 		if (getWorld() == null || getWorld() != other.getWorld() || !Entity.apparentlyCollide(this, other))
@@ -120,7 +110,6 @@ public abstract class MinorPlanet extends Entity {
 	 * 			The other entity.
 	 * @return	Always true.
 	 * 			| result == true
-	 * 
 	 */
 	@Override
 	public boolean mustShowCollisionWith(Entity other) {

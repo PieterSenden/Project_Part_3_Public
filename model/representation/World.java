@@ -99,10 +99,10 @@ public class World {
 	 * @param  height
 	 *         The height to check.
 	 * @return 
-	 *       | result == (0 < height) && (height <= getMaxHeight())
+	 *       | result == (0 <= height) && (height <= getMaxHeight())
 	 */
 	public static boolean isValidHeight(double height) {
-		return (0 < height) && (height <= getMaxHeight());
+		return (0 <= height) && (height <= getMaxHeight());
 	}
 	
 	/**
@@ -139,10 +139,10 @@ public class World {
 	 * @param  width
 	 *         The width to check.
 	 * @return 
-	 *       | result == (0 < width) && (width <= getMaxWidth())
+	 *       | result == (0 <= width) && (width <= getMaxWidth())
 	 */
 	public static boolean isValidWidth(double width) {
-		return (0 < width) && (width <= getMaxWidth());
+		return (0 <= width) && (width <= getMaxWidth());
 	}
 	
 	/**
