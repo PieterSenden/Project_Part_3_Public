@@ -66,20 +66,6 @@ public abstract class MinorPlanet extends Entity {
 		return density == getMinimalDensity();
 	}
 	
-	/**
-	 * Check whether this minor planet can have the given radius as its initial radius.
-	 * 
-	 * @param radius
-	 * 		  The radius to check.
-	 * @return True iff the given radius is greater than or equal to the minimal radius of this minor planet.
-	 * 			| result == (radius >= getMinimalRadius())
-	 */
-	//TODO Waarom wordt deze methode overschreven???
-	@Override
-	public boolean canHaveAsInitialRadius(double radius) {
-		return radius >= getMinimalRadius();
-	}
-	
 	
 	/**
 	 * Resolve a collision between this minor planet and another entity.

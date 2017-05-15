@@ -696,7 +696,8 @@ public class Ship extends Entity {
 	 */
 	@Raw
 	public boolean canHaveAsBullet(Bullet bullet) {
-		return (bullet != null && (bullet.getWorld() == null || getWorld() == bullet.getWorld()) && !isTerminated() && !bullet.isTerminated());
+		return (bullet != null && (bullet.getWorld() == null || getWorld() == bullet.getWorld()) && !isTerminated() && !bullet.isTerminated()) &&
+				canSurround(bullet);
 	}
 	
 	/**
@@ -778,7 +779,8 @@ public class Ship extends Entity {
 	 * 			and added to the world containing this ship, if any, and hasFired(randomBullet) is true.
 	 * 		| if (getNbOfBulletsInMagazine() != 0 && getWorld() != null)
 	 * 		|	then for precisely one bullet in getMagazine():
-	 * 		|		new.hasFired((new bullet)) && ! new.hasLoadedInMagazine((new bullet) && (new bullet).getWorld() == this.getWorld())
+	 * 		|		new.hasFired((new randomBullet)) && ! new.hasLoadedInMagazine((new randomBullet) &&
+	 * 		|		(new randomBullet).getWorld() == this.getWorld())
 	 * @effect If this ship is not terminated and if the magazine of this ship is not empty, said random bullet is set to fire configuration.
 	 * 		| randomBullet.setToFireConfiguration()
 	 * @effect If this ship is not terminated and if the magazine of this ship is not empty and
@@ -852,7 +854,7 @@ public class Ship extends Entity {
 	public void loadBullet(Bullet bullet) throws IllegalBulletException, TerminatedException {
 		if (this.isTerminated())
 			throw new TerminatedException();
-		if (! canHaveAsBullet(bullet) || ! canSurround(bullet) || 
+		if (! canHaveAsBullet(bullet) || 
 				(hasFired(bullet) && ! Entity.apparentlyCollide(this, bullet)) ||
 				(bullet.getShip() != null && bullet.getShip() != this))
 			throw new IllegalBulletException();

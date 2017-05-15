@@ -273,6 +273,7 @@ public class Bullet extends Entity {
 	 * 			| isTerminated()
 	 * @throws	IllegalMethodCallException
 	 * 			| getWorld() == null || !apparentlyCollidesWithBoundary()
+	 * TODO Liskov in orde brengen (terminate()...) (speciaal voor jou Pieter, deze haakjes...)
 	 */
 	@Override
 	public void bounceOfBoundary() throws TerminatedException, IllegalMethodCallException {

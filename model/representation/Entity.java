@@ -586,21 +586,6 @@ public abstract class Entity {
 	 */
 	private final double minimalDensity;
 	
-	/**
-	 * Set the radius of this entity to the given radius.
-	 * @param radius
-	 * 			The new radius of this entity.
-	 * @post The new radius of this entity is equal to the given radius.
-	 * 			| new.getRadius() == radius
-	 * @throws IllegalRadiusException
-	 * 			This entity cannot have the given radius as its radius.
-	 * 			| ! canHaveAsRadius(radius)
-	 */
-	protected void setRadius(double radius) throws IllegalRadiusException {
-		if (! canHaveAsRadius(radius))
-			throw new IllegalRadiusException();
-		this.radius = radius;
-	}
 	
 	/**
 	 * Return the radius of this entity.
@@ -641,7 +626,6 @@ public abstract class Entity {
 	public boolean canHaveAsRadius(double radius) {
 		return canHaveAsInitialRadius(radius);
 	}
-
 	
 	/**
 	 * @return The volume of this entity.
@@ -650,6 +634,22 @@ public abstract class Entity {
 	@Raw
 	public double getVolume() {
 		return 4.0 / 3 * Math.PI * Math.pow(getRadius(), 3);
+	}
+	
+	/**
+	 * Set the radius of this entity to the given radius.
+	 * @param radius
+	 * 			The new radius of this entity.
+	 * @post The new radius of this entity is equal to the given radius.
+	 * 			| new.getRadius() == radius
+	 * @throws IllegalRadiusException
+	 * 			This entity cannot have the given radius as its radius.
+	 * 			| ! canHaveAsRadius(radius)
+	 */
+	protected void setRadius(double radius) throws IllegalRadiusException {
+		if (! canHaveAsRadius(radius))
+			throw new IllegalRadiusException();
+		this.radius = radius;
 	}
 	
 	/**
@@ -1248,6 +1248,7 @@ public abstract class Entity {
 	 * @throws	IllegalMethodCallException
 	 * 			This entity is not associated to a world or this entity does not collide with the boundary of its world.
 	 * 			| getWorld() == null || !apparentlyCollidesWithBoundary()
+	 * TODO Liskov met Bullet in orde brengen (terminate()...)
 	 */
 	public void bounceOfBoundary() throws IllegalMethodCallException, TerminatedException {
 		if (isTerminated())
