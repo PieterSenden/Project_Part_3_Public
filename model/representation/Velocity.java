@@ -43,7 +43,7 @@ public class Velocity extends PhysicalVector {
 	 * 
 	 * @param other
 	 * 			The second physical vector (after minus sign).
-	 * @return 	The difference of this position vector and the given other position vector.
+	 * @return 	The difference of this velocity vector and the given other physical vector.
 	 * 			| @see implementation
 	 * @throws NullPointerException
 	 * 			The given other physical vector is not effective.
@@ -62,11 +62,11 @@ public class Velocity extends PhysicalVector {
 	}
 	
 	/**
-	 * Return the sum of this velocity vector with the given other velocity vector.
+	 * Return the sum of this velocity vector with the given other physical vector.
 	 * 
 	 * @param other
-	 * 			The second velocity vector.
-	 * @return The sum of this velocity vector an the given other velocity vector.
+	 * 			The second physical vector.
+	 * @return The sum of this velocity vector an the given other physical vector.
 	 * 			| result == new Velocity(getxComponent() + other.getxComponent(), getyComponent() + other.getyComponent())
 	 * @throws NullPointerException
 	 * 			The given other physical vector is not effective.

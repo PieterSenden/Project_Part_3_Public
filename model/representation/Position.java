@@ -73,7 +73,7 @@ public class Position extends PhysicalVector {
 	 * 
 	 * @param other
 	 * 			The second physical vector (after minus sign).
-	 * @return 	The difference of this position vector and the given other position vector.
+	 * @return 	The difference of this position vector and the given other physical vector.
 	 * 			| @see implementation
 	 * @throws NullPointerException
 	 * 			The given other physical vector is not effective.
@@ -96,7 +96,7 @@ public class Position extends PhysicalVector {
 	 * 
 	 * @param other
 	 * 			The second position vector.
-	 * @return The sum of this position vector an the given other position vector.
+	 * @return The sum of this position vector an the given other physical vector.
 	 * 			| result == (Position)(super.vectorPlus(other))
 	 * @throws NullPointerException
 	 * 			The given other physical vector is not effective.
