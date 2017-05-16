@@ -3,6 +3,8 @@ package asteroids.model.representation;
 import java.util.Set;
 import java.util.HashSet;
 import asteroids.model.exceptions.*;
+import asteroids.model.programs.Program;
+import asteroids.model.programs.ProgramExecutor;
 import be.kuleuven.cs.som.annotate.*;
 
 /**
@@ -17,6 +19,8 @@ import be.kuleuven.cs.som.annotate.*;
  *       | isValidThrusterForce(this.getThrusterForce())
  * @invar  Each ship must have proper bullets.
  * 		 | hasProperBullets()
+ * @invar  Each ship must have a proper program executor.
+ * 		 | hasProperProgramExecutor()
  * 
  * @author Joris Ceulemans & Pieter Senden
  * @version 2.0
@@ -915,4 +919,49 @@ public class Ship extends Entity {
 	 */
 	private Set<Bullet> firedBullets = new HashSet<>();
 
+	@Basic @Raw
+	public ProgramExecutor getProgramExecutor() {
+		return this.programExecutor;
+	}
+	
+	public boolean canHaveAsProgramExecutor(ProgramExecutor programExecutor) {
+		return true;
+	}
+	
+	public boolean hasProperProgramExecutor() {
+		return canHaveAsProgramExecutor(getProgramExecutor()) && (getProgramExecutor() == null || getProgramExecutor().getShip() == this);
+	}
+	
+	private void setProgramExecutor(ProgramExecutor programExecutor) throws IllegalArgumentException {
+		if (! canHaveAsProgramExecutor(programExecutor))
+			throw new IllegalArgumentException();
+		if (programExecutor.getShip() != null && programExecutor.getShip() != this)
+			throw new IllegalMethodCallException();
+		this.programExecutor = programExecutor;
+	}
+	
+	
+	public void loadProgram(Program program) throws IllegalArgumentException {
+		if (! isValidProgram(program))
+			throw new IllegalArgumentException();
+		ProgramExecutor executor = new ProgramExecutor();
+		executor.setProgram(program);
+		setProgramExecutor(executor);
+		executor.setShip(this);
+	}
+	
+	public Program getProgram() {
+		if (getProgramExecutor() == null)
+			return null;
+		return getProgramExecutor().getProgram();
+	}
+	
+	public static boolean isValidProgram(Program program) {
+		return ProgramExecutor.isValidProgram(program);
+	}
+	
+	private ProgramExecutor programExecutor;
+	
+	
+	
 }
