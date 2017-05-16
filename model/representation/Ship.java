@@ -2,6 +2,8 @@ package asteroids.model.representation;
 
 import java.util.Set;
 import java.util.HashSet;
+import java.util.List;
+
 import asteroids.model.exceptions.*;
 import asteroids.model.programs.Program;
 import asteroids.model.programs.ProgramExecutor;
@@ -173,7 +175,7 @@ public class Ship extends Entity {
 	 * 		| getFiredBullets().isEmpty()
 	 * @effect The super method is called to terminate this ship.
 	 * 		| super.terminate()
-	 * 
+	 * TODO specs
 	 */
 	@Override
 	public void terminate() {
@@ -185,6 +187,10 @@ public class Ship extends Entity {
 			Set<Bullet> firedBulletsClone = new HashSet<>(getFiredBullets());
 			for (Bullet bullet: firedBulletsClone) {
 				removeBullet(bullet);
+			}
+			if (getProgramExecutor() != null) {
+				getProgramExecutor().terminate();
+				setProgramExecutor(null);
 			}
 			super.terminate();
 		}
@@ -918,21 +924,25 @@ public class Ship extends Entity {
 	 * 		| for each bullet in firedBullets: bullet.getShip() == this
 	 */
 	private Set<Bullet> firedBullets = new HashSet<>();
-
+	
+	//TODO Add specifications for the following methods.
 	@Basic @Raw
 	public ProgramExecutor getProgramExecutor() {
 		return this.programExecutor;
 	}
 	
 	public boolean canHaveAsProgramExecutor(ProgramExecutor programExecutor) {
-		return true;
+		return (programExecutor == null) || (isTerminated() ? false : !programExecutor.isTerminated());
 	}
 	
 	public boolean hasProperProgramExecutor() {
 		return canHaveAsProgramExecutor(getProgramExecutor()) && (getProgramExecutor() == null || getProgramExecutor().getShip() == this);
 	}
 	
-	private void setProgramExecutor(ProgramExecutor programExecutor) throws IllegalArgumentException {
+	public void setProgramExecutor(ProgramExecutor programExecutor) throws TerminatedException, IllegalArgumentException,
+																			IllegalMethodCallException {
+		if (isTerminated())
+			throw new TerminatedException();
 		if (! canHaveAsProgramExecutor(programExecutor))
 			throw new IllegalArgumentException();
 		if (programExecutor.getShip() != null && programExecutor.getShip() != this)
@@ -941,11 +951,12 @@ public class Ship extends Entity {
 	}
 	
 	
-	public void loadProgram(Program program) throws IllegalArgumentException {
+	public void loadProgram(Program program) throws IllegalArgumentException, TerminatedException {
 		if (! isValidProgram(program))
 			throw new IllegalArgumentException();
-		ProgramExecutor executor = new ProgramExecutor();
-		executor.setProgram(program);
+		if (isTerminated())
+			throw new TerminatedException();
+		ProgramExecutor executor = new ProgramExecutor(program);
 		setProgramExecutor(executor);
 		executor.setShip(this);
 	}
@@ -960,8 +971,15 @@ public class Ship extends Entity {
 		return ProgramExecutor.isValidProgram(program);
 	}
 	
-	private ProgramExecutor programExecutor;
+	public List<Object> executeProgram(double duration) throws IllegalMethodCallException, TerminatedException {
+		if (getProgramExecutor() == null)
+			throw new IllegalMethodCallException();
+		if (isTerminated())
+			throw new TerminatedException();
+		return getProgramExecutor().executeProgram(duration);
+	}
 	
+	private ProgramExecutor programExecutor;
 	
 	
 }
