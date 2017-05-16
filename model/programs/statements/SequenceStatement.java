@@ -25,7 +25,7 @@ public class SequenceStatement extends Statement implements ComposedStatement {
 	
 	@Override
 	public void execute(ProgramExecutor executor) {
-		if (executor.getExecutionStackDepth() < getDepth())
+		if (executor.getCurrentExecutionListLength() < getDepth())
 			executor.setExecutionPositionAt(getDepth(), 1);
 		for (int i = executor.getExecutionPositionAt(getDepth()); i <= getNbOfEnclosedStatements(); i++) {
 			getEnclosedStatementAt(i).execute(executor);

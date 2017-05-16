@@ -29,7 +29,7 @@ public abstract class Action<T> extends SingleExpressionStatement<T> {
 	public void execute(ProgramExecutor executor) throws IllegalMethodCallException, HoldException {
 		if (!(getExecutable() instanceof Program))
 			throw new IllegalMethodCallException();
-		if (getTimeToExecute() > executor.getRemainingTime())
+		if (getTimeToExecute() > executor.getRemainingExecutionTime())
 			throw new HoldException();
 		executor.decreaseRemainingTime(getTimeToExecute());
 	}

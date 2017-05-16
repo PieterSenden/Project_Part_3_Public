@@ -16,7 +16,7 @@ public class IfThenElseStatement extends SingleExpressionStatement<Boolean> impl
 	
 	@Override
 	public void execute(ProgramExecutor executor) {
-		if (executor.getExecutionStackDepth() < getDepth())
+		if (executor.getCurrentExecutionListLength() < getDepth())
 			executor.setExecutionPositionAt(getDepth(), CONDITION);
 		if (evaluateExpression(executor) || executor.getExecutionPositionAt(getDepth()) == IF) {
 			setExecutionPosition(IF, executor);

@@ -17,7 +17,7 @@ public class WhileStatement extends SingleExpressionStatement<Boolean> implement
 	
 	@Override
 	public void execute(ProgramExecutor executor) {
-		if (executor.getExecutionStackDepth() < getDepth())
+		if (executor.getCurrentExecutionListLength() < getDepth())
 			executor.setExecutionPositionAt(getDepth(), NOT_EXECUTING_BODY);
 		while (evaluateExpression(executor) || executor.getExecutionPositionAt(getDepth()) == EXECUTING_BODY) {
 			setIsExecutingBody(EXECUTING_BODY, executor);
