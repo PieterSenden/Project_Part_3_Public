@@ -9,7 +9,7 @@ public class GetVxExpression extends UnaryExpression<Double, Entity> {
 		super(entityExpression);
 	}
 	
-	public GetVxExpression(UnkownTypeExpression<?> entityExpression) {
+	public GetVxExpression(UnknownTypeExpression<?> entityExpression) {
 		super(entityExpression.convertToType(Entity.class));
 	}
 	

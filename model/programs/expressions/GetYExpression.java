@@ -9,7 +9,7 @@ public class GetYExpression extends UnaryExpression<Double, Entity> {
 		super(entityExpression);
 	}
 	
-	public GetYExpression(UnkownTypeExpression<?> entityExpression) {
+	public GetYExpression(UnknownTypeExpression<?> entityExpression) {
 		super(entityExpression.convertToType(Entity.class));
 	}
 	

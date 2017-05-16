@@ -9,7 +9,7 @@ public class GetRadiusExpression extends UnaryExpression<Double, Entity> {
 		super(entityExpression);
 	}
 	
-	public GetRadiusExpression(UnkownTypeExpression<?> entityExpression) {
+	public GetRadiusExpression(UnknownTypeExpression<?> entityExpression) {
 		super(entityExpression.convertToType(Entity.class));
 	}
 	

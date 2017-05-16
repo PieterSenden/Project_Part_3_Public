@@ -8,7 +8,7 @@ public class SquareRootExpression extends UnaryExpression<Double, Double> {
 		super(radicandExpression);
 	}
 	
-	public SquareRootExpression(UnkownTypeExpression<?> radicandExpression) {
+	public SquareRootExpression(UnknownTypeExpression<?> radicandExpression) {
 		super(radicandExpression.convertToType(Double.class));
 	}
 	
