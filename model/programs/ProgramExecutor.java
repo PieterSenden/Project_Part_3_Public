@@ -4,6 +4,7 @@ import asteroids.model.representation.Ship;
 import be.kuleuven.cs.som.annotate.Basic;
 
 public class ProgramExecutor {
+	
 	@Basic
 	public Ship getShip() {
 		return this.ship;
@@ -51,6 +52,10 @@ public class ProgramExecutor {
 	@Basic
 	public Program getProgram() {
 		return this.program;
+	}
+	
+	public static boolean isValidProgram(Program program) {
+		return program != null;
 	}
 	
 	private Program program;
