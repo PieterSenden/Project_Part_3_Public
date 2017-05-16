@@ -5,9 +5,26 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Stack;
 
+import asteroids.model.exceptions.IllegalMethodCallException;
 import be.kuleuven.cs.som.annotate.Basic;
 
+
+/**
+ * @author Joris Ceulemans & Pieter Senden
+ * @version 3.0
+ * 
+ * @invar | hasProperProgramExecutor()
+ *
+ */
+
 public class VariableContainer {
+	
+	public VariableContainer(ProgramExecutor executor) throws IllegalMethodCallException {
+		if (executor.getVariableContainer() != null)
+			throw new IllegalMethodCallException();
+		this.programExecutor = executor;
+	}
+	
 	@Basic
 	public Variable getVariableWithName(String name) throws NoSuchElementException {
 		if (! hasVariableWithName(name))
@@ -23,7 +40,9 @@ public class VariableContainer {
 		return globalVariables.containsKey(name);
 	}
 	
-	public void assignVariable(String name, Object value) throws IllegalArgumentException {
+	public void assignVariable(String name, Object value) throws IllegalArgumentException, IllegalMethodCallException {
+		if (getProgramExecutor().getProgram().hasFunctionWithName(name))
+			throw new IllegalMethodCallException();
 		Map<String,Variable> scope;
 		if (! localVariables.empty())
 			scope = localVariables.peek();
@@ -60,6 +79,11 @@ public class VariableContainer {
 		localVariables.pop();
 	}
 	
+	public void reset() {
+		globalVariables = new HashMap<>();
+		localVariables = new Stack<>();
+	}
+	
 	/**
 	 * Map containing the global variables. The keys are the names of the variables, the values are variable objects.
 	 */
@@ -71,4 +95,19 @@ public class VariableContainer {
 	 * If the stack is empty, this means that no function code, but program code is being executed.
 	 */
 	private Stack<Map<String,Variable>> localVariables = new Stack<>();
+	
+	@Basic
+	public ProgramExecutor getProgramExecutor() {
+		return this.programExecutor;
+	}
+	
+	public static boolean isValidProgramExecutor(ProgramExecutor executor) {
+		return executor != null;
+	}
+	
+	public boolean hasProperProgramExecutor() {
+		return isValidProgramExecutor(getProgramExecutor()) && getProgramExecutor().getVariableContainer() == this;
+	}
+	
+	private final ProgramExecutor programExecutor;
 }

@@ -16,7 +16,7 @@ import be.kuleuven.cs.som.annotate.*;
  * 
  * @invar	| hasProperShip()
  * @invar	| isValidProgram(getProgram())
- * @invar	| isValidExecutionStack(getExecutionStack()) TODO
+ * @invar	| isValidExecutionStack(getExecutionStack())
  *
  */
 public class ProgramExecutor {
@@ -49,6 +49,7 @@ public class ProgramExecutor {
 		resetRemainingExecutionTime();
 		resetPrintList();
 		resetVariableContainer();
+		resetParameterContainer(); // In theory, this is not necessary, but it is a safety measure.
 	}
 	
 	@Basic
@@ -76,16 +77,23 @@ public class ProgramExecutor {
 	
 	
 	public int getCurrentExecutionListLength() {
-		
+		return getExecutionStack().peek().size();
 	}
 	
-	public void setExecutionPositionAt(int depth, int position) {
-		//TODO
+	public void setExecutionPositionAt(int depth, int position) throws IllegalArgumentException {
+		if (depth < 0) 
+			throw new IllegalArgumentException();
+		List<Integer> currentExecutionScope = getExecutionStack().peek();
+		if (currentExecutionScope.size() < depth)
+			throw new IllegalArgumentException();
+		if (currentExecutionScope.size() == depth)
+			currentExecutionScope.add(position);
+		else
+			currentExecutionScope.set(depth, position);
 	}
 	
-	public int getExecutionPositionAt(int depth) {
-		//TODO
-		return 0;
+	public int getExecutionPositionAt(int depth) throws IndexOutOfBoundsException {
+		return getExecutionStack().peek().get(depth);
 	}
 	
 	public boolean isValidExecutionStack(Stack<List<Integer>> executionStack) {
@@ -98,13 +106,30 @@ public class ProgramExecutor {
 		return true;
 	}
 	
-	public void removeExecutionPosition() {
-		//TODO
+	public void removeExecutionPosition() throws IllegalMethodCallException {
+		List<Integer> currentExecutionScope = getExecutionStack().peek();
+		if (currentExecutionScope.size() == 0)
+			throw new IllegalMethodCallException();
+		currentExecutionScope.remove(currentExecutionScope.size() - 1);
+	}
+	
+	public void addExecutionScope() {
+		getExecutionStack().push(new ArrayList<Integer>());
+	}
+	
+	public void removeExecutionScope() throws IllegalMethodCallException {
+		if (getExecutionStack().size() <= 1)
+			throw new IllegalMethodCallException();
+		getExecutionStack().pop();
 	}
 	
 	private void resetExecutionStack() {
 		executionStack = new Stack<>();
 		executionStack.push(new ArrayList<>());
+	}
+	@Basic @Model
+	private Stack<List<Integer>> getExecutionStack() {
+		return this.executionStack;
 	}
 	
 	private Stack<List<Integer>> executionStack = new Stack<>();
@@ -162,10 +187,20 @@ public class ProgramExecutor {
 	}
 	
 	private void resetVariableContainer() {
-		this.variableContainer = new VariableContainer();
+		getVariableContainer().reset();
 	}
 	
-	private VariableContainer variableContainer = new VariableContainer();
+	private final VariableContainer variableContainer = new VariableContainer(this);
+	
+	public ParameterContainer getParameterContainer() {
+		return this.parameterContainer;
+	}
+	
+	private void resetParameterContainer() {
+		this.parameterContainer = new ParameterContainer();
+	}
+	
+	private ParameterContainer parameterContainer = new ParameterContainer();
 	
 	@Basic
 	public Program getProgram() {
@@ -182,7 +217,7 @@ public class ProgramExecutor {
 			this.reset();
 		try {
 			setProgramFinished(false);
-			program.execute(duration, this);
+			program.executeBodyStatement(this);
 			setProgramFinished(true);
 			return getPrintList();
 		}
