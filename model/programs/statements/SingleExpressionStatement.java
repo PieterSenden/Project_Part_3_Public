@@ -1,5 +1,6 @@
 package asteroids.model.programs.statements;
 
+import asteroids.model.programs.ProgramExecutor;
 import asteroids.model.programs.expressions.Expression;
 
 public abstract class SingleExpressionStatement<T> extends Statement {
@@ -18,8 +19,8 @@ public abstract class SingleExpressionStatement<T> extends Statement {
 		return expression != null;
 	}
 	
-	public T evaluateExpression() {
-		return getExpression().evaluate();
+	public T evaluateExpression(ProgramExecutor executor) {
+		return getExpression().evaluate(executor);
 	}
 	
 	

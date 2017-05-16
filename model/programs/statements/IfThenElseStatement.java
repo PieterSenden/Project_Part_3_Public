@@ -18,7 +18,7 @@ public class IfThenElseStatement extends SingleExpressionStatement<Boolean> impl
 	public void execute(ProgramExecutor executor) {
 		if (executor.getExecutionStackDepth() < getDepth())
 			executor.setExecutionPositionAt(getDepth(), CONDITION);
-		if (evaluateExpression() || executor.getExecutionPositionAt(getDepth()) == IF) {
+		if (evaluateExpression(executor) || executor.getExecutionPositionAt(getDepth()) == IF) {
 			setExecutionPosition(IF, executor);
 			getIfStatement().execute(executor);
 			setExecutionPosition(CONDITION, executor);

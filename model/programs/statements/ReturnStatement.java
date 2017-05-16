@@ -13,7 +13,7 @@ public class ReturnStatement extends SingleExpressionStatement<Object> {
 	
 	@Override
 	public void execute(ProgramExecutor executor) {
-		throw new ReturnException(evaluateExpression());
+		throw new ReturnException(evaluateExpression(executor));
 	}
 	
 }

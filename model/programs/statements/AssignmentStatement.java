@@ -22,7 +22,7 @@ public class AssignmentStatement extends SingleExpressionStatement<Object> {
 	
 	@Override
 	public void execute(ProgramExecutor executor) {
-		executor.getVariableContainer().assignVariable(variableName, evaluateExpression());
+		executor.getVariableContainer().assignVariable(variableName, evaluateExpression(executor));
 	}
 	
 	@Basic
