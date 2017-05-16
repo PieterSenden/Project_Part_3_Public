@@ -27,8 +27,13 @@ public abstract class Statement {
 		return (getExecutable() == null ? null : getExecutable().getProgram());
 	}
 	
+	@Basic
+	public Executable getEric() {
+		return this.eric;
+	}
+	
 	public boolean canHaveAsEric(Executable exe) {
-		return (exe == null) || exe.canHaveAsBodyStatement(this);
+		return (exe == null) || Executable.isValidBodyStatement(this);
 	}
 	
 	public boolean hasProperEric() {
@@ -37,12 +42,8 @@ public abstract class Statement {
 		return getEric().getBodyStatement() == this;
 	}
 	
-	@Basic
-	public Executable getEric() {
-		return this.eric;
-	}
 	
-	void setEric(Executable executable) throws IllegalArgumentException, IllegalMethodCallException {
+	public void setEric(Executable executable) throws IllegalArgumentException, IllegalMethodCallException {
 		if (! canHaveAsEric(executable))
 			throw new IllegalArgumentException();
 		if (executable.getBodyStatement() != this || getExecutable() != null || getEnclosingStatement() != null)
