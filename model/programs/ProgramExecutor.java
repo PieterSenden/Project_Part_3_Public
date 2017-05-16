@@ -1,21 +1,82 @@
 package asteroids.model.programs;
 
-import asteroids.model.representation.Ship;
-import be.kuleuven.cs.som.annotate.Basic;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Stack;
 
+import asteroids.model.exceptions.IllegalMethodCallException;
+import asteroids.model.exceptions.programExceptions.HoldException;
+import asteroids.model.representation.Ship;
+import be.kuleuven.cs.som.annotate.*;
+
+/**
+ * 
+ * @author Joris Ceulemans & Pieter Senden
+ * @version 3.0
+ * 
+ * @invar	| hasProperShip()
+ * @invar	| isValidProgram(getProgram())
+ * @invar	| isValidExecutionStack(getExecutionStack()) TODO
+ *
+ */
 public class ProgramExecutor {
+	
+	@Raw
+	public ProgramExecutor(Program program) throws IllegalArgumentException {
+		if (!isValidProgram(program))
+			throw new IllegalArgumentException();
+		this.program = program;
+		this.executionStack.push(new ArrayList<Integer>());
+	}
+	
+	@Basic
+	public boolean isTerminated() {
+		return this.isTerminated;
+	}
+	
+	public void terminate() {
+		if (!isTerminated()) {
+			isTerminated = true;
+			getShip().setProgramExecutor(null);
+			setShip(null);
+		}
+	}
+	
+	private boolean isTerminated;
+	
+	private void reset() {
+		resetExecutionStack();
+		resetRemainingExecutionTime();
+		resetPrintList();
+		resetVariableContainer();
+	}
 	
 	@Basic
 	public Ship getShip() {
 		return this.ship;
 	}
 	
+	public boolean canHaveAsShip(Ship ship) {
+		return isTerminated() ? (ship == null) : (ship != null && !ship.isTerminated());
+	}
+	
+	public boolean hasProperShip() {
+		return canHaveAsShip(getShip()) && (getShip().getProgramExecutor() == this);
+	}
+	
+	public void setShip(Ship ship) throws IllegalMethodCallException, IllegalArgumentException {
+		if (!canHaveAsShip(ship))
+			throw new IllegalArgumentException();
+		if ((ship != null) && (ship.getProgramExecutor() != this))
+			throw new IllegalMethodCallException();
+		this.ship = ship;
+	}
+	
 	private Ship ship;
 	
-	//TODO Evt stack van lists omwille van statements in function calls
-	public int getExecutionStackDepth() {
-		//TODO
-		return 0;
+	
+	public int getCurrentExecutionListLength() {
+		
 	}
 	
 	public void setExecutionPositionAt(int depth, int position) {
@@ -27,27 +88,84 @@ public class ProgramExecutor {
 		return 0;
 	}
 	
+	public boolean isValidExecutionStack(Stack<List<Integer>> executionStack) {
+		if ((executionStack == null) || (executionStack.size() == 0))
+			return false;
+		for (List<Integer> list : executionStack) {
+			if (list == null)
+				return false;
+		}
+		return true;
+	}
+	
 	public void removeExecutionPosition() {
 		//TODO
 	}
 	
-	public double getRemainingTime() {
-		//TODO
-		return 0;
+	private void resetExecutionStack() {
+		executionStack = new Stack<>();
+		executionStack.push(new ArrayList<>());
 	}
 	
-	public void decreaseRemainingTime(double timeToDecrease) {
-		//TODO
+	private Stack<List<Integer>> executionStack = new Stack<>();
+	
+	@Basic @Raw
+	public double getRemainingExecutionTime() {
+		return remainingExecutionTime;
+	}
+	
+	public static boolean isValidRemainingExecutionTime(double duration) {
+		return (duration >= 0) && Double.isFinite(duration);
+	}
+	
+	private void setRemainingExecutionTime(double newRemainingTime) throws IllegalArgumentException {
+		if (!isValidRemainingExecutionTime(newRemainingTime))
+			throw new IllegalArgumentException();
+		this.remainingExecutionTime = newRemainingTime;
+	}
+	
+	private void increaseRemainingExecutionTime(double timeToIncrease) throws IllegalArgumentException {
+		if (timeToIncrease < 0)
+			throw new IllegalArgumentException();
+		setRemainingExecutionTime(getRemainingExecutionTime() + timeToIncrease);
+	}
+	
+	public void decreaseRemainingTime(double timeToDecrease) throws IllegalArgumentException {
+		if (timeToDecrease < 0)
+			throw new IllegalArgumentException();
+		setRemainingExecutionTime(getRemainingExecutionTime() - timeToDecrease);
+	}
+	
+	private void resetRemainingExecutionTime() {
+		setRemainingExecutionTime(0);
+	}
+	
+	private double remainingExecutionTime;
+	
+	@Basic
+	public List<Object> getPrintList() {
+		return new ArrayList<>(printList);
 	}
 	
 	public void addToPrintList(Object item) {
-		//TODO
+		printList.add(item);
 	}
 	
-	public VariableContainer getVariableContainer() {
-		//TODO
-		return null;
+	private void resetPrintList() {
+		printList = new ArrayList<>();
 	}
+	
+	private List<Object> printList = new ArrayList<>();
+	
+	public VariableContainer getVariableContainer() {
+		return this.variableContainer;
+	}
+	
+	private void resetVariableContainer() {
+		this.variableContainer = new VariableContainer();
+	}
+	
+	private VariableContainer variableContainer = new VariableContainer();
 	
 	@Basic
 	public Program getProgram() {
@@ -58,6 +176,36 @@ public class ProgramExecutor {
 		return program != null;
 	}
 	
-	private Program program;
+	public List<Object> executeProgram(double duration) {
+		increaseRemainingExecutionTime(duration);
+		if (isProgramFinished())
+			this.reset();
+		try {
+			setProgramFinished(false);
+			program.execute(duration, this);
+			setProgramFinished(true);
+			return getPrintList();
+		}
+		catch (HoldException exc) {
+			//The program did not terminate, but an action had to be executed for which not enough time was available.
+			return null;
+		}
+	}
 	
+	private final Program program;
+	
+	@Basic @Raw
+	public boolean isProgramFinished() {
+		return programFinished;
+	}
+	
+	private void setProgramFinished(boolean flag) {
+		programFinished = flag;
+	}
+	
+	/**
+	 * A variable registering whether the program this executor is executing is finished or not. In this way, it is possible to restart a program
+	 * that is finished.
+	 */
+	private boolean programFinished;
 }

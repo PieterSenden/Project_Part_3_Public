@@ -46,6 +46,21 @@ public class VariableContainer {
 	}
 	
 	/**
+	 * Method to create a new scope when a function call is being processed.
+	 */
+	public void createNewScope() {
+		Map<String,Variable> newScope = new HashMap<>();
+		localVariables.push(newScope);
+	}
+	
+	/**
+	 * Method to delete the current scope when the current function call is finished.
+	 */
+	public void deleteCurrentScope() {
+		localVariables.pop();
+	}
+	
+	/**
 	 * Map containing the global variables. The keys are the names of the variables, the values are variable objects.
 	 */
 	private Map<String,Variable> globalVariables = new HashMap<>();
