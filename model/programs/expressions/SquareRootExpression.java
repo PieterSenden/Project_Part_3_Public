@@ -8,6 +8,10 @@ public class SquareRootExpression extends UnaryExpression<Double, Double> {
 		super(radicandExpression);
 	}
 	
+	public SquareRootExpression(UnkownTypeExpression<?> radicandExpression) {
+		super(radicandExpression.convertToType(Double.class));
+	}
+	
 	@Override
 	public Double evaluate(ProgramExecutor executor) {
 		double radicand = evaluateSubExpression(executor);

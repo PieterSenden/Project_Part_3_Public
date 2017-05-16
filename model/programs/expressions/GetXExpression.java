@@ -9,6 +9,10 @@ public class GetXExpression extends UnaryExpression<Double, Entity> {
 		super(entityExpression);
 	}
 	
+	public GetXExpression(UnkownTypeExpression<?> entityExpression) {
+		super(entityExpression.convertToType(Entity.class));
+	}
+	
 	@Override
 	public Double evaluate(ProgramExecutor executor) {
 		return evaluateSubExpression(executor).getPosition().getxComponent();

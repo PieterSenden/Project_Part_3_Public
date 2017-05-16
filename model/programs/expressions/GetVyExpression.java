@@ -9,6 +9,10 @@ public class GetVyExpression extends UnaryExpression<Double, Entity> {
 		super(entityExpression);
 	}
 	
+	public GetVyExpression(UnkownTypeExpression<?> entityExpression) {
+		super(entityExpression.convertToType(Entity.class));
+	}
+	
 	@Override
 	public Double evaluate(ProgramExecutor executor) {
 		return evaluateSubExpression(executor).getVelocity().getyComponent();
