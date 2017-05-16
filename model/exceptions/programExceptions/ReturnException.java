@@ -15,6 +15,9 @@ import be.kuleuven.cs.som.annotate.*;
 public class ReturnException extends RuntimeException {
 	/**
 	 * Initialize this new ReturnException
+	 * 
+	 * @param returnValue
+	 * 			The value to return.
 	 */
 	public ReturnException(Object returnValue) {
 		super();
