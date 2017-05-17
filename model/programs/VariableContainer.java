@@ -51,7 +51,7 @@ public class VariableContainer {
 		
 		if (scope.containsKey(name)){
 			Variable oldVariable = scope.get(name);
-			if (oldVariable.canHaveAsValue(value))
+			if (Variable.isValidVariable(oldVariable.getClass(), value))
 				scope.put(name, new Variable(value, oldVariable.getType()));
 				// The new variable object has the same type as the variable object it replaces. In this way, it is enforced that the type
 				// of a variable is not changed during the execution of a program/function call.

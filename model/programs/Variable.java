@@ -19,33 +19,35 @@ import be.kuleuven.cs.som.annotate.*;
 public class Variable {
 	@Raw
 	public Variable(Object value, Class<?> type) throws IllegalArgumentException {
-		if (! isValidType(type))
+		if (! isValidVariable(type, value))
 			throw new IllegalArgumentException();
 		this.type = type;
-		if (!canHaveAsValue(value))
-			throw new IllegalArgumentException();
 		this.value = value;
 	}
 	
 	@Raw
 	public Variable(Object value) throws IllegalArgumentException {
-		if (value == null)
-			throw new IllegalArgumentException("A variable containing null must be constructed with a given type.");
-		Class<?> variableType = value.getClass();
-		boolean supportedTypeFound = false;
-		//We look for the most general supported type that the given value belongs to.
-		for (Class<?> supportedType : Variable.getSupportedTypes()) {
-			if (supportedType.isAssignableFrom(variableType)) {
-				variableType = supportedType;
-				supportedTypeFound = true;
+		if (value != null) {
+			Class<?> variableType = value.getClass();
+			boolean supportedTypeFound = false;
+			//We look for the most general supported type that the given value belongs to.
+			for (Class<?> supportedType : Variable.getSupportedTypes()) {
+				if (supportedType.isAssignableFrom(variableType)) {
+					variableType = supportedType;
+					supportedTypeFound = true;
+				}
 			}
+			if (!supportedTypeFound)
+				throw new IllegalArgumentException("Variables of this type are not supported.");
+			this.type = variableType;
+			if (! isValidVariable(getType(), value))
+				throw new IllegalArgumentException();
+			this.value = value;
 		}
-		if (!supportedTypeFound)
-			throw new IllegalArgumentException("Variables of this type are not supported.");
-		this.type = variableType;
-		if (!canHaveAsValue(value))
-			throw new IllegalArgumentException();
-		this.value = value;
+		else {
+			this.value = value;
+			this.type = null;
+		}
 	}
 	
 	@Basic
@@ -53,11 +55,11 @@ public class Variable {
 		return this.value;
 	}
 	
-	public boolean canHaveAsValue(Object value) {
-		if (value == null)
-			return Variable.hasAsSupportedReferenceType(getType());
-		return getType().isAssignableFrom(value.getClass());
-	}
+//	public boolean canHaveAsValue(Object value) {
+//		if (value == null)
+//			return Variable.hasAsSupportedReferenceType(getType());
+//		return getType().isAssignableFrom(value.getClass());
+//	}
 	
 	private final Object value;
 	
@@ -66,11 +68,19 @@ public class Variable {
 		return this.type;
 	}
 	
-	public static boolean isValidType(Class<?> type) {
-		return Variable.hasAsSupportedType(type);
-	}
+//	public static boolean isValidType(Class<?> type) {
+//		return Variable.hasAsSupportedType(type);
+//	}
 	
 	private final Class<?> type;
+	
+	public static boolean isValidVariable(Class<?> type, Object value) {
+		if (type == null)
+			return value == null;
+		else
+			return (value == null) ? hasAsSupportedReferenceType(type) : (hasAsSupportedType(type) && type.isAssignableFrom(value.getClass())); 
+			
+	}
 	
 	@Immutable
 	public static boolean hasAsSupportedValueType(Class<?> type) {
