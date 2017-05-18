@@ -502,8 +502,12 @@ public class Facade implements IFacade {
 
 	@Override
 	public void removeBulletFromShip(Ship ship, Bullet bullet) throws ModelException {
-		// TODO Auto-generated method stub
-		
+		try {
+			ship.removeBullet(bullet);
+		}
+		catch (RuntimeException exc) {
+			throw new ModelException(exc);
+		}
 	}
 
 	@Override
@@ -567,16 +571,14 @@ public class Facade implements IFacade {
 		}
 	}
 
-	@Override
+	@Override @Deprecated
 	public Ship createShip() throws ModelException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
+	@Override @Deprecated
 	public Ship createShip(double x, double y, double xVelocity, double yVelocity, double radius,
 			double orientation) throws ModelException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -633,96 +635,143 @@ public class Facade implements IFacade {
 	@Override
 	public double getDistanceBetween(Ship ship1, Ship ship2)
 			throws ModelException {
-		// TODO Auto-generated method stub
+		
 		return 0;
 	}
 
 	@Override
 	public boolean overlap(Ship ship1, Ship ship2) throws ModelException {
-		// TODO Auto-generated method stub
-		return false;
+		try {
+			return Entity.overlap(ship1, ship2);
+		}
+		catch (RuntimeException exc) {
+			throw new ModelException(exc);
+		}
 	}
 
 	@Override
 	public double getTimeToCollision(Ship ship1, Ship ship2)
 			throws ModelException {
-		// TODO Auto-generated method stub
-		return 0;
+		return getTimeCollisionEntity(ship1, ship2);
 	}
 
 	@Override
 	public double[] getCollisionPosition(Ship ship1, Ship ship2)
 			throws ModelException {
-		// TODO Auto-generated method stub
-		return null;
+		return getPositionCollisionEntity(ship1, ship2);
 	}
 
 	@Override
 	public Set<? extends Asteroid> getWorldAsteroids(World world) throws ModelException {
-		// TODO Auto-generated method stub
-		return null;
+		try {
+			return world.getSpecificEntities(Asteroid.class)
+		}
+		catch (RuntimeException exc) {
+			throw new ModelException(exc);
+		}
 	}
 
 	@Override
 	public void addAsteroidToWorld(World world, Asteroid asteroid) throws ModelException {
-		// TODO Auto-generated method stub
+		try {
+			world.addEntity(asteroid);
+		}
+		catch (RuntimeException exc) {
+			throw new ModelException(exc);
+		}
 		
 	}
 
 	@Override
 	public void removeAsteroidFromWorld(World world, Asteroid asteroid) throws ModelException {
-		// TODO Auto-generated method stub
-		
+		try {
+			world.removeEntity(asteroid);
+		}
+		catch (RuntimeException exc) {
+			throw new ModelException(exc);
+		}
 	}
 
 	@Override
 	public Set<? extends Planetoid> getWorldPlanetoids(World world) throws ModelException {
-		// TODO Auto-generated method stub
-		return null;
+		try {
+			world.getSpecificEntities(Planetoid.class);
+		}
+		catch (RuntimeException exc) {
+			throw new ModelException(exc);
+		}
 	}
 
 	@Override
 	public void addPlanetoidToWorld(World world, Planetoid planetoid) throws ModelException {
-		// TODO Auto-generated method stub
-		
+		try {
+			world.addEntity(planetoid);
+		}
+		catch (RuntimeException exc) {
+			throw new ModelException(exc);
+		}		
 	}
 
 	@Override
 	public void removePlanetoidFromWorld(World world, Planetoid planetoid)
 			throws ModelException {
-		// TODO Auto-generated method stub
-		
+		try {
+			world.removeEntity(planetoid);
+		}
+		catch (RuntimeException exc) {
+			throw new ModelException(exc);
+		}		
 	}
 
 	@Override
 	public Asteroid createAsteroid(double x, double y, double xVelocity, double yVelocity, double radius)
 			throws ModelException {
-		// TODO Auto-generated method stub
-		return null;
+		try {
+			return new Asteroid(x, y, xVelocity, yVelocity, radius);
+		}
+		catch (RuntimeException exc) {
+			throw new ModelException(exc);
+		}
 	}
 
 	@Override
 	public void terminateAsteroid(Asteroid asteroid) throws ModelException {
-		// TODO Auto-generated method stub
-		
+		try {
+			asteroid.terminate();
+		}
+		catch (RuntimeException exc) {
+			throw new ModelException(exc);
+		}		
 	}
 
 	@Override
 	public boolean isTerminatedAsteroid(Asteroid asteroid) throws ModelException {
-		// TODO Auto-generated method stub
-		return false;
+		try {
+			return asteroid.isTerminated();
+		}
+		catch (RuntimeException exc) {
+			throw new ModelException(exc);
+		}
 	}
 
 	@Override
 	public double[] getAsteroidPosition(Asteroid asteroid) throws ModelException {
-		// TODO Auto-generated method stub
-		return null;
+		try {
+			return asteroid.getPosition().getAsArray();
+		}
+		catch (RuntimeException exc) {
+			throw new ModelException(exc);
+		}
 	}
 
 	@Override
 	public double[] getAsteroidVelocity(Asteroid asteroid) throws ModelException {
-		// TODO Auto-generated method stub
-		return null;
+		try {
+			return asteroid.getVelocity().getAsArray();
+		}
+		catch (RuntimeException exc) {
+			throw new ModelException(exc);
+		}
 	}
 
 	@Override
