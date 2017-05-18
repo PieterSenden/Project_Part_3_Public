@@ -662,7 +662,7 @@ public class Ship extends Entity {
 	 * 			| this.isTerminated()
 	 */
 	@Model
-	void removeBullet(Bullet bullet) throws IllegalArgumentException, TerminatedException {
+	public void removeBullet(Bullet bullet) throws IllegalArgumentException, TerminatedException {
 		if (this.isTerminated())
 			throw new TerminatedException();
 		if (! hasAsBullet(bullet))
