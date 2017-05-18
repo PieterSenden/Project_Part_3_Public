@@ -6,6 +6,7 @@ import javax.print.attribute.standard.PrinterStateReasons;
 
 import asteroids.model.programs.expressions.*;
 import asteroids.model.programs.statements.*;
+import asteroids.model.representation.*;
 import asteroids.part3.programs.IProgramFactory;
 import asteroids.part3.programs.SourceLocation;
 
@@ -140,99 +141,83 @@ public class ProgramFactory implements IProgramFactory<Expression, Statement, Fu
 	}
 
 	@Override
-	public Expression createGetXExpression(Expression e, SourceLocation location) {
-		// TODO Auto-generated method stub
-		return null;
+	public Expression<Double> createGetXExpression(Expression e, SourceLocation location) {
+		return new GetXExpression(e);
 	}
 
 	@Override
-	public Expression createGetYExpression(Expression e, SourceLocation location) {
-		// TODO Auto-generated method stub
-		return null;
+	public Expression<Double> createGetYExpression(Expression e, SourceLocation location) {
+		return new GetYExpression(e);
 	}
 
 	@Override
-	public Expression createGetVXExpression(Expression e, SourceLocation location) {
-		// TODO Auto-generated method stub
-		return null;
+	public Expression<Double> createGetVXExpression(Expression e, SourceLocation location) {
+		return new GetVxExpression(e);
 	}
 
 	@Override
-	public Expression createGetVYExpression(Expression e, SourceLocation location) {
-		// TODO Auto-generated method stub
-		return null;
+	public Expression<Double> createGetVYExpression(Expression e, SourceLocation location) {
+		return new GetVyExpression(e);
 	}
 
 	@Override
-	public Expression createGetRadiusExpression(Expression e, SourceLocation location) {
-		// TODO Auto-generated method stub
-		return null;
+	public Expression<Double> createGetRadiusExpression(Expression e, SourceLocation location) {
+		return new GetRadiusExpression(e);
 	}
 
 	@Override
-	public Expression createLessThanExpression(Expression e1, Expression e2, SourceLocation location) {
-		// TODO Auto-generated method stub
-		return null;
+	public Expression<Boolean> createLessThanExpression(Expression e1, Expression e2, SourceLocation location) {
+		return new LessThanExpression(e1, e2);
 	}
 
 	@Override
-	public Expression createEqualityExpression(Expression e1, Expression e2, SourceLocation location) {
-		// TODO Auto-generated method stub
-		return null;
+	public Expression<Boolean> createEqualityExpression(Expression e1, Expression e2, SourceLocation location) {
+		return new EqualityExpression(e1, e2);
 	}
 
 	@Override
-	public Expression createAdditionExpression(Expression e1, Expression e2, SourceLocation location) {
-		// TODO Auto-generated method stub
-		return null;
+	public Expression<Double> createAdditionExpression(Expression e1, Expression e2, SourceLocation location) {
+		return new AdditionExpression(e1, e2);
 	}
 
 	@Override
-	public Expression createMultiplicationExpression(Expression e1, Expression e2, SourceLocation location) {
-		// TODO Auto-generated method stub
-		return null;
+	public Expression<Double> createMultiplicationExpression(Expression e1, Expression e2, SourceLocation location) {
+		return new MultiplicationExpression(e1, e2);
 	}
 
 	@Override
-	public Expression createSqrtExpression(Expression e, SourceLocation location) {
-		// TODO Auto-generated method stub
-		return null;
+	public Expression<Double> createSqrtExpression(Expression e, SourceLocation location) {
+		return new SquareRootExpression(e);
 	}
 
 	@Override
-	public Expression createGetDirectionExpression(SourceLocation location) {
-		// TODO Auto-generated method stub
-		return null;
+	public Expression<Double> createGetDirectionExpression(SourceLocation location) {
+		return new GetDirExpression();
 	}
 
 	@Override
 	public Statement createThrustOnStatement(SourceLocation location) {
-		// TODO Auto-generated method stub
-		return null;
+		return new ThrustOnAction();
 	}
 
 	@Override
 	public Statement createThrustOffStatement(SourceLocation location) {
-		// TODO Auto-generated method stub
-		return null;
+		return new ThrustOffAction();
 	}
 
 	@Override
 	public Statement createFireStatement(SourceLocation location) {
-		// TODO Auto-generated method stub
-		return null;
+		return new FireAction();
 	}
 
 	@Override
 	public Statement createTurnStatement(Expression angle, SourceLocation location) {
-		// TODO Auto-generated method stub
-		return null;
+		return new TurnAction(angle);
 	}
 
 	@Override
 	public Statement createSkipStatement(SourceLocation location) {
-		// TODO Auto-generated method stub
-		return null;
+		return new SkipAction();
 	}
 
 }
