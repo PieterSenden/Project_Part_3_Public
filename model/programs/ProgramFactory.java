@@ -6,6 +6,8 @@ import javax.print.attribute.standard.PrinterStateReasons;
 
 import asteroids.model.programs.expressions.*;
 import asteroids.model.programs.statements.*;
+import asteroids.model.representation.*;
+import asteroids.model.representation.Entity;
 import asteroids.part3.programs.IProgramFactory;
 import asteroids.part3.programs.SourceLocation;
 
@@ -86,57 +88,48 @@ public class ProgramFactory implements IProgramFactory<Expression, Statement, Fu
 	}
 
 	@Override
-	public Expression createDoubleLiteralExpression(double value, SourceLocation location) {
-		// TODO Auto-generated method stub
-		return null;
+	public Expression<Double> createDoubleLiteralExpression(double value, SourceLocation location) {
+		return new ConstantExpression(value);
 	}
 
 	@Override
-	public Expression createNullExpression(SourceLocation location) {
-		// TODO Auto-generated method stub
-		return null;
+	public Expression<Entity> createNullExpression(SourceLocation location) {
+		return new NullExpression();
 	}
 
 	@Override
-	public Expression createSelfExpression(SourceLocation location) {
-		// TODO Auto-generated method stub
-		return null;
+	public Expression<Entity> createSelfExpression(SourceLocation location) {
+		return new SelfExpression();
 	}
 
 	@Override
-	public Expression createShipExpression(SourceLocation location) {
-		// TODO Auto-generated method stub
-		return null;
+	public Expression<Entity> createShipExpression(SourceLocation location) {
+		return new NearestEntityExpression(Ship.class);
 	}
 
 	@Override
-	public Expression createAsteroidExpression(SourceLocation location) {
-		// TODO Auto-generated method stub
-		return null;
+	public Expression<Entity> createAsteroidExpression(SourceLocation location) {
+		return new NearestEntityExpression(Asteroid.class);
 	}
 
 	@Override
-	public Expression createPlanetoidExpression(SourceLocation location) {
-		// TODO Auto-generated method stub
-		return null;
+	public Expression<Entity> createPlanetoidExpression(SourceLocation location) {
+		return new NearestEntityExpression(Planetoid.class);
 	}
 
 	@Override
-	public Expression createBulletExpression(SourceLocation location) {
-		// TODO Auto-generated method stub
-		return null;
+	public Expression<Entity> createBulletExpression(SourceLocation location) {
+		return new NearestEntityExpression(Bullet.class);
 	}
 
 	@Override
-	public Expression createPlanetExpression(SourceLocation location) {
-		// TODO Auto-generated method stub
-		return null;
+	public Expression<Entity> createPlanetExpression(SourceLocation location) {
+		return new NearestEntityExpression(MinorPlanet.class);
 	}
 
 	@Override
-	public Expression createAnyExpression(SourceLocation location) {
-		// TODO Auto-generated method stub
-		return null;
+	public Expression<Entity> createAnyExpression(SourceLocation location) {
+		return new AnyExpression();
 	}
 
 	@Override
