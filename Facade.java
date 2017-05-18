@@ -408,56 +408,95 @@ public class Facade implements IFacade {
 	
 	@Override
 	public Set<? extends Bullet> getWorldBullets(World world) throws ModelException {
-		// TODO Auto-generated method stub
-		return null;
+		try {
+			return world.getSpecificEntities(Bullet.class);
+		}
+		catch (RuntimeException exc) {
+			throw new ModelException(exc);
+		}
 	}
 
 	@Override
 	public void addShipToWorld(World world, Ship ship) throws ModelException {
-		// TODO Auto-generated method stub
+		try {
+			world.addEntity(ship);
+		}
+		catch (RuntimeException exc) {
+			throw new ModelException(exc);
+		}
 		
 	}
 
 	@Override
 	public void removeShipFromWorld(World world, Ship ship) throws ModelException {
-		// TODO Auto-generated method stub
+		try {
+			world.removeEntity(ship);
+		}
+		catch (RuntimeException exc) {
+			throw new ModelException(exc);
+		}
 		
 	}
 
 	@Override
 	public void addBulletToWorld(World world, Bullet bullet) throws ModelException {
-		// TODO Auto-generated method stub
-		
+		try {
+			world.addEntity(bullet);
+		}
+		catch (RuntimeException exc) {
+			throw new ModelException(exc);
+		}
 	}
 
 	@Override
 	public void removeBulletFromWorld(World world, Bullet bullet) throws ModelException {
-		// TODO Auto-generated method stub
+		try {
+			world.removeEntity(bullet);
+		}
+		catch (RuntimeException exc) {
+			throw new ModelException(exc);
+		}
 		
 	}
 
 	@Override
 	public Set<? extends Bullet> getBulletsOnShip(Ship ship) throws ModelException {
-		// TODO Auto-generated method stub
-		return null;
+		try {
+			return ship.getMagazine();
+		}
+		catch (RuntimeException exc) {
+			throw new ModelException(exc);
+		}
 	}
 
 	@Override
 	public int getNbBulletsOnShip(Ship ship) throws ModelException {
-		// TODO Auto-generated method stub
-		return 0;
+		try {
+			return ship.getNbOfBulletsInMagazine();
+		}
+		catch (RuntimeException exc) {
+			throw new ModelException(exc);
+		}
 	}
 
 	@Override
 	public void loadBulletOnShip(Ship ship, Bullet bullet) throws ModelException {
-		// TODO Auto-generated method stub
-		
+		try {
+			ship.loadBullet(bullet);
+		}
+		catch (RuntimeException exc) {
+			throw new ModelException(exc);
+		}
 	}
 
 	@Override
 	public void loadBulletsOnShip(Ship ship, Collection<Bullet> bullets) throws ModelException {
-		// TODO Auto-generated method stub
-		
+		try {
+			ship.loadBullets((Bullet[])bullets.toArray());
+		}
+		catch (RuntimeException exc) {
+			throw new ModelException(exc);
+		}
 	}
 
 	@Override
@@ -468,38 +507,63 @@ public class Facade implements IFacade {
 
 	@Override
 	public void fireBullet(Ship ship) throws ModelException {
-		// TODO Auto-generated method stub
+		try {
+			ship.fireBullet();
+		}
+		catch (RuntimeException exc) {
+			throw new ModelException(exc);
+		}
 		
 	}
 
 	@Override
 	public double getTimeNextCollision(World world) throws ModelException {
-		// TODO Auto-generated method stub
-		return 0;
+		try {
+			return world.getTimeToFirstCollision();
+		}
+		catch (RuntimeException exc) {
+			throw new ModelException(exc);
+		}
 	}
 
 	@Override
 	public double[] getPositionNextCollision(World world) throws ModelException {
-		// TODO Auto-generated method stub
-		return null;
+		try {
+			return world.getPositionFirstCollision().getAsArray();
+		}
+		catch (RuntimeException exc) {
+			throw new ModelException(exc);
+		}
 	}
 
 	@Override
 	public void evolve(World world, double dt, CollisionListener collisionListener) throws ModelException {
-		// TODO Auto-generated method stub
-		
+		try {
+			world.evolve(dt, collisionListener);
+		}
+		catch (RuntimeException exc) {
+			throw new ModelException(exc);
+		}
 	}
 
 	@Override
 	public Object getEntityAt(World world, double x, double y) throws ModelException {
-		// TODO Auto-generated method stub
-		return null;
+		try {
+			return world.getEntityAt(new Position(x, y));
+		}
+		catch (RuntimeException exc) {
+			throw new ModelException(exc);
+		}
 	}
 
 	@Override
 	public Set<? extends Object> getEntities(World world) throws ModelException {
-		// TODO Auto-generated method stub
-		return null;
+		try {
+			return world.getEntities();
+		}
+		catch (RuntimeException exc) {
+			throw new ModelException(exc);
+		}
 	}
 
 	@Override
@@ -517,32 +581,52 @@ public class Facade implements IFacade {
 
 	@Override
 	public double[] getShipPosition(Ship ship) throws ModelException {
-		// TODO Auto-generated method stub
-		return null;
+		try {
+			return ship.getPosition().getAsArray();
+		}
+		catch (RuntimeException exc) {
+			throw new ModelException(exc);
+		}
 	}
 
 	@Override
 	public double[] getShipVelocity(Ship ship) throws ModelException {
-		// TODO Auto-generated method stub
-		return null;
+		try {
+			return ship.getVelocity().getAsArray();
+		}
+		catch (RuntimeException exc) {
+			throw new ModelException(exc);
+		}
 	}
 
 	@Override
 	public double getShipRadius(Ship ship) throws ModelException {
-		// TODO Auto-generated method stub
-		return 0;
+		try {
+			return ship.getRadius();
+		}
+		catch (RuntimeException exc) {
+			throw new ModelException(exc);
+		}
 	}
 
 	@Override
 	public double getShipOrientation(Ship ship) throws ModelException {
-		// TODO Auto-generated method stub
-		return 0;
+		try {
+			return ship.getOrientation();
+		}
+		catch (RuntimeException exc) {
+			throw new ModelException(exc);
+		}
 	}
 
 	@Override
 	public void turn(Ship ship, double angle) throws ModelException {
-		// TODO Auto-generated method stub
-		
+		try {
+			ship.turn(angle);
+		}
+		catch (RuntimeException exc) {
+			throw new ModelException(exc);
+		}
 	}
 
 	@Override
