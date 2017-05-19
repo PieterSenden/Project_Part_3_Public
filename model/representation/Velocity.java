@@ -58,7 +58,8 @@ public class Velocity extends PhysicalVector {
 	@Override
 	public Velocity vectorMinus(PhysicalVector other) throws NullPointerException, IllegalComponentException,
 																					IllegalArgumentException {
-		return (Velocity)(super.vectorMinus(other));
+		PhysicalVector result = super.vectorMinus(other);
+		return new Velocity(result.getxComponent(), result.getyComponent());
 	}
 	
 	/**
@@ -81,7 +82,8 @@ public class Velocity extends PhysicalVector {
 	@Override
 	public Velocity vectorPlus(PhysicalVector other) throws NullPointerException, IllegalComponentException,
 	IllegalArgumentException {
-		return (Velocity)(super.vectorPlus(other));
+		PhysicalVector result = super.vectorPlus(other);
+		return new Velocity(result.getxComponent(), result.getyComponent());
 	}
 	
 	/**
@@ -100,7 +102,8 @@ public class Velocity extends PhysicalVector {
 	 */
 	@Override
 	public Velocity scalarMultiple(double factor) throws IllegalComponentException,	IllegalArgumentException {
-		return (Velocity)(super.scalarMultiple(factor));
+		PhysicalVector result = super.scalarMultiple(factor);
+		return new Velocity(result.getxComponent(), result.getyComponent());
 	}
 	
 	/**

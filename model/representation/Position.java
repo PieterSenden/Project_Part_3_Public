@@ -88,7 +88,8 @@ public class Position extends PhysicalVector {
 	@Override
 	public Position vectorMinus(PhysicalVector other) throws NullPointerException, IllegalComponentException,
 																					IllegalArgumentException {
-		return (Position)(super.vectorMinus(other));
+		PhysicalVector result = super.vectorMinus(other);
+		return new Position(result.getxComponent(), result.getyComponent());
 	}
 	
 	/**
@@ -111,7 +112,8 @@ public class Position extends PhysicalVector {
 	@Override
 	public Position vectorPlus(PhysicalVector other) throws NullPointerException, IllegalComponentException,
 	IllegalArgumentException {
-		return (Position)(super.vectorPlus(other));
+		PhysicalVector result = super.vectorPlus(other);
+		return new Position(result.getxComponent(), result.getyComponent());
 	}
 	
 	/**
@@ -130,7 +132,8 @@ public class Position extends PhysicalVector {
 	 */
 	@Override
 	public Position scalarMultiple(double factor) throws IllegalComponentException,	IllegalArgumentException {
-		return (Position)(super.scalarMultiple(factor));
+		PhysicalVector result = super.scalarMultiple(factor);
+		return new Position(result.getxComponent(), result.getyComponent());
 	}
 	
 	/**
