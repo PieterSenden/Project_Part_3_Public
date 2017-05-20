@@ -100,6 +100,12 @@ public class Facade implements IFacade {
 		catch (RuntimeException exc) {
 			throw new ModelException(exc);
 		}
+		catch (AssertionError err) {
+			// The project assignment states that all aspects related to orientation must be worked out nominally.
+			// However, the tests regarding orientation expect an exception. Hence, we have to catch the AssertionError
+			// and throw a ModelException.
+			throw new ModelException(err);
+		}
 	}
 	
 	/**
@@ -316,9 +322,7 @@ public class Facade implements IFacade {
 	@Override
 	public Ship getBulletShip(Bullet bullet) throws ModelException {
 		try {
-			if (bullet.getShip() != null && bullet.getShip().hasLoadedInMagazine(bullet))
-				return bullet.getShip();
-			return null;
+			return bullet.getContainingShip();
 		}
 		catch (RuntimeException exc) {
 			throw new ModelException(exc);
@@ -331,9 +335,7 @@ public class Facade implements IFacade {
 	@Override
 	public Ship getBulletSource(Bullet bullet) throws ModelException {
 		try {
-			if (bullet.getWorld() != null)
-				return bullet.getShip();
-			return null;
+			return bullet.getSourceShip();
 		}
 		catch (RuntimeException exc) {
 			throw new ModelException(exc);
@@ -493,7 +495,7 @@ public class Facade implements IFacade {
 	@Override
 	public void loadBulletsOnShip(Ship ship, Collection<Bullet> bullets) throws ModelException {
 		try {
-			ship.loadBullets((Bullet[])bullets.toArray());
+			ship.loadBullets(bullets.toArray(new Bullet[] {}));
 		}
 		catch (RuntimeException exc) {
 			throw new ModelException(exc);
@@ -630,6 +632,12 @@ public class Facade implements IFacade {
 		catch (RuntimeException exc) {
 			throw new ModelException(exc);
 		}
+		catch (AssertionError err) {
+			// The project assignment states that all aspects related to orientation must be worked out nominally.
+			// However, the tests regarding orientation expect an exception. Hence, we have to catch the AssertionError
+			// and throw a ModelException.
+			throw new ModelException(err);
+		}
 	}
 
 	@Override
@@ -664,7 +672,7 @@ public class Facade implements IFacade {
 	@Override
 	public Set<? extends Asteroid> getWorldAsteroids(World world) throws ModelException {
 		try {
-			return world.getSpecificEntities(Asteroid.class)
+			return world.getSpecificEntities(Asteroid.class);
 		}
 		catch (RuntimeException exc) {
 			throw new ModelException(exc);
@@ -695,7 +703,7 @@ public class Facade implements IFacade {
 	@Override
 	public Set<? extends Planetoid> getWorldPlanetoids(World world) throws ModelException {
 		try {
-			world.getSpecificEntities(Planetoid.class);
+			return world.getSpecificEntities(Planetoid.class);
 		}
 		catch (RuntimeException exc) {
 			throw new ModelException(exc);
