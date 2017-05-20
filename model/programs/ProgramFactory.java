@@ -57,7 +57,7 @@ public class ProgramFactory implements IProgramFactory<Expression, Statement, Fu
 
 	@Override
 	public Statement createSequenceStatement(List<Statement> statements, SourceLocation sourceLocation) {
-		return new SequenceStatement((Statement[])statements.toArray());
+		return new SequenceStatement(statements.toArray(new Statement[] {}));
 	}
 
 	@Override
@@ -73,7 +73,7 @@ public class ProgramFactory implements IProgramFactory<Expression, Statement, Fu
 	@Override
 	public Expression createFunctionCallExpression(String functionName, List<Expression> actualArgs,
 			SourceLocation sourceLocation) {
-		return new FunctionCallExpression<>(functionName, (Expression[])actualArgs.toArray());
+		return new FunctionCallExpression<>(functionName, actualArgs.toArray(new Expression[] {}));
 	}
 
 	@Override
