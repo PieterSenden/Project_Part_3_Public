@@ -37,6 +37,9 @@ public class Facade implements IFacade {
 		try {
 			return ((Entity)object).getCollisionWithBoundaryPosition().getAsArray();
 		}
+		catch (NullPointerException exc) {
+			return null;
+		}
 		catch (RuntimeException exc) {
 			throw new ModelException(exc);
 		}
