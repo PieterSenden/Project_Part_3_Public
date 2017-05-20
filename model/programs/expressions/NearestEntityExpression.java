@@ -1,5 +1,6 @@
 package asteroids.model.programs.expressions;
 
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import asteroids.model.exceptions.IllegalMethodCallException;
@@ -29,10 +30,10 @@ public	 class NearestEntityExpression extends Expression<Entity> {
 	public Entity evaluate(ProgramExecutor executor) {
 		Stream<Entity> entityStream = stream(executor);
 		Ship currentShip = executor.getShip();
-		return entityStream.filter(e -> getEntityType().isAssignableFrom(e.getClass()))
+		Optional<Entity> result = entityStream.filter(e -> getEntityType().isAssignableFrom(e.getClass()))
 					.filter(e -> e != currentShip)
-					.reduce( (e1, e2) -> (Entity.getDistanceBetween(e1, currentShip) <= Entity.getDistanceBetween(e2, currentShip)) ? e1 : e2)
-					.get();
+					.reduce( (e1, e2) -> (Entity.getDistanceBetween(e1, currentShip) <= Entity.getDistanceBetween(e2, currentShip)) ? e1 : e2);
+		return result.isPresent() ? result.get() : null;
 	}
 	
 	@Basic
