@@ -16,7 +16,10 @@ public class PrintStatement extends SingleExpressionStatement<Object> {
 		if (! (getExecutable() instanceof Program))
 			throw new IllegalMethodCallException();
 		Object evaluation = getExpression().evaluate(executor);
-		System.out.println(evaluation.toString());
+		if (evaluation == null)
+			System.out.println("null");
+		else
+			System.out.println(evaluation.toString());
 		executor.addToPrintList(evaluation);
 	}
 

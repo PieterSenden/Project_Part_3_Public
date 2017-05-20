@@ -1,11 +1,12 @@
 package asteroids.model.programs.statements;
 
 import asteroids.model.programs.ProgramExecutor;
+import asteroids.model.programs.expressions.NullExpression;
 
 public class SkipAction extends Action<Object> {
 	
 	public SkipAction() {
-		super(TIME_TO_EXECUTE, null);
+		super(TIME_TO_EXECUTE, new NullExpression());
 	}
 	
 	@Override
