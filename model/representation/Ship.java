@@ -388,7 +388,7 @@ public class Ship extends Entity {
 	/**
 	 * Variable registering the thruster force of this ship.
 	 */
-	private double thrusterForce = 1.1e21;
+	private double thrusterForce = 1.1e18;
 	
 	
 	/**
@@ -554,7 +554,7 @@ public class Ship extends Entity {
 	private void addAsLoadedBullet(Bullet bullet) throws IllegalBulletException, TerminatedException {
 		if (this.isTerminated())
 			throw new TerminatedException();
-		if (! canHaveAsBullet(bullet))
+		if (! canHaveAsLoadedBullet(bullet))
 			throw new IllegalBulletException();
 		this.magazine.add(bullet);
 	}
@@ -612,7 +612,7 @@ public class Ship extends Entity {
 	private void addAsFiredBullet(Bullet bullet) throws IllegalBulletException, TerminatedException {
 		if (this.isTerminated())
 			throw new TerminatedException();
-		if (! canHaveAsBullet(bullet))
+		if (! canHaveAsFiredBullet(bullet))
 			throw new IllegalBulletException();
 		this.firedBullets.add(bullet);
 	}
@@ -672,7 +672,8 @@ public class Ship extends Entity {
 				removeAsLoadedBullet(bullet);
 			else if (hasFired(bullet))
 				removeAsFiredBullet(bullet);
-			bullet.setShip(null);
+			bullet.setContainingShip(null);
+			bullet.setSourceShip(null);
 			//Cannot throw IllegalMethodCallException because at this point certainly !hasAsBullet(bullet).
 			//Cannot throw TerminatedException because we have that this.hasAsBullet(bullet) and then the class invariant implies that
 			//	this.canHaveAsBullet(bullet).
@@ -699,7 +700,7 @@ public class Ship extends Entity {
 	 * 			this ship must be associated to the same world.
 	 * 			| if (this.isTerminated())
 	 * 			|	then result == false
-	 * 			| if (bullet == null || bullet.isTerminated())
+	 * 			| if (bullet == null)
 	 * 			|	then result == false
 	 * 			| else if (bullet.getWorld() == null)
 	 * 			|	then result == true
@@ -710,8 +711,33 @@ public class Ship extends Entity {
 	 */
 	@Raw
 	public boolean canHaveAsBullet(Bullet bullet) {
-		return (bullet != null && (bullet.getWorld() == null || getWorld() == bullet.getWorld()) && !isTerminated() && !bullet.isTerminated()) &&
-				canSurround(bullet);
+		return bullet != null && (bullet.getWorld() == null || getWorld() == bullet.getWorld()) && !isTerminated() && canSurround(bullet);
+	}
+	
+	/**
+	 * Check whether this ship can have the given bullet in its magazine.
+	 * 
+	 * @param bullet
+	 * 		The bullet to check.
+	 * @return True iff this ship can have the given bullet as bullet and the given is not terminated.
+	 * 		| @see implementation
+	 */
+	@Raw
+	public boolean canHaveAsLoadedBullet(Bullet bullet) {
+		return canHaveAsBullet(bullet) && !bullet.isTerminated();
+	}
+	
+	/**
+	 * Check whether this ship can have the given bullet as fired bullet.
+	 * 
+	 * @param bullet
+	 * 		The bullet to check.
+	 * @return True iff this ship can have the given bullet as bullet.
+	 * 		| @see implementation
+	 */
+	@Raw
+	public boolean canHaveAsFiredBullet(Bullet bullet) {
+		return canHaveAsBullet(bullet);
 	}
 	
 	/**
@@ -727,21 +753,21 @@ public class Ship extends Entity {
 	 * 			| if (!this.isTerminated())
 	 * 			| 	then result == 
 	 * 			| 	 	(for each bullet in getMagazine():
-	 * 			|			!canHaveAsBullet(bullet) && bullet.getShip() == this && ! hasFired(bullet) && bullet.getWorld() == null)
+	 * 			|			!canHaveAsBullet(bullet) && bullet.getContainingShip() == this && ! hasFired(bullet) && bullet.getWorld() == null)
 	 * 			|		&&
 	 * 			|		(for each bullet in getFiredBullets():
-	 * 			|			!canHaveAsBullet(bullet) && bullet.getShip() == this && ! hasLoadedInMagazine(bullet) && bullet.getWorld() == getWorld()) 			
+	 * 			|			!canHaveAsBullet(bullet) && bullet.getSourceShip() == this && ! hasLoadedInMagazine(bullet) && bullet.getWorld() == getWorld()) 			
 	 */
 	public boolean hasProperBullets() {
 		if (!isTerminated()) {
 			for (Bullet bullet : getMagazine()) {
-				if (!canHaveAsBullet(bullet) || bullet.getShip() != this || hasFired(bullet)
+				if (!canHaveAsLoadedBullet(bullet) || bullet.getContainingShip() != this || hasFired(bullet)
 						|| bullet.getWorld() != null)
 					return false;
 			}
 			for (Bullet bullet : getFiredBullets()) {
-				if (!canHaveAsBullet(bullet) || bullet.getShip() != this || hasLoadedInMagazine(bullet)
-						|| bullet.getWorld() != getWorld())
+				if (!canHaveAsFiredBullet(bullet) || bullet.getSourceShip() != this || hasLoadedInMagazine(bullet)
+						|| (!bullet.isTerminated() && bullet.getWorld() != getWorld()))
 					return false;
 			}
 			return true;
@@ -807,19 +833,24 @@ public class Ship extends Entity {
 	 * 			then that random bullet and said entity are immediately destroyed.
 	 * 			| if ( for some entity in getWorld().getEntities() : overlap(new randomBullet, entity)) 
 	 * 			|	then entity.terminate()
-	 * 			|		and randomBullet.terminate() 
+	 * 			|		and randomBullet.terminate()
+	 * @effect	| randomBullet.setSourceShip(getContainingShip())
+	 * @effect	| randomBullet.setContainingShip(null)
 	 */
 	public void fireBullet() {
 		if (! this.isTerminated()) {
 			if (getNbOfBulletsInMagazine() != 0 && getWorld() != null) {
-				Bullet bulletToFire = (Bullet) getMagazine().toArray()[0];
+				Bullet bulletToFire = (Bullet)getMagazine().toArray()[0];
 				try {
 					bulletToFire.setToFireConfiguration();
 					// Cannot throw IllegalPositionException because this bullet is not contained in a world yet.
 					removeAsLoadedBullet(bulletToFire);
 					// Cannot throw IllegalBulletException, since bulletToFire was loaded in the magazine. 
+					Ship containingShip = bulletToFire.getContainingShip();
+					bulletToFire.setContainingShip(null);
 					addAsFiredBullet(bulletToFire);
 					// Cannot throw IllegalBulletException, since canHaveAsBullet(bulletToFire) was already true by class invariant.
+					bulletToFire.setSourceShip(containingShip);
 					try {
 						getWorld().addEntity(bulletToFire);
 					} catch (IllegalArgumentException exc) {
@@ -870,14 +901,16 @@ public class Ship extends Entity {
 			throw new TerminatedException();
 		if (! canHaveAsBullet(bullet) || 
 				(hasFired(bullet) && ! Entity.apparentlyCollide(this, bullet)) ||
-				(bullet.getShip() != null && bullet.getShip() != this))
+				(bullet.getSourceShip() != null && bullet.getSourceShip() != this) ||
+				!surrounds(bullet))
 			throw new IllegalBulletException();
 		if (hasFired(bullet))
 			removeAsFiredBullet(bullet);
 		addAsLoadedBullet(bullet);
-		bullet.setShip(this);
+		bullet.setContainingShip(this);
 		//Cannot throw IllegalMethodCallException because this ship is effective and the given bullet has been loaded in the magazine.
 		//Cannot throw TerminatedException because canHaveAsBullet(bullet) implies !bullet.isTerminated().
+		bullet.setSourceShip(null);
 		if (bullet.getWorld() != null)
 			getWorld().removeEntity(bullet);
 			//The method removeEntity cannot throw an exception because all conditions to throw exceptions are false in this case.
@@ -908,7 +941,7 @@ public class Ship extends Entity {
 	 * 			that is an acceptable bullet for this ship.
 	 * 		| for each bullet in magazine: canHaveAsBullet(bullet)
 	 * @invar Each bullet in the magazine references this ship as the ship on which it is loaded.
-	 * 		| for each bullet in magazine: bullet.getShip() == this
+	 * 		| for each bullet in magazine: bullet.getContainingShip() == this
 	 */
 	private Set<Bullet> magazine = new HashSet<>();
 	
@@ -921,7 +954,7 @@ public class Ship extends Entity {
 	 * 		| for each bullet in firedBullets: canHaveAsBullet(bullet)
 	 * @invar Each bullet in the set of fired bullets references this ship
 	 * 			as the ship by which it has been fired.
-	 * 		| for each bullet in firedBullets: bullet.getShip() == this
+	 * 		| for each bullet in firedBullets: bullet.getSourceShip() == this
 	 */
 	private Set<Bullet> firedBullets = new HashSet<>();
 	

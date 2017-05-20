@@ -451,21 +451,21 @@ public class World {
 	/**
 	 * Calculate the time until the first collision (between entities or of an entity against the boundary) in this world.
 	 * 
-	 * @return (for some entity in getEntities() : entity.collidesWithBoundaryAfterMove(result)) ||
-	 * 			(for some entity1, entity2 in getEntities() : (entity1 != entity2) && Entity.collideAfterMove(entity1, entity2, result))
-	 * @return for each time in { t in RealNumbers | 0 <= t < result} :
-	 * 			((for each entity in getEntities() : !entity.collidesWithBoudaryAfterMove(time)) &&
-	 * 			 (for each entity1, entity2 in getEntities() : (entity1 == entity2) || !Entity.collideAfterMove(time)))
-	 * @throws IllegalMethodCallException
-	 * 			| getEntities().isEmpty()
+	 * @return  | if (! getEntities().isEmpty())
+	 * 			|	then (for some entity in getEntities() : entity.collidesWithBoundaryAfterMove(result)) ||
+	 * 			| 		(for some entity1, entity2 in getEntities() : (entity1 != entity2) && Entity.collideAfterMove(entity1, entity2, result))
+	 * @return 	| if (! getEntities().isEmpty) 
+	 * 			|	then for each time in { t in RealNumbers | 0 <= t < result} :
+	 * 			|		((for each entity in getEntities() : !entity.collidesWithBoudaryAfterMove(time)) &&
+	 * 			|		(for each entity1, entity2 in getEntities() : (entity1 == entity2) || !Entity.collideAfterMove(time)))
+	 * @return	| if (getEntities().isEmpty())
+	 * 			|	then result == Double.POSITIVE_INIFINITY
 	 * @throws TerminatedException
 	 * 			| isTerminated()
 	 */
 	public double getTimeToFirstCollision() throws IllegalMethodCallException, TerminatedException {
 		if (isTerminated())
 			throw new TerminatedException();
-		if (getEntities().isEmpty())
-			throw new IllegalMethodCallException();
 		double result = Double.POSITIVE_INFINITY;
 		for (Entity entity: getEntities()) {
 			result = Math.min(result, entity.getTimeToCollisionWithBoundary());

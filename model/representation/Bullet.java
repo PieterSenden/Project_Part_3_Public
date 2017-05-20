@@ -103,16 +103,16 @@ public class Bullet extends Entity {
 	/**
 	 * Terminate this bullet.
 	 * 
-	 * @effect	| if (!isTerminated() && getShip != null)
+	 * @effect	| if (!isTerminated() && getContainingShip != null)
 	 * 			| super.terminate()
-	 * @effect	| if (!isTerminated() && getShip != null)
+	 * @effect	| if (!isTerminated() && getContainingShip != null)
 	 * 			|	then getShip.removeBullet(this)
 	 */
 	@Override
 	public void terminate() {
 		if (!isTerminated()) {
-			if (getShip() != null)
-				getShip().removeBullet(this);
+			if (getContainingShip() != null)
+				getContainingShip().removeBullet(this);
 			super.terminate();
 		}
 	}
@@ -353,88 +353,123 @@ public class Bullet extends Entity {
 	/**
 	 * Determine whether this bullet can be removed from its world.
 	 * 
-	 * @return	| result == (getWorld() != null) && ((getShip() == null) || Entity.apparentlyCollide(this, getShip()))
+	 * @return	| result == (getWorld() != null) && ((getSourceShip() == null) || Entity.apparentlyCollide(this, getSourceShip()))
 	 */
 	@Override
 	public boolean canBeRemovedFromWorld() {
 		if (getWorld() == null)
 			return false;
-		if ((getShip() != null) && !Entity.apparentlyCollide(this, getShip()))
+		if ((getSourceShip() != null) && !Entity.apparentlyCollide(this, getSourceShip()))
 			return false;
 		return true;
 	}
 	
 	
 	/**
-	 * Return the ship associated to this bullet, i.e. the ship that holds this bullet or fired it.
+	 * Return the ship containing this bullet in its magazine.
 	 */
 	@Basic @Raw
-	public Ship getShip() {
-		return this.ship;
+	public Ship getContainingShip() {
+		return this.containingShip;
 	}
 	
 	/**
-	 * Check whether this bullet can be associated to the given ship.
+	 * Return the ship that fired this bullet.
+	 */
+	@Basic @Raw
+	public Ship getSourceShip() {
+		return this.sourceShip;
+	}
+	
+	/**
+	 * Check whether this bullet can have the given ship as its containing ship.
 	 * 
 	 * @param ship
 	 * 		The ship to check.
 	 * @return 
-	 * 			| result == ((ship == null) || ship.canHaveAsBullet(this))
+	 * 			| result == (ship == null) || (ship.canHaveAsLoadedBullet(this) && getWorld() == null)
 	 */
 	@Raw
-	public boolean canHaveAsShip(Ship ship) {
-		return ((ship == null) || ship.canHaveAsBullet(this));
+	public boolean canHaveAsContainingShip(Ship ship) {
+		return (ship == null) || (ship.canHaveAsLoadedBullet(this) && getWorld() == null);
+	}
+	
+	/**
+	 * Check whether this bullet can have the given ship as its source ship.
+	 * 
+	 * @param ship
+	 * 		The ship to check.
+	 * @return 
+	 * 			| result == ((ship == null) || ship.canHaveAsFiredBullet(this))
+	 */
+	@Raw
+	public boolean canHaveAsSourceShip(Ship ship) {
+		return ((ship == null) || ship.canHaveAsFiredBullet(this));
 	}
 	
 	/**
 	 * Check whether this bullet has a proper ship.
 	 * 
 	 * @return 
-	 * 			| if (canHaveAsShip(getShip())
-	 * 			|	if (getShip() == null)
+	 * 			| if (canHaveAsContainingShip(getContainingShip())
+	 * 			|	if (getContainingShip() == null)
 	 * 			|		then result == true
-	 * 			|	else if (getWorld() == null)
-	 * 			|		then result == getShip().hasLoadedInMagazine(this)
-	 * 			|	else if (getWorld() == getShip().getWorld())
-	 * 			|		then result == getShip().hasFired(this)
+	 * 			|	else
+	 * 			|		then result == getContainingShip().hasLoadedInMagazine(this) && getSourceShip() == null
+	 * 			| else
+	 * 			|	then result == false
+	 */
+	@Raw
+	public boolean hasProperContainingShip() {
+		if (! canHaveAsContainingShip(getContainingShip()) )
+			return false;
+		else if (getContainingShip() == null)
+			return true;
+		else
+			return getContainingShip().hasLoadedInMagazine(this) && getSourceShip() == null;
+	}
+	
+	/**
+	 * Check whether this bullet has a proper ship.
+	 * 
+	 * @return 
+	 * 			| if (canHaveAsSourceShip(getSourceShip())
+	 * 			|	if (getSourceShip() == null)
+	 * 			|		then result == true
+	 * 			|	else
+	 * 			|		then result == getSourceShip().hasFired(this) && getSourceShip() == null
 	 * 			| else
 	 * 			|	then result == false
 	 * 
 	 */
 	@Raw
-	public boolean hasProperShip() {
-		if (! canHaveAsShip(getShip()) )
+	public boolean hasProperSourceShip() {
+		if (! canHaveAsSourceShip(getSourceShip()) )
 			return false;
-		else if (getShip() == null)
+		else if (getSourceShip() == null)
 			return true;
-		else if (getWorld() == null)
-			// This bullet must be loaded on its ship, because it is associated to a ship but not to a world.
-			return getShip().hasLoadedInMagazine(this);
 		else
-			// This bullet must have been fired by its ship.
-			// At this point we know that canHaveAsShip(getShip()) is true, getShip() != null and getWorld() != null,
-			// so it must hold that (getWorld() == getShip().getWorld()). We therefore do not have to check this equality.
-			return getShip().hasFired(this);
+			return getSourceShip().hasFired(this) && getContainingShip() == null;
 	}
 	
 	/**
 	 * Set this bullet to fire configuration.
 	 * 
-	 * @post | if (!isTerminated() && getShip() != null && getShip().hasLoadedInMagazine(this))
-	 * 		 | 	then Entity.getDistanceBetweenCentres(new, getShip()) == (1 + 5 * (1 - ACCURACY_FACTOR)) * Entity.getSumOfRadii(this, getShip())
-	 * 		 | 		&& (new.getPosition().getyComponent() - getShip().getPosition().getyComponent() ==
-	 * 		 |			Math.tan(getShip().getOrientation()) * ((new.getPosition().getxComponent() - getShip().getPosition().getxComponent() )
+	 * @post | if (!isTerminated() && getContainingShip() != null && getContainingShip().hasLoadedInMagazine(this))
+	 * 		 | 	then Entity.getDistanceBetweenCentres(new, getContainingShip()) == (1 + 5 * (1 - ACCURACY_FACTOR)) * Entity.getSumOfRadii(this, getContainingShip())
+	 * 		 | 		&& (new.getPosition().getyComponent() - getContainingShip().getPosition().getyComponent() ==
+	 * 		 |			Math.tan(getContainingShip().getOrientation()) * ((new.getPosition().getxComponent() - getContainingShip().getPosition().getxComponent() )
 	 * 		 |		&& (new.getVelocity().getSpeed() == 250 && new.getVelocity().getyComponent() ==
-	 * 		 |			Math.tan(getShip().getOrientation()) * new.getVelocity().getxComponent()
+	 * 		 |			Math.tan(getContainingShip().getOrientation()) * new.getVelocity().getxComponent()
 	 * @note This method must only be invoked in the method fireBullet() of the class Ship
 	 */
 	@Model
 	void setToFireConfiguration() throws IllegalComponentException, IllegalPositionException {
-		if (!isTerminated() && getShip() != null && getShip().hasLoadedInMagazine(this)) {
-			double newDistanceBetweenCentres = (1 + 5 * (1 - ACCURACY_FACTOR)) * Entity.getSumOfRadii(this, getShip());
-			double angle = getShip().getOrientation();
-			setPosition(getShip().getPosition().getxComponent() + newDistanceBetweenCentres * Math.cos(angle),
-					getShip().getPosition().getyComponent() + newDistanceBetweenCentres * Math.sin(angle));
+		if (!isTerminated() && getContainingShip() != null && getContainingShip().hasLoadedInMagazine(this)) {
+			double newDistanceBetweenCentres = (1 + 5 * (1 - ACCURACY_FACTOR)) * Entity.getSumOfRadii(this, getContainingShip());
+			double angle = getContainingShip().getOrientation();
+			setPosition(getContainingShip().getPosition().getxComponent() + newDistanceBetweenCentres * Math.cos(angle),
+					getContainingShip().getPosition().getyComponent() + newDistanceBetweenCentres * Math.sin(angle));
 			setVelocity(250 * Math.cos(angle), 250 * Math.sin(angle));
 		}
 	}
@@ -449,39 +484,68 @@ public class Bullet extends Entity {
 	 */
 	@Model
 	void setToLoadConfiguration() {
-		if (!isTerminated() && (getShip() != null) && getShip().hasLoadedInMagazine(this)) {
-			setPosition(getShip().getPosition());
+		if (!isTerminated() && (getContainingShip() != null) && getContainingShip().hasLoadedInMagazine(this)) {
+			//This method must only be invoked in the method loadBullet() of the class Ship, therefore the containing ship of this bullet
+			//is already set.
+			setPosition(getContainingShip().getPosition());
 			//Cannot throw IllegalComponentException or IllegalPositionException because getShip() is on a legal position (and if this bullet
-			// is associated to a world, getShip() is associated to the same world because of the class invariant).
+			//is associated to a world, getContainingShip() is associated to the same world because of the class invariant).
 			setVelocity(0, 0);
 			resetNbOfBounces();
 		}
 	}
 	
 	/**
-	 * Set the ship of this bullet to the given ship.
+	 * Set the containing ship of this bullet to the given ship.
 	 * 
 	 * @param ship
-	 * 		The new ship for this bullet.
-	 * @post    | new.getShip() == ship
+	 * 		The new containing ship for this bullet.
+	 * @post    | new.getContainingShip() == ship
 	 * @throws IllegalMethodCallException
-	 * 			| ( ( ship != null && ! ship.hasAsBullet(this)) ||
-	 * 		   	|	(ship == null && getShip() != null && getShip().hasAsBullet(this))
+	 * 			| ( (ship != null && (! ship.hasLoadedInMagazine(this) || getSourceShip()!= null)) ||
+				|	(ship == null && getContainingShip() != null && getContainingShip().hasLoadedInMagazine(this)))
 	 * @note If this method is invoked with an effective ship and does not throw an exception,
 	 * 			then the world of this bullet must be set to null.
 	 */
 	@Raw @Model
-	void setShip(Ship ship) throws IllegalMethodCallException {
+	void setContainingShip(Ship ship) throws IllegalMethodCallException {
 		if (isTerminated())
 			throw new TerminatedException();
-		if ((ship != null && ! ship.hasAsBullet(this)) ||
-				(ship == null && getShip() != null && getShip().hasAsBullet(this)))
+		if ((ship != null && ! (ship.hasLoadedInMagazine(this) || getSourceShip() != null)) ||
+				(ship == null && getContainingShip() != null && getContainingShip().hasLoadedInMagazine(this)))
 			throw new IllegalMethodCallException();
-		this.ship = ship;
+		this.containingShip = ship;
 	}
 	
 	/**
-	 * A variable registering the ship to which this bullet is associated (contained in or fired by).
+	 * Set the source ship of this bullet to the given ship.
+	 * 
+	 * @param ship
+	 * 		The new ship for this bullet.
+	 * @post    | new.getSourceShip() == ship
+	 * @throws IllegalMethodCallException
+	 * 			| ( (ship != null && ! (ship.hasFired(this) || getContainingShip()!= null)) ||
+				|	(ship == null && getSourceShip() != null && getSourceShip().hasFired(this)))
+	 * @note If this method is invoked with an effective ship and does not throw an exception,
+	 * 			then the world of this bullet must be set to null.
 	 */
-	private Ship ship;
+	@Raw @Model
+	void setSourceShip(Ship ship) throws IllegalMethodCallException {
+		if (isTerminated())
+			throw new TerminatedException();
+		if ((ship != null && (! ship.hasFired(this) || getContainingShip() != null)) ||
+				(ship == null && getSourceShip() != null && getSourceShip().hasFired(this)))
+			throw new IllegalMethodCallException();
+		this.sourceShip = ship;
+	}
+	
+	/**
+	 * A variable registering the ship in which this bullet is contained.
+	 */
+	private Ship containingShip;
+	
+	/**
+	 * A variable registering the ship by which this bullet was fired.
+	 */
+	private Ship sourceShip;
 }

@@ -783,27 +783,27 @@ public abstract class Entity {
 		return (Entity.getDistanceBetween(entity1, entity2) <= (ACCURACY_FACTOR - 1) * getSumOfRadii(entity1, entity2));
 	}
 	
-//	/**
-//	 * Check whether the given entity lies fully within the bounds of this entity.
-//	 * 
-//	 * @param other
-//	 * 			The entity to check.
-//	 * @return True iff minimal distance between the centre of the given entity and a point on the boundary of this entity
-//	 * 			is greater than or equal to the radius of the given entity times the ACCURACY_FACTOR.
-//	 * 		| result == (min{ pos in Position | Position.getDistanceBetween(pos, this.getPosition()) == this.getRadius()
-//	 * 		|					: Position.getDistanceBetween(pos, other.getPosition())}) >= other.getRadius() * ACCURACY_FACTOR)
-//	 * @throws NullPointerException
-//	 * 			The given entity is not effective
-//	 * 		| other == null
-//	 * @throws TerminatedException
-//	 * 			One of the entities is terminated
-//	 * 			| (entity1.isTerminated() || entity2.isTerminated())
-//	 */
-//	public boolean surrounds(Entity other) throws NullPointerException, TerminatedException {
-//		if (this.isTerminated() || other.isTerminated())
-//			throw new TerminatedException();
-//		return (this.getRadius() - getDistanceBetweenCentres(this, other) ) >= other.getRadius() * ACCURACY_FACTOR;
-//	}
+	/**
+	 * Check whether the given entity lies fully within the bounds of this entity.
+	 * 
+	 * @param other
+	 * 			The entity to check.
+	 * @return True iff minimal distance between the centre of the given entity and a point on the boundary of this entity
+	 * 			is greater than or equal to the radius of the given entity times the ACCURACY_FACTOR.
+	 * 		| result == (min{ pos in Position | Position.getDistanceBetween(pos, this.getPosition()) == this.getRadius()
+	 * 		|					: Position.getDistanceBetween(pos, other.getPosition())}) >= other.getRadius() * ACCURACY_FACTOR)
+	 * @throws NullPointerException
+	 * 			The given entity is not effective
+	 * 		| other == null
+	 * @throws TerminatedException
+	 * 			One of the entities is terminated
+	 * 			| (entity1.isTerminated() || entity2.isTerminated())
+	 */
+	public boolean surrounds(Entity other) throws NullPointerException, TerminatedException {
+		if (this.isTerminated() || other.isTerminated())
+			throw new TerminatedException();
+		return (this.getRadius() - getDistanceBetweenCentres(this, other) ) >= other.getRadius() * ACCURACY_FACTOR;
+	}
 	
 	/**
 	 * Check whether this entity can fully surround the given entity.
@@ -941,12 +941,13 @@ public abstract class Entity {
 	 * 			|																	&& (entity1.getWorld() == entity2.getWorld()))
 	 * 			|	then collideAfterMove(entity1, entity2, result) &&
 	 * 			|		( for each t in { x in Real Numbers | 0 <= x < result } : !collideAfterMove(entity1, entity2, t)
+	 * @return If both entities are effective, but are not contained in the same world, or are not contained in a world at all,
+	 * 			the result is equal to positive infinity.
+	 * 			| if ((entity1.getWorld() == null) || (entity1.getWorld() != entity2.getWorld()))
+				|	then result == Double.POSITIVE_INFINITY
 	 * @throws NullPointerException
 	 * 			One of the entities is non-effective.
 	 * 			|	(entity1 == null) || (entity2 == null)
-	 * @throws IllegalMethodCallException
-	 * 			The world of one entity is not effective or both entities are not contained in the same world.
-	 * 			| (entity1.getWorld() == null) || (entity1.getWorld() == entity2.getWorld())
 	 * @throws OverlapException
 	 * 			The entities overlap.
 	 * 			| overlap(entity1, entity2)
@@ -955,17 +956,14 @@ public abstract class Entity {
 	 * @throws TerminatedException
 	 * 			One of the entities is terminated.
 	 * 			| (entity1.isTerminated() || entity2.isTerminated())
-	 * @throws IllegalMethodCallException
-	 * 			The world of one entity is not effective or both entities are not contained in the same world.
 	 */
-	public static double getTimeToCollision(Entity entity1, Entity entity2) throws NullPointerException, IllegalMethodCallException,
-																		OverlapException, TerminatedException {
+	public static double getTimeToCollision(Entity entity1, Entity entity2) throws NullPointerException, OverlapException, TerminatedException {
 		if (entity1.isTerminated() || entity2.isTerminated())
 			throw new TerminatedException();
-		if ((entity1.getWorld() == null) || (entity1.getWorld() != entity2.getWorld()))
-			throw new IllegalMethodCallException();
 		if (overlap(entity1, entity2))
 			throw new OverlapException();
+		if ((entity1.getWorld() == null) || (entity1.getWorld() != entity2.getWorld()))
+			return Double.POSITIVE_INFINITY;
 		
 		double dx, dy, dvx, dvy, discriminant, sumOfRadii, dvDotdr;
 		dx = entity1.getPosition().getxComponent() - entity2.getPosition().getxComponent();
@@ -1010,9 +1008,6 @@ public abstract class Entity {
 	 * @throws NullPointerException
 	 * 			One of the entities is non-effective.
 	 * 			| (entity1 == null) || (entity2 == null)
-	 * @throws IllegalMethodCallException
-	 * 			The world of one entity is not effective or both entities are not contained in the same world.
-	 * 			| (entity1.getWorld() == null) || (entity1.getWorld() == entity2.getWorld())
 	 * @throws OverlapException
 	 * 			The entities overlap.
 	 * 			| overlap(entity1, entity2)
@@ -1021,15 +1016,11 @@ public abstract class Entity {
 	 * @throws TerminatedException
 	 * 			One of the entities is terminated
 	 * 			| (entity1.isTerminated() || entity2.isTerminated())
-	 * @throws IllegalMethodCallException
-	 * 			The world of one entity is not effective or both entities are not contained in the same world.
 	 */
 	public static Position getCollisionPosition(Entity entity1, Entity entity2) throws NullPointerException, IllegalMethodCallException,
 																OverlapException, TerminatedException {
 		if (entity1.isTerminated() || entity2.isTerminated())
 			throw new TerminatedException();
-		if ((entity1.getWorld() == null) || (entity1.getWorld() != entity2.getWorld()))
-			throw new IllegalMethodCallException();
 		if (overlap(entity1, entity2))
 			throw new OverlapException();
 		
@@ -1172,9 +1163,21 @@ public abstract class Entity {
 	public Position getCollisionWithBoundaryPosition() throws TerminatedException {
 		if (this.isTerminated())
 			throw new TerminatedException();
-		if (getWorld() == null || getTimeToCollisionWithBoundary() == Double.POSITIVE_INFINITY)
+		if (getWorld() == null || getWorld().getWidth() == 0 || getWorld().getWidth() == 0 
+								|| getTimeToCollisionWithBoundary() == Double.POSITIVE_INFINITY)
 			return null;
-		return getPosition().move(getVelocity(), getTimeToCollisionWithBoundary());
+		Position centreWhenColliding = getPosition().move(getVelocity(), getTimeToCollisionWithBoundary());
+		double x = centreWhenColliding.getxComponent();
+		double y = centreWhenColliding.getyComponent();
+		double slope = getWorld().getHeight() / getWorld().getWidth();
+		if (y >= Double.max(slope * x, getWorld().getHeight() - slope * x))
+			return new Position(x, y + getRadius());
+		else if (y <= Double.min(slope * x, getWorld().getHeight() - slope * x))
+			return new Position(x, y - getRadius());
+		else if (x >= Double.max(1 / slope * y, getWorld().getWidth() - 1 / slope * y))
+			return new Position(x + getRadius(), y);
+		else
+			return new Position(x - getRadius(), y);
 	}
 	
 	/**

@@ -135,7 +135,7 @@ public class Planetoid extends MinorPlanet {
 		super.resolveCollision(other);
 		if (other instanceof Ship)
 			other.teleport();
-		else
+		else if (! (other instanceof Bullet) && ! (other instanceof MinorPlanet))
 			other.resolveCollision(this);
 	}
 	

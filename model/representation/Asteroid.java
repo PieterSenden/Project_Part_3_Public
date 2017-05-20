@@ -121,7 +121,7 @@ public class Asteroid extends MinorPlanet {
 		super.resolveCollision(other);
 		if (other instanceof Ship)
 			other.terminate();
-		else
+		else if (! (other instanceof Bullet) && ! (other instanceof MinorPlanet))
 			other.resolveCollision(this);
 	}
 	
