@@ -80,16 +80,17 @@ public class Planetoid extends MinorPlanet {
 	@Override
 	public void terminate() {
 		if (! isTerminated()){
-			if (getRadius() >= 30 && getWorld() != null) {
+			World planetoidWorld = getWorld();
+			super.terminate();
+			if (getRadius() >= 30 && planetoidWorld != null) {
 				double angle = Math.random() * 2 * Math.PI;
 				Position newPos1 = getPosition().vectorPlus(new Position(Math.cos(angle), Math.sin(angle)).scalarMultiple(getRadius() / 2));
 				Position newPos2 = getPosition().vectorMinus(new Position(Math.cos(angle), Math.sin(angle)).scalarMultiple(getRadius() / 2));
 				Velocity newVel1 = (new Velocity(Math.cos(angle), Math.sin(angle))).scalarMultiple(1.5 * getSpeed());
 				Velocity newVel2 = (new Velocity(Math.cos(angle), Math.sin(angle))).scalarMultiple(-1.5 * getSpeed());
-				getWorld().addEntity(new Asteroid(newPos1, newVel1, getRadius() / 2));
-				getWorld().addEntity(new Asteroid(newPos2, newVel2, getRadius() / 2));
+				planetoidWorld.addEntity(new Asteroid(newPos1, newVel1, getRadius() / 2));
+				planetoidWorld.addEntity(new Asteroid(newPos2, newVel2, getRadius() / 2));
 			}
-			super.terminate();
 		}
 	}
 	

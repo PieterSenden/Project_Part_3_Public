@@ -242,7 +242,7 @@ public class World {
 				return false;
 			for (Entity other: getEntities()) {
 				if ((other != entity) && Entity.overlap(entity, other))
-					return false;
+ 					return false;
 			}
 		}
 		return true;

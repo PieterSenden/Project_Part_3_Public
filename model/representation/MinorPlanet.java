@@ -94,8 +94,8 @@ public abstract class MinorPlanet extends Entity {
 		if (getWorld() == null || getWorld() != other.getWorld() || !Entity.apparentlyCollide(this, other))
 			throw new IllegalMethodCallException();
 		if (other instanceof Bullet) {
-			this.terminate();
 			other.terminate();
+			this.terminate();
 		}
 		else if (other instanceof MinorPlanet) {
 			bounceOf(other);
