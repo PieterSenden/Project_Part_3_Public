@@ -359,8 +359,6 @@ public class Bullet extends Entity {
 	public boolean canBeRemovedFromWorld() {
 		if (getWorld() == null)
 			return false;
-		if ((getSourceShip() != null) && !Entity.apparentlyCollide(this, getSourceShip()))
-			return false;
 		return true;
 	}
 	
@@ -509,7 +507,7 @@ public class Bullet extends Entity {
 	 */
 	@Raw @Model
 	void setContainingShip(Ship ship) throws IllegalMethodCallException {
-		if (isTerminated())
+		if (isTerminated() && ship != null)
 			throw new TerminatedException();
 		if ((ship != null && ! (ship.hasLoadedInMagazine(this) || getSourceShip() != null)) ||
 				(ship == null && getContainingShip() != null && getContainingShip().hasLoadedInMagazine(this)))
@@ -531,7 +529,7 @@ public class Bullet extends Entity {
 	 */
 	@Raw @Model
 	void setSourceShip(Ship ship) throws IllegalMethodCallException {
-		if (isTerminated())
+		if (isTerminated() && ship != null)
 			throw new TerminatedException();
 		if ((ship != null && (! ship.hasFired(this) || getContainingShip() != null)) ||
 				(ship == null && getSourceShip() != null && getSourceShip().hasFired(this)))
