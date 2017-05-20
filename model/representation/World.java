@@ -426,8 +426,6 @@ public class World {
 				entities.remove(pos);
 		}
 		entities.put(entity.getPosition(), entity);
-		if (!hasProperEntities())
-			throw new IllegalStateException();
 	}
 	
 	/**
@@ -596,6 +594,8 @@ public class World {
 		}
 		if (duration > 0)
 			advance(duration);
+		if (!hasProperEntities())
+			throw new IllegalStateException();
 	}
 	
 	/**
