@@ -265,9 +265,8 @@ public abstract class Entity {
 		double newyComponent = getRadius() + Math.random() * (getWorld().getHeight() - 2 * getRadius());
 		setPosition(newxComponent, newyComponent);
 		getWorld().updatePosition(this);
-		if (! getWorld().hasProperEntities())
+		if (!getWorld().hasProperEntities())
 			terminate();
-
 	}
 	
 	/**

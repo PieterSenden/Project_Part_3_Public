@@ -30,7 +30,7 @@ public	 class NearestEntityExpression extends Expression<Entity> {
 	public Entity evaluate(ProgramExecutor executor) {
 		Stream<Entity> entityStream = stream(executor);
 		Ship currentShip = executor.getShip();
-		Optional<Entity> result =  entityStream.filter(e -> getEntityType().isAssignableFrom(e.getClass()))
+		Optional<Entity> result = entityStream.filter(e -> getEntityType().isAssignableFrom(e.getClass()))
 					.filter(e -> e != currentShip)
 					.reduce( (e1, e2) -> (Entity.getDistanceBetween(e1, currentShip) <= Entity.getDistanceBetween(e2, currentShip)) ? e1 : e2);
 		return result.isPresent() ? result.get() : null;

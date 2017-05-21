@@ -14,7 +14,8 @@ public class TurnAction extends Action<Double> {
 		super.execute(executor);
 		try {
 			executor.getShip().turn(evaluateExpression(executor));
-		} catch (AssertionError err) {
+		}
+		catch (AssertionError err) {
 			;
 		}
 	}
