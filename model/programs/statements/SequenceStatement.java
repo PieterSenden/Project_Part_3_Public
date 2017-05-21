@@ -21,11 +21,13 @@ public class SequenceStatement extends Statement implements ComposedStatement {
 			if (! canHaveAsEnclosedStatement(statement))
 				throw new IllegalArgumentException();
 		this.enclosedStatements = enclosedStatements;
+		for (Statement statement : enclosedStatements)
+			statement.setEnclosingStatement(this);
 	}
 	
 	@Override
 	public void execute(ProgramExecutor executor) {
-		if (executor.getCurrentExecutionListLength() < getDepth())
+		if (executor.getCurrentExecutionListLength() <= getDepth())
 			executor.setExecutionPositionAt(getDepth(), 1);
 		for (int i = executor.getExecutionPositionAt(getDepth()); i <= getNbOfEnclosedStatements(); i++) {
 			getEnclosedStatementAt(i).execute(executor);

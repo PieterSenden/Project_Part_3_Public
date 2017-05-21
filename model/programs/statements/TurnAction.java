@@ -12,7 +12,11 @@ public class TurnAction extends Action<Double> {
 	@Override
 	public void execute(ProgramExecutor executor) {
 		super.execute(executor);
-		executor.getShip().turn(evaluateExpression(executor));
+		try {
+			executor.getShip().turn(evaluateExpression(executor));
+		} catch (AssertionError err) {
+			;
+		}
 	}
 	
 	public static final double TIME_TO_EXECUTE = 0.2;

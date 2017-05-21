@@ -17,7 +17,7 @@ import be.kuleuven.cs.som.annotate.*;
 public abstract class Action<T> extends SingleExpressionStatement<T> {
 	
 	@Raw
-	public Action(double timeToExecute, Expression<T> expression) {
+	public Action(double timeToExecute, Expression<? extends T> expression) {
 		super(expression);
 		if (isValidTimeToExecute(timeToExecute))
 			this.timeToExecute = timeToExecute;
