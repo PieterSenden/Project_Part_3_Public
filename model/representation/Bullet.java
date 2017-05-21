@@ -353,7 +353,7 @@ public class Bullet extends Entity {
 	/**
 	 * Determine whether this bullet can be removed from its world.
 	 * 
-	 * @return	| result == (getWorld() != null) && ((getSourceShip() == null) || Entity.apparentlyCollide(this, getSourceShip()))
+	 * @return	| result == (getWorld() != null)
 	 */
 	@Override
 	public boolean canBeRemovedFromWorld() {

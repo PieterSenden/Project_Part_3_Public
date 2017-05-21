@@ -902,7 +902,7 @@ public class Ship extends Entity {
 		if (! canHaveAsBullet(bullet) || 
 				(hasFired(bullet) && ! Entity.apparentlyCollide(this, bullet)) ||
 				(bullet.getSourceShip() != null && bullet.getSourceShip() != this) ||
-				(! hasFired(bullet) && !surrounds(bullet)))
+				(!hasFired(bullet) && !surrounds(bullet)))
 			throw new IllegalBulletException();
 		if (hasFired(bullet))
 			removeAsFiredBullet(bullet);

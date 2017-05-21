@@ -241,8 +241,9 @@ public class World {
 			if (!canHaveAsEntity(entity) || (entity.getWorld() != this) || (getEntityAt(entity.getPosition()) != entity))
 				return false;
 			for (Entity other: getEntities()) {
-				if ((other != entity) && Entity.overlap(entity, other))
-					return false;
+				if ((other != entity) && Entity.overlap(entity, other)) {
+   					return false;
+				}
 			}
 		}
 		return true;
