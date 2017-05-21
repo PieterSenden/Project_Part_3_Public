@@ -13,11 +13,12 @@ public class WhileStatement extends SingleExpressionStatement<Boolean> implement
 		if (! canHaveAsEnclosedStatement(bodyStatement))
 			throw new IllegalArgumentException();
 		this.bodyStatement = bodyStatement;
+		bodyStatement.setEnclosingStatement(this);
 	}
 	
 	@Override
 	public void execute(ProgramExecutor executor) {
-		if (executor.getCurrentExecutionListLength() < getDepth())
+		if (executor.getCurrentExecutionListLength() <= getDepth())
 			executor.setExecutionPositionAt(getDepth(), NOT_EXECUTING_BODY);
 		while (evaluateExpression(executor) || executor.getExecutionPositionAt(getDepth()) == EXECUTING_BODY) {
 			setIsExecutingBody(EXECUTING_BODY, executor);

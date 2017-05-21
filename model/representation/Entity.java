@@ -263,13 +263,10 @@ public abstract class Entity {
 			throw new IllegalMethodCallException();
 		double newxComponent = getRadius() + Math.random() * (getWorld().getWidth() - 2 * getRadius());
 		double newyComponent = getRadius() + Math.random() * (getWorld().getHeight() - 2 * getRadius());
-		try {
-			setPosition(newxComponent, newyComponent);
-			getWorld().updatePosition(this);
-		}
-		catch (IllegalStateException exc) {
+		setPosition(newxComponent, newyComponent);
+		getWorld().updatePosition(this);
+		if (!getWorld().hasProperEntities())
 			terminate();
-		}
 	}
 	
 	/**

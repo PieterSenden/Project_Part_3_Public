@@ -11,12 +11,15 @@ public class IfThenElseStatement extends SingleExpressionStatement<Boolean> impl
 		if (! canHaveAsIfStatement(ifStatement) || ! canHaveAsElseStatement(elseStatement))
 			throw new IllegalArgumentException();
 		this.ifStatement = ifStatement;
+		ifStatement.setEnclosingStatement(this);
 		this.elseStatement = elseStatement;
+		if (elseStatement != null)
+			elseStatement.setEnclosingStatement(this);
 	}
 	
 	@Override
 	public void execute(ProgramExecutor executor) {
-		if (executor.getCurrentExecutionListLength() < getDepth())
+		if (executor.getCurrentExecutionListLength() <= getDepth())
 			executor.setExecutionPositionAt(getDepth(), CONDITION);
 		if (evaluateExpression(executor) || executor.getExecutionPositionAt(getDepth()) == IF) {
 			setExecutionPosition(IF, executor);
@@ -40,7 +43,7 @@ public class IfThenElseStatement extends SingleExpressionStatement<Boolean> impl
 //	}
 //	
 	private void setExecutionPosition(int executionPosition, ProgramExecutor executor) throws IllegalArgumentException {
-		if (executionPosition != CONDITION || executionPosition != IF || executionPosition != CONDITION)
+		if (executionPosition != CONDITION && executionPosition != IF && executionPosition != ELSE)
 			throw new IllegalArgumentException();
 		executor.setExecutionPositionAt(getDepth(), executionPosition);
 	}
