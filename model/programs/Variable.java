@@ -79,7 +79,6 @@ public class Variable {
 			return value == null;
 		else
 			return (value == null) ? hasAsSupportedReferenceType(type) : (hasAsSupportedType(type) && type.isAssignableFrom(value.getClass())); 
-			
 	}
 	
 	@Immutable
