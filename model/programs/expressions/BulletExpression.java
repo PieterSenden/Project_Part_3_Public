@@ -25,10 +25,9 @@ public class BulletExpression extends Expression<Bullet> {
 		if (executor.getShip().getFiredBullets().isEmpty())
 			return null;
 		Stream<Bullet> bulletStream = stream(executor);
-		Optional<Bullet> result = bulletStream.filter(b -> ! b.isTerminated())
-							.reduce( (b1, b2) -> b1);
+		Optional<Bullet> result = bulletStream.filter(b -> !b.isTerminated())
+							.reduce((b1,b2) -> b1);
 		return result.isPresent() ? result.get() : null;
-		
 	}
-
+	
 }
