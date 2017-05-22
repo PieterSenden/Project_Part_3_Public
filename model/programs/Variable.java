@@ -28,16 +28,8 @@ public class Variable {
 	@Raw
 	public Variable(Object value) throws IllegalArgumentException {
 		if (value != null) {
-			Class<?> variableType = value.getClass();
-			boolean supportedTypeFound = false;
-			//We look for the most general supported type that the given value belongs to.
-			for (Class<?> supportedType : Variable.getSupportedTypes()) {
-				if (supportedType.isAssignableFrom(variableType)) {
-					variableType = supportedType;
-					supportedTypeFound = true;
-				}
-			}
-			if (!supportedTypeFound)
+			Class<?> variableType = getMostGeneralSupportedTypeFor(value);
+			if (variableType == null)
 				throw new IllegalArgumentException("Variables of this type are not supported.");
 			this.type = variableType;
 			if (! isValidVariable(getType(), value))
@@ -48,6 +40,21 @@ public class Variable {
 			this.value = value;
 			this.type = null;
 		}
+	}
+	
+	public static Class<?> getMostGeneralSupportedTypeFor(Object value) {
+		Class<?> result = value.getClass();
+		boolean supportedTypeFound = false;
+		for (Class<?> supportedType : Variable.getSupportedTypes()) {
+			if (supportedType.isAssignableFrom(result)) {
+				result = supportedType;
+				supportedTypeFound = true;
+			}
+		}
+		if (supportedTypeFound)
+			return result;
+		else
+			return null;
 	}
 	
 	@Basic

@@ -11,8 +11,6 @@ public class EqualityExpression extends BinaryExpression<Boolean, Object, Object
 
 	@Override
 	public Boolean evaluate(ProgramExecutor executor) {
-		if (evaluateLeftSubExpression(executor).getClass() != evaluateRightSubExpression(executor).getClass())
-			return false;
 		return evaluateLeftSubExpression(executor) == evaluateRightSubExpression(executor);
 	}
 

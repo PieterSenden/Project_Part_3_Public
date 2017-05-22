@@ -41,13 +41,14 @@ public class VariableContainer {
 	}
 	
 	public void assignVariable(String name, Object value) throws IllegalArgumentException, IllegalMethodCallException {
-		if (getProgramExecutor().getProgram().hasFunctionWithName(name))
-			throw new IllegalMethodCallException();
 		Map<String,Variable> scope;
 		if (! localVariables.empty())
 			scope = localVariables.peek();
-		else
+		else {
+			if (getProgramExecutor().getProgram().hasFunctionWithName(name))
+				throw new IllegalMethodCallException();
 			scope = globalVariables;
+		}
 		
 		if (scope.containsKey(name)){
 			Variable oldVariable = scope.get(name);
@@ -55,6 +56,9 @@ public class VariableContainer {
 				scope.put(name, new Variable(value, oldVariable.getType()));
 				// The new variable object has the same type as the variable object it replaces. In this way, it is enforced that the type
 				// of a variable is not changed during the execution of a program/function call.
+			else if (oldVariable.getType() == null && Variable.hasAsSupportedReferenceType(Variable.getMostGeneralSupportedTypeFor(value)) ) {
+				scope.put(name, new Variable(value));
+			}
 			else
 				throw new IllegalArgumentException("This value cannot be assigned to the variable with the given name.");
 		}

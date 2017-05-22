@@ -2,6 +2,7 @@ package asteroids.model.programs.statements;
 
 import asteroids.model.programs.ProgramExecutor;
 import asteroids.model.programs.expressions.Expression;
+import asteroids.util.internal.InternalUtils;
 
 public class TurnAction extends Action<Double> {
 	
@@ -13,9 +14,12 @@ public class TurnAction extends Action<Double> {
 	public void execute(ProgramExecutor executor) {
 		super.execute(executor);
 		try {
-			executor.getShip().turn(evaluateExpression(executor));
+			double turnAngle = evaluateExpression(executor);
+			turnAngle = InternalUtils.toProperAngleDelta(executor.getShip().getOrientation(), turnAngle);
+			executor.getShip().turn(turnAngle);
 		}
 		catch (AssertionError err) {
+			//By using toProperAngleDelta, this assertion error should not be thrown. We include this catcher as a safety measure.
 			;
 		}
 	}

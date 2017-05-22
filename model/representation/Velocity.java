@@ -31,7 +31,7 @@ public class Velocity extends PhysicalVector {
 	 * Calculate the speed associated with this velocity 
 	 * 
 	 * @return The speed associated with this velocity
-	 * 			|  result == Maht.sqrt(getxComponent()^2 + getyComponent()^2)
+	 * 			|  result == Math.sqrt(getxComponent()^2 + getyComponent()^2)
 	 */
 	public double getSpeed() {
 		return Math.hypot(getxComponent(), getyComponent());

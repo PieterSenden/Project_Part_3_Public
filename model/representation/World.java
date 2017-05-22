@@ -612,8 +612,12 @@ public class World {
 			throw new IllegalArgumentException(Double.toString(getTimeToFirstCollision()));
 		for (Entity entity: getEntities()) {
 			entity.move(duration);
-			if (entity instanceof Ship)
-				((Ship)entity).thrust(duration);
+			if (entity instanceof Ship) {
+				Ship entityAsShip = (Ship)entity;
+				entityAsShip.thrust(duration);
+				if (entityAsShip.getProgramExecutor() != null)
+					entityAsShip.executeProgram(duration);
+			}
 		}
 	}
 	
