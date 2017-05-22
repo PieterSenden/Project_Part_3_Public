@@ -41,13 +41,14 @@ public class VariableContainer {
 	}
 	
 	public void assignVariable(String name, Object value) throws IllegalArgumentException, IllegalMethodCallException {
-		if (getProgramExecutor().getProgram().hasFunctionWithName(name))
-			throw new IllegalMethodCallException();
 		Map<String,Variable> scope;
 		if (! localVariables.empty())
 			scope = localVariables.peek();
-		else
+		else {
+			if (getProgramExecutor().getProgram().hasFunctionWithName(name))
+				throw new IllegalMethodCallException();
 			scope = globalVariables;
+		}
 		
 		if (scope.containsKey(name)){
 			Variable oldVariable = scope.get(name);
