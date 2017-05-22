@@ -431,11 +431,14 @@ public abstract class Entity {
 	 * 			for any physical vector, then the new velocity of this entity is equal to a velocity with 0 as its xComponent and yComponent.
 	 * 		 | if (getVelocity() == null && (!PhysicalVector.isValidComponent(xComponent) || !PhysicalVector.isValidComponent(yComponent))
 	 * 		 |		then new.getVelocity().equals(new Velocity(0, 0)
+	 * TODO specs
 	 */
 	@Raw @Model
 	protected void setVelocity(double xComponent, double yComponent) {
 		Velocity tempVelocity;
 		try {
+			if (!Double.isFinite(xComponent) || !Double.isFinite(yComponent))
+				throw new IllegalComponentException();
 			tempVelocity = new Velocity(xComponent, yComponent);
 		}
 		catch(IllegalComponentException exc) {
