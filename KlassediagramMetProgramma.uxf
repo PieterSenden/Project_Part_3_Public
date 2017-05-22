@@ -414,66 +414,66 @@ expression</panel_attributes>
     <coordinates>
       <x>410</x>
       <y>860</y>
-      <w>450</w>
+      <w>460</w>
       <h>110</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>430.0;10.0;430.0;50.0;10.0;50.0;10.0;90.0</additional_attributes>
+    <additional_attributes>440.0;10.0;440.0;50.0;10.0;50.0;10.0;90.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
       <x>540</x>
       <y>860</y>
-      <w>320</w>
+      <w>330</w>
       <h>110</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>300.0;10.0;300.0;50.0;10.0;50.0;10.0;90.0</additional_attributes>
+    <additional_attributes>310.0;10.0;310.0;50.0;10.0;50.0;10.0;90.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
       <x>700</x>
       <y>860</y>
-      <w>160</w>
+      <w>170</w>
       <h>110</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>140.0;10.0;140.0;50.0;10.0;50.0;10.0;90.0</additional_attributes>
+    <additional_attributes>150.0;10.0;150.0;50.0;10.0;50.0;10.0;90.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>830</x>
+      <x>840</x>
       <y>860</y>
-      <w>90</w>
+      <w>80</w>
       <h>110</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>10.0;10.0;10.0;50.0;70.0;50.0;70.0;90.0</additional_attributes>
+    <additional_attributes>10.0;10.0;10.0;50.0;60.0;50.0;60.0;90.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
       <x>260</x>
       <y>860</y>
-      <w>600</w>
+      <w>610</w>
       <h>110</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>580.0;10.0;580.0;50.0;10.0;50.0;10.0;90.0</additional_attributes>
+    <additional_attributes>590.0;10.0;590.0;50.0;10.0;50.0;10.0;90.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>830</x>
+      <x>840</x>
       <y>860</y>
-      <w>270</w>
+      <w>260</w>
       <h>110</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>10.0;10.0;10.0;50.0;250.0;50.0;250.0;90.0</additional_attributes>
+    <additional_attributes>10.0;10.0;10.0;50.0;240.0;50.0;240.0;90.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
@@ -483,7 +483,8 @@ expression</panel_attributes>
       <w>390</w>
       <h>130</h>
     </coordinates>
-    <panel_attributes>lt=-&gt;
+    <panel_attributes>lt=&lt;-&gt;
+m1=0..1
 m2=1..*
 &lt; has as substatement</panel_attributes>
     <additional_attributes>230.0;110.0;230.0;10.0;10.0;10.0</additional_attributes>
