@@ -978,7 +978,7 @@ public class Ship extends Entity {
 			throw new TerminatedException();
 		if (! canHaveAsProgramExecutor(programExecutor))
 			throw new IllegalArgumentException();
-		if (programExecutor.getShip() != null && programExecutor.getShip() != this)
+		if (programExecutor != null && programExecutor.getShip() != null && programExecutor.getShip() != this)
 			throw new IllegalMethodCallException();
 		this.programExecutor = programExecutor;
 	}
