@@ -13,7 +13,7 @@ public class BulletExpression extends Expression<Bullet> {
 		if (executor == null || executor.getShip() == null || executor.getShip().getFiredBullets() == null)
 			throw new IllegalMethodCallException();
 		Stream.Builder<Bullet> builder = Stream.builder();
-		for (Bullet bullet : executor.getShip().getFiredBullets())
+		for (Bullet bullet: executor.getShip().getFiredBullets())
 			builder.accept(bullet);
 		return builder.build();
 	}
@@ -26,7 +26,7 @@ public class BulletExpression extends Expression<Bullet> {
 			return null;
 		Stream<Bullet> bulletStream = stream(executor);
 		Optional<Bullet> result = bulletStream.filter(b -> !b.isTerminated())
-											.reduce((b1,b2) -> b1);
+							.reduce((b1,b2) -> b1);
 		return result.isPresent() ? result.get() : null;
 	}
 	

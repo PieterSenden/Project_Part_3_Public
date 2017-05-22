@@ -433,11 +433,12 @@ public abstract class Entity {
 	 * 		 |		then new.getVelocity().equals(new Velocity(0, 0)
 	 * TODO specs
 	 */
+	// TODO: specs in orde brengen.
 	@Raw @Model
 	protected void setVelocity(double xComponent, double yComponent) {
 		Velocity tempVelocity;
 		try {
-			if (!Double.isFinite(xComponent) || !Double.isFinite(yComponent))
+			if (! Double.isFinite(xComponent) || ! Double.isFinite(yComponent))
 				throw new IllegalComponentException();
 			tempVelocity = new Velocity(xComponent, yComponent);
 		}

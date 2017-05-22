@@ -8,7 +8,7 @@ import asteroids.model.programs.ProgramExecutor;
 import asteroids.model.representation.*;
 import be.kuleuven.cs.som.annotate.Basic;
 
-public	 class NearestEntityExpression extends Expression<Entity> {
+public class NearestEntityExpression extends Expression<Entity> {
 	
 	public NearestEntityExpression(Class<? extends Entity> entityType) throws IllegalArgumentException {
 		if (isValidEntityType(entityType))

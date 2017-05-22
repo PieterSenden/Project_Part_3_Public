@@ -51,11 +51,11 @@ class PhysicalVector {
 	 *  
 	 * @param  component
 	 *         The component to check.
-	 * @return true iff the given component is a finite number.
-	 *       | result == !Double.isNan(component)
+	 * @return true iff the given component is not NaN.
+	 *       | result == ! Double.isNaN(component);
 	 */
 	public static boolean isValidComponent(double component) {
-		return !Double.isNaN(component);
+		return ! Double.isNaN(component);
 	}
 	/**
 	 * Return the xComponent of this physical vector.
