@@ -6,7 +6,7 @@ package asteroids.model.exceptions.programExceptions;
  * @author Joris Ceulemans & Pieter Senden
  * @version 3.0
  * 
- * @note This exception may only be caught in a TODO. 
+ * @note This exception may only be caught in executeProgram() of ProgramExecutor. 
  */
 
 

@@ -16,6 +16,9 @@ import be.kuleuven.cs.som.annotate.*;
  *       | isValidWidth(this.getWidth())
  * @invar  Each world must have proper entities.
  * 		 | hasProperEntities()
+ * 
+ * @author Joris Ceulemans & Pieter Senden
+ * @version 3.0
  */
 public class World {
 	/**
@@ -110,7 +113,6 @@ public class World {
 	 */
 	private final double height;
 	
-	
 	/**
 	 * Return the maximal height for any world.
 	 */
@@ -167,7 +169,7 @@ public class World {
 	/**
 	 * Return an array with the dimensions (width and height) of this world.
 	 * 
-	 * @return @see implementation
+	 * @return | @see implementation
 	 */
 	@Raw
 	public double[] getDimensions() {
@@ -313,38 +315,6 @@ public class World {
 		return result;
 	}
 	
-//	/**
-//	 * Returns a set of all ships contained in this world.
-//	 * 
-//	 * @return	| result == { e in getEntities() | (e instanceof Ship) : (Ship)e }
-//	 */
-//	public Set<Ship> getShips() {
-//		Set<Ship> result = new HashSet<>();
-//		for (Entity entity: getEntities()) {
-//			if (entity instanceof Ship)
-//				result.add((Ship)entity);
-//		}
-//		return result;
-//	}
-	
-//	public Set<Ship> getShips() {
-//		return getSpecificEntities(Ship.class);
-//	}
-	
-//	/**
-//	 * Returns a set of all bullets contained in this world.
-//	 * 
-//	 * @return	| result == { e in getEntities() | (e instanceof Bullet) : (Bullet)e }
-//	 */
-//	public Set<Bullet> getBullets() {
-//		Set<Bullet> result = new HashSet<>();
-//		for (Entity entity: getEntities()) {
-//			if (entity instanceof Bullet)
-//				result.add((Bullet)entity);
-//		}
-//		return result;
-//	}
-	
 	/**
 	 * Add a given entity to this world.
 	 * 
@@ -375,6 +345,7 @@ public class World {
 	
 	/**
 	 * Remove the given entity from this world.
+	 * 
 	 * @param entity
 	 * 			The entity to remove from this world.
 	 * @post	| new.getEntityAt((new entity).getPosition) == null
@@ -385,10 +356,6 @@ public class World {
 	 * 			| !hasAsEntity(entity)
 	 * @throws IllegalMethodCallException
 	 * 			| !entity.canBeRemovedFromWorld()
-	 * @note	Ships and bullets can only be removed if they are not associated with another bullet or ship respectively. This means that
-	 * 			ships can only be removed if they have no more fired bullets in this world. Similarly, a fired bullet can only be removed
-	 * 			if its associated ship is null or it apparently collides with its associated ship. To remove a ship or a bullet that does
-	 * 			not satisfy these requirements, first end the association between them.
 	 */
 	public void removeEntity(Entity entity) throws NullPointerException, IllegalArgumentException, IllegalMethodCallException {
 		if (entity == null)
@@ -406,9 +373,9 @@ public class World {
 	 * if the position of an entity in this world has changed).
 	 * 
 	 * @post	| if (hasasEntity(entity))
-	 * 			|	then ((getEntityAt(entity.getPosition()) == entity) &&
-	 * 			|	(for each position in { p in Position | hasWithinboundaries(p) } : 
-	 * 			|		(position == entity.getPosition() || getEntityAt(position) != entity)))
+	 * 			|	then ((new.getEntityAt(entity.getPosition()) == entity) &&
+	 * 			|	(for each position in { p in Position | new.hasWithinboundaries(p) } : 
+	 * 			|		(position == entity.getPosition() || new.getEntityAt(position) != entity)))
 	 * @throws	IllegalMethodCallException
 	 * 			| !hasAsentity(entity)
 	 * @throws	TerminatedException
@@ -450,19 +417,24 @@ public class World {
 	/**
 	 * Calculate the time until the first collision (between entities or of an entity against the boundary) in this world.
 	 * 
-	 * @return  | if (! getEntities().isEmpty())
-	 * 			|	then (for some entity in getEntities() : entity.collidesWithBoundaryAfterMove(result)) ||
-	 * 			| 		(for some entity1, entity2 in getEntities() : (entity1 != entity2) && Entity.collideAfterMove(entity1, entity2, result))
-	 * @return 	| if (! getEntities().isEmpty) 
-	 * 			|	then for each time in { t in RealNumbers | 0 <= t < result} :
-	 * 			|		((for each entity in getEntities() : !entity.collidesWithBoudaryAfterMove(time)) &&
-	 * 			|		(for each entity1, entity2 in getEntities() : (entity1 == entity2) || !Entity.collideAfterMove(time)))
-	 * @return	| if (getEntities().isEmpty())
-	 * 			|	then result == Double.POSITIVE_INIFINITY
+	 * @return  | if (Double.isFinite(result))
+	 * 			|	then if (! getEntities().isEmpty())
+	 * 			|		then (for some entity in getEntities() : entity.collidesWithBoundaryAfterMove(result)) ||
+	 * 			| 			(for some entity1, entity2 in getEntities() : (entity1 != entity2) && Entity.collideAfterMove(entity1, entity2, result))
+	 * @return  | if (Double.isFinite(result))
+	 * 			| 	if (! getEntities().isEmpty()) 
+	 * 			|		then for each time in { t in RealNumbers | 0 <= t < result} :
+	 * 			|			((for each entity in getEntities() : !entity.collidesWithBoudaryAfterMove(time)) &&
+	 * 			|			(for each entity1, entity2 in getEntities() : (entity1 == entity2) || !Entity.collideAfterMove(time)))
+	 * @return	| if (! Double.isFinite(result))
+	 * 			|	then (getEntities().isEmpty()) ||
+	 * 			|		for each time in { t in RealNumbers | true} :
+	 * 			|			((for each entity in getEntities() : !entity.collidesWithBoudaryAfterMove(time)) &&
+	 * 			|			(for each entity1, entity2 in getEntities() : (entity1 == entity2) || !Entity.collideAfterMove(time)))
 	 * @throws TerminatedException
 	 * 			| isTerminated()
 	 */
-	public double getTimeToFirstCollision() throws IllegalMethodCallException, TerminatedException {
+	public double getTimeToFirstCollision() throws TerminatedException {
 		if (isTerminated())
 			throw new TerminatedException();
 		double result = Double.POSITIVE_INFINITY;
@@ -495,6 +467,8 @@ public class World {
 	 * 			|	then (for some (entity1, entity2) in { (ent1, ent2) in getEntities() x getEntities() | (entity1 != entity2) && 
  	 * 			|		Entity.collideAfterMove(entity1, entity2, getTimeToFirstCollision()) } : 		
  	 * 			|			result == Entity.getCollisionPosition(entity1, entity2))
+ 	 * @return	| if (getTimeToFirstCollision() == Double.POSITIVE_INIFINITY)
+ 	 * 			|	then result == null
 	 * @throws IllegalMethodCallException
 	 * 			| getEntities().isEmpty()
 	 * @throws TerminatedException
@@ -567,7 +541,7 @@ public class World {
 	 * This method does not check whether the collision actually occurs.
 	 */
 	public void showCollision(CollisionListener collisionListener, Entity entity1, Entity entity2) throws NullPointerException,
-																								OverlapException, TerminatedException{
+																								OverlapException, TerminatedException {
 		if (collisionListener != null && !isTerminated()) {
 			if (entity1.mustShowCollisionWith(entity2)) {
 				Position collisionPosition = Entity.getCollisionPosition(entity1, entity2);
@@ -637,7 +611,7 @@ public class World {
 					//It is possible that entity is terminated in a previous collision (that is handled in this invocation of resolveCollsions),
 					// such that it still belongs to the collisionSet.
 					showCollision(collisionListener, entity);
-					entity.bounceOfBoundary();
+					entity.bounceOffBoundary();
 				}
 			}
 			else if (collision.size() == 2) {
@@ -654,5 +628,5 @@ public class World {
 			else
 				throw new IllegalCollisionException();
 		}
-}
+	}
 }

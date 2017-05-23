@@ -1,6 +1,7 @@
 package asteroids.model.programs.expressions;
 
 import java.util.Optional;
+import java.util.function.BinaryOperator;
 import java.util.stream.Stream;
 
 import asteroids.model.exceptions.IllegalMethodCallException;
@@ -26,7 +27,11 @@ public class BulletExpression extends Expression<Bullet> {
 			return null;
 		Stream<Bullet> bulletStream = stream(executor);
 		Optional<Bullet> result = bulletStream.filter(b -> !b.isTerminated())
-							.reduce((b1,b2) -> b1);
+							.reduce(new BinaryOperator<Bullet>() {
+								public Bullet apply(Bullet b1, Bullet b2) {
+									return Math.random() <= 0.5 ? b1 : b2;
+								}
+							});
 		return result.isPresent() ? result.get() : null;
 	}
 	

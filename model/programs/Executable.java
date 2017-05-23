@@ -9,7 +9,7 @@ public abstract class Executable {
 		if (! isValidBodyStatement(bodyStatement))
 			throw new IllegalArgumentException();
 		this.bodyStatement = bodyStatement;
-		bodyStatement.setEric(this);
+		bodyStatement.setDirectExecutable(this);
 	}
 	
 	public abstract Program getProgram();
@@ -24,7 +24,7 @@ public abstract class Executable {
 	}
 	
 	public boolean hasProperBodyStatement() {
-		return isValidBodyStatement(getBodyStatement()) && getBodyStatement().getEric() == this;
+		return isValidBodyStatement(getBodyStatement()) && getBodyStatement().getDirectExecutable() == this;
 	}
 	
 	public void executeBodyStatement(ProgramExecutor executor) {

@@ -104,7 +104,7 @@ public class Ship extends Entity {
 	}
 	
 	/**
-	 * Initialize this new ship with position with given position, velocity, radius and orientation.
+	 * Initialize this new ship with given position, velocity, radius and orientation.
 	 * 
 	 * @param xComPos
 	 * 			The xComponent of the position this new ship.
@@ -121,24 +121,24 @@ public class Ship extends Entity {
 	 * @effect This new ship is initialized with the given position as its position, the given velocity as its velocity,
 	 * 			the given radius as its radius, the given orientation as its orientation and the default mass as its mass.
 	 * 			| this(xComPos, yComPos, xComVel, yComVel, radius, orientation, 0)
-	 * @note The default mass is the volume of this new entity multiplied by the minimal density of this ship.
+	 * @note The default mass is the volume of this new ship multiplied by the minimal density of this new ship.
 	 */
 	@Raw 
 	public Ship(double xComPos, double yComPos, double xComVel, double yComVel, double radius,
 			double orientation) throws IllegalComponentException, IllegalRadiusException {
 		this(xComPos, yComPos, xComVel, yComVel, radius, orientation, 0);
 		// The 0 argument for the mass ensures that the mass of this new ship is set to the volume of this new ship
-		// times the minimal density of this ship.
+		// times the minimal density of this new ship.
 	}
 	
 	
 	/**
-	 * Initialize a new ship with given xComponent, yComponent and radius.
+	 * Initialize a new ship with given position and radius.
 	 * 
 	 * @param xComponent
-	 * 			xComponent of this new ship
+	 * 			The xComponent of the position of this new ship.
 	 * @param yComponent
-	 * 			yComponent of this new ship
+	 * 			The yComponent of the position of this new ship.
 	 * @param radius
 	 * 			radius of this new ship
 	 * @effect This new ship is initialized with the given xComponent and yComponent as its position, the given radius as its radius,
@@ -151,31 +151,19 @@ public class Ship extends Entity {
 	}
 	
 	/**
-	 * Return a copy of this ship.
-	 * 
-	 * @return A copy of this ship.
-	 * 			| @see implementation
-	 * @throws TerminatedException
-	 * 			| this.isTerminated()
-	 */
-	@Override
-	public Ship copy() throws TerminatedException {
-		if (isTerminated())
-			throw new TerminatedException();
-		return new Ship(getPosition().getxComponent(), getPosition().getyComponent(), getVelocity().getxComponent(),
-				getVelocity().getyComponent(), getRadius(), getOrientation(), getMass(), hasThrusterActivated());
-	}
-	
-	/**
 	 * Terminate this ship.
 	 * 
 	 * @post All loaded bullets have been removed from the magazine of this ship.
-	 * 		| getMagazine().isEmpty()
+	 * 		| new.getMagazine().isEmpty()
 	 * @post All fired bullets have been removed from the collection of fired bullets of this ship.
-	 * 		| getFiredBullets().isEmpty()
+	 * 		| new.getFiredBullets().isEmpty()
+	 * @post If the program executor of this ship was effective, this executor is terminated.
+	 * 		| if (getProgramExecutor() != null)
+	 * 		|	then getProgramExecutor().isTerminated()
+	 * @post This new ship has no program executor associated to it.
+	 * 		| new.getProgramExecutor() == null
 	 * @effect The super method is called to terminate this ship.
 	 * 		| super.terminate()
-	 * TODO specs
 	 */
 	@Override
 	public void terminate() {
@@ -286,21 +274,6 @@ public class Ship extends Entity {
 		return super.canHaveAsRadius(radius) && (radius == getInitialRadius());
 	}
 	
-	
-//	/**
-//	 * Check whether this ship can have the given radius as its initial radius.
-//	 * @param radius
-//	 * 			The radius to check.
-//	 * @return True iff the given radius is greater than or equal to the minimal radius of any ship
-//	 * 			and the given radius is finite.
-//	 * 		  |	@see implementation.
-//	 */
-//	@Override
-//	public boolean canHaveAsInitialRadius(double radius) {
-//		return radius >= getMinimalRadius() && Double.isFinite(radius);
-//	}
-	
-	
 	/**
 	 * Return the total mass of this ship.
 	 * The total mass of a ship is the sum of its mass and the mass of the objects carried by that ship.
@@ -317,25 +290,6 @@ public class Ship extends Entity {
 		return result;
 	}
 	
-//	/**
-//	 * Initialize this new ship with given thrusterForce.
-//	 * 
-//	 * @param  force
-//	 *         The thrusterForce for this new ship.
-//	 * @post   If the given thrusterForce is a valid thrusterForce for any ship,
-//	 *         the thrusterForce of this new ship is equal to the given
-//	 *         thrusterForce. Otherwise, the thrusterForce of this new ship is equal
-//	 *         to 1.1e21.
-//	 *       | if (isValidThrusterForce(force))
-//	 *       |   then new.getThrusterForce() == force
-//	 *       |   else new.getThrusterForce() == 1.1e21
-//	 */
-//	public Ship(double force) {
-//		if (! isValidThrusterForce(force))
-//			force = 1.1e21;
-//		this.force = force;
-//	}
-	
 	/**
 	 * Return the thruster force of this ship.
 	 */
@@ -348,9 +302,10 @@ public class Ship extends Entity {
 	 * Return the acceleration of this ship.
 	 * 
 	 * @return 0 if the thruster of this ship is not activated, and the quotient of this ship's thruster force and total mass if the
-	 * 				thruster is activated
-	 * 			| if (hasThrusterActivated()) then result == getThrusterForce() / getTotalMass()
-	 * 			|	else result == 0
+	 * 				thruster is activated.
+	 * 			| if (hasThrusterActivated())
+	 * 			|	then result == getThrusterForce() / getTotalMass()
+	 * 			| else result == 0
 	 */
 	public double getAcceleration() {
 		if (hasThrusterActivated())
@@ -360,7 +315,7 @@ public class Ship extends Entity {
 	}
 	
 	/**
-	 * Check whether this ship can have the given thruster force as its thrusterForce.
+	 * Check whether the given thruster force is a valid thruster force for any ship.
 	 *  
 	 * @param  force
 	 *         The thrusterForce to check.
@@ -401,8 +356,9 @@ public class Ship extends Entity {
 	
 	/**
 	 * Set the thruster status of this ship to the given flag.
+	 * 
 	 * @param flag
-	 * 		the new thruster status of this ship.
+	 * 		The new thruster status of this ship.
 	 * @post The new thruster status of this ship is equal to the given flag.
 	 * 		| new.hasThrusterActivated() == flag
 	 */
@@ -413,6 +369,7 @@ public class Ship extends Entity {
 	
 	/**
 	 * Activate the thruster of this ship.
+	 * 
 	 * @effect The thruster status of this ship is set to true.
 	 * 			| setThrust(true)
 	 */
@@ -423,6 +380,7 @@ public class Ship extends Entity {
 	
 	/**
 	 * Deactivate the thruster of this ship.
+	 * 
 	 * @effect The thruster status of this ship is set to false.
 	 * 			| setThrust(false)
 	 */
@@ -438,11 +396,11 @@ public class Ship extends Entity {
 	
 	
 	/**
-	 * Change the velocity of this ship with during the given time interval.
+	 * Change the velocity of this ship during the given time interval.
 	 * 
 	 * @param duration
 	 * 		The length of the time interval over which the ship has to be accelerated.
-	 * @effect If duration is non-negative , the x component (resp. y component) of the new
+	 * @effect If duration is non-negative , the x-component (resp. y-component) of the new
 	 * 			velocity of this ship is set to the sum of the current component
 	 * 			plus duration times acceleration of this ship times the cosine (resp. sine) of the orientation of this ship.
 	 * 			| if (duration >= 0)
@@ -462,7 +420,7 @@ public class Ship extends Entity {
 	 * 
 	 * @param other
 	 * 			The entity to resolve a collision with.
-	 * @effect	If the other entity is a ship, this ship bounces of the other ship.
+	 * @effect	If the other entity is a ship, this ship bounces off the other ship.
 	 * 			| if (other instanceof Ship)
 	 * 			|	then this.bounceOf(other)
 	 * @effect	If the other entity is not a ship, then the collision between the other entity and this ship is resolved.
@@ -486,7 +444,7 @@ public class Ship extends Entity {
 		if (getWorld() == null || getWorld() != other.getWorld() || !Entity.apparentlyCollide(this, other))
 			throw new IllegalMethodCallException();
 		if (other instanceof Ship)
-			this.bounceOf(other);
+			this.bounceOff(other);
 			//The method bounceOf only throws an exception under the conditions specified in the throws clauses
 			// in the documentation of this method.
 		else {
@@ -495,8 +453,8 @@ public class Ship extends Entity {
 	}
 	
 	/**
-	 * Check whether, if a collision between this entity and the given other entity occurs, it must be shown.
-	 * This method does not check if this entity and the other entity collide, only whether the collision must be shown if they do.
+	 * Check whether, if a collision between this ship and the given other entity occurs, it must be shown.
+	 * This method does not check if this ship and the other entity collide, only whether the collision must be shown if they do.
 	 * 
 	 * @param other
 	 * 			The other entity.
@@ -540,12 +498,12 @@ public class Ship extends Entity {
 	 * 
 	 * @param bullet
 	 * 		The bullet to be added to the magazine of this ship.
-	 * @post If this ship can have the given bullet as bullet, then the bullet is added to the magazine of this ship.
-	 * 		| if (canHaveAsBullet(bullet))
-	 * 		|	then hasLoadedInMagazine(bullet)
+	 * @post If this ship can have the given bullet as loaded bullet, then the bullet is added to the magazine of this ship.
+	 * 		| if (canHaveAsLoadedBullet(bullet))
+	 * 		|	then new.hasLoadedInMagazine(bullet)
 	 * @throws IllegalBulletException
-	 * 		This ship cannot have the given bullet as bullet.
-	 * 		| ! canHaveAsBullet(bullet)
+	 * 		This ship cannot have the given bullet as loaded bullet.
+	 * 		| ! canHaveAsLoadedBullet(bullet)
 	 * @throws TerminatedException
 	 * 		This ship is terminated
 	 * 		| this.isTerminated()
@@ -567,7 +525,7 @@ public class Ship extends Entity {
 	 * @post If the given bullet is effective and is loaded on this ship, then
 	 * 			the given bullet is removed from the magazine of this ship.
 	 * 		| if (bullet != null && hasLoadedInMagazine(bullet))
-	 * 		|	then ! hasLoadedInMagazine(bullet)
+	 * 		|	then ! new.hasLoadedInMagazine(bullet)
 	 * @throws IllegalBulletException
 	 * 			The given bullet is not loaded on this ship.
 	 * 		| ! hasLoadedInMagazine(bullet)
@@ -598,12 +556,12 @@ public class Ship extends Entity {
 	 * 
 	 * @param bullet
 	 * 		The bullet to be added to the collection of fired bullets of this ship.
-	 * @post If this ship can have the given bullet as bullet, then the bullet is added to the collection of fired bullets of this ship.
+	 * @post If this ship can have the given bullet as fired bullet, then the bullet is added to the collection of fired bullets of this ship.
 	 * 		| if (canHaveAsBullet(bullet))
-	 * 		|	then hasFired(bullet)
+	 * 		|	then new.hasFired(bullet)
 	 * @throws IllegalBulletException
-	 * 		This ship cannot have the given bullet as bullet.
-	 * 		| ! canHaveAsBullet(bullet)
+	 * 		This ship cannot have the given bullet as fired bullet.
+	 * 		| ! canHaveAsFiredBullet(bullet)
 	 * @throws TerminatedException
 	 * 		This ship is terminated
 	 * 		| this.isTerminated()
@@ -682,9 +640,10 @@ public class Ship extends Entity {
 	
 	/**
 	 * Check whether this ship is associated to the given bullet.
+	 * 
 	 * @param bullet
 	 * 			The bullet to check.
-	 * @return True iff this ship has fired or loaded the given bullet.
+	 * @return True iff this ship has fired the given bullet or has the given bullet in its magazine.
 	 * 			| @see implementation
 	 */
 	public boolean hasAsBullet(@Raw Bullet bullet) {
@@ -701,6 +660,8 @@ public class Ship extends Entity {
 	 * 			| if (this.isTerminated())
 	 * 			|	then result == false
 	 * 			| if (bullet == null)
+	 * 			|	then result == false
+	 * 			| if (! canSurround(bullet))
 	 * 			|	then result == false
 	 * 			| else if (bullet.getWorld() == null)
 	 * 			|	then result == true
@@ -746,17 +707,17 @@ public class Ship extends Entity {
 	 * @return If this ship is terminated, true iff there are no bullets in the magazine and the collection of all bullets fired by this ship is empty.
 	 * 			| if (this.isTerminated())
 	 * 			|	result == (getMagazine().isEmpty() && getFiredBullets().isEmpty())
-	 * @return If this ship is not terminated, true iff each bullet in magazine is effective, has not been fired by this ship, is not associated to any world
+	 * @return If this ship is not terminated, true iff each bullet in the magazine is effective, has not been fired by this ship, is not associated to any world
 	 * 			and references this ship as its ship, 
 	 * 			and each bullet that has been fired by this ship, is effective, is not loaded in the magazine of this ship,
 	 * 			is associated to the same world as this ship and references this ship as its ship.
 	 * 			| if (!this.isTerminated())
 	 * 			| 	then result == 
 	 * 			| 	 	(for each bullet in getMagazine():
-	 * 			|			!canHaveAsBullet(bullet) && bullet.getContainingShip() == this && ! hasFired(bullet) && bullet.getWorld() == null)
+	 * 			|			canHaveAsLoadedBullet(bullet) && bullet.getContainingShip() == this && ! hasFired(bullet) && bullet.getWorld() == null)
 	 * 			|		&&
 	 * 			|		(for each bullet in getFiredBullets():
-	 * 			|			!canHaveAsBullet(bullet) && bullet.getSourceShip() == this && ! hasLoadedInMagazine(bullet) && bullet.getWorld() == getWorld()) 			
+	 * 			|			canHaveAsFiredBullet(bullet) && bullet.getSourceShip() == this && ! hasLoadedInMagazine(bullet) && (bullet.isTerminated() || bullet.getWorld() == getWorld()) 			
 	 */
 	public boolean hasProperBullets() {
 		if (!isTerminated()) {
@@ -778,7 +739,8 @@ public class Ship extends Entity {
 	}
 	
 	/**
-	 * Return the number of bullets loaded in the magazine of this ship. 
+	 * Return the number of bullets loaded in the magazine of this ship.
+	 * 
 	 * @return The number of bullets loaded in the magazine of this ship.
 	 * 			| @see implementation
 	 */
@@ -958,20 +920,60 @@ public class Ship extends Entity {
 	 */
 	private Set<Bullet> firedBullets = new HashSet<>();
 	
-	//TODO Add specifications for the following methods.
+	
+	/**
+	 * Return the program executor of this ship.
+	 */
 	@Basic @Raw
 	public ProgramExecutor getProgramExecutor() {
 		return this.programExecutor;
 	}
 	
+	/**
+	 * Check whether this ship can have the given program executor as its program executor.
+	 * 
+	 * @param programExecutor
+	 * 			The program executor to check.
+	 * @return True if the given program executor is not effective.
+	 * 			| if (programExecutor == null)
+	 * 			|	then result == true
+	 * @return If the given program executor is effective, the result is true iff this ship is not terminated and the given program executor is not terminated
+	 * 			| if (programExecutor != null)
+	 * 			|	then result == isTerminated() ? false : !programExecutor.isTerminated()
+	 */
 	public boolean canHaveAsProgramExecutor(ProgramExecutor programExecutor) {
 		return (programExecutor == null) || (isTerminated() ? false : !programExecutor.isTerminated());
 	}
 	
+	/**
+	 * Check whether this ship has a proper program executor associated to it.
+	 * 
+	 * @return True iff this ship can have its program executor as its program executor and
+	 * 			(the program executor of this ship is null or the ship associated to the program executor of this ship, is this ship).
+	 * 			| @see implementation
+	 */
 	public boolean hasProperProgramExecutor() {
 		return canHaveAsProgramExecutor(getProgramExecutor()) && (getProgramExecutor() == null || getProgramExecutor().getShip() == this);
 	}
 	
+	
+	/**
+	 * Set the program executor of this ship to the given program executor.
+	 * 
+	 * @param programExecutor
+	 * 			The new program executor for this ship.
+	 * @post The new program executor of this ship is equal to the given program executor.
+	 * 			| new.getProgramExecutor() == programExecutor
+	 * @throws TerminatedException
+	 * 			This ship is terminated.
+	 * 			| isTerminated()
+	 * @throws IllegalArgumentException
+	 * 			This ship cannot have the given program executor as its program executor.
+	 * 			| ! canHaveAsProgramExecutor(programExecutor)
+	 * @throws IllegalMethodCallException
+	 * 			The given program executor is effective, the ship associated to the given program executor is effective and not this ship.
+	 * 			| programExecutor != null && programExecutor.getShip() != null && programExecutor.getShip() != this
+	 */
 	public void setProgramExecutor(ProgramExecutor programExecutor) throws TerminatedException, IllegalArgumentException,
 																			IllegalMethodCallException {
 		if (isTerminated())
@@ -983,7 +985,20 @@ public class Ship extends Entity {
 		this.programExecutor = programExecutor;
 	}
 	
-	
+	/**
+	 * Load the given program on this ship.
+	 * 
+	 * @param program
+	 * 			The program to load on this ship.
+	 * @post The program associated to this new ship is equal to the given program.
+	 * 			| new.getProgram() == program
+	 * @throws IllegalArgumentException
+	 * 			The given program is not a valid program for any ship.
+	 * 			| ! isValidProgram(program)
+	 * @throws TerminatedException
+	 * 			This ship is terminated.
+	 * 			| isTerminated()
+	 */
 	public void loadProgram(Program program) throws IllegalArgumentException, TerminatedException {
 		if (! isValidProgram(program))
 			throw new IllegalArgumentException();
@@ -994,16 +1009,48 @@ public class Ship extends Entity {
 		executor.setShip(this);
 	}
 	
+	/**
+	 * Return the program associated to this ship, if any.
+	 * 
+	 * @return Null if the program executor associated to this ship is not effective.
+	 * 			Otherwise, the program associated to the program executor associated to this ship.
+	 * 			| @see implementation
+	 */
 	public Program getProgram() {
 		if (getProgramExecutor() == null)
 			return null;
 		return getProgramExecutor().getProgram();
 	}
 	
+	/**
+	 * Check whether the given program is a valid program for any ship.
+	 * 
+	 * @param program
+	 * 			The program to check
+	 * @return	True iff the given program is a valid program for any program executor.
+	 * 			| result == ProgramExecutor.isValidProgram(program)
+	 */
 	public static boolean isValidProgram(Program program) {
 		return ProgramExecutor.isValidProgram(program);
 	}
 	
+	/**
+	 * Execute the program associated to this ship during the given duration.
+	 * 
+	 * @param duration
+	 * 			The time during which the program has to be executed.
+	 * @return A list of all values the program associated to this ship has printed out during its execution, if the program has finished executing.
+	 * 			Otherwise, null.
+	 * 			| if (getProgramExecutor().isProgramFinished())
+	 * 			|	then result == getProgramExecutor().getPrintList())
+	 * 			| else result == null
+	 * @throws IllegalMethodCallException
+	 * 			The program executor of this ship is not effective.
+	 * 			| getProgramExecutor() == null
+	 * @throws TerminatedException
+	 * 			This ship is terminated.
+	 * 			| isTerminated()
+	 */
 	public List<Object> executeProgram(double duration) throws IllegalMethodCallException, TerminatedException {
 		if (getProgramExecutor() == null)
 			throw new IllegalMethodCallException();
@@ -1012,7 +1059,8 @@ public class Ship extends Entity {
 		return getProgramExecutor().executeProgram(duration);
 	}
 	
+	/**
+	 * A variable registering the program executor associated to this ship.
+	 */
 	private ProgramExecutor programExecutor;
-	
-	
 }
