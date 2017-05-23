@@ -216,7 +216,7 @@ public class Bullet extends Entity {
 	
 	
 	/**
-	 * Make this bullet bounce off the boundary of its world.
+	 * Make this bullet bounce of the boundary of its world.
 	 * 
 	 * @effect	| if (getNbOfBouces() >= getMaximalNbOfBounces())
 	 * 			|	then terminate()
@@ -469,9 +469,7 @@ public class Bullet extends Entity {
 	 * @post    | new.getSourceShip() == ship
 	 * @throws IllegalMethodCallException
 	 * 			| ( (ship != null && ! (ship.hasFired(this) || getContainingShip()!= null)) ||
-				|	(ship == null && getSourceShip() != null && getSourceShip().hasFired(this)))
-	 * @note If this method is invoked with an effective ship and does not throw an exception,
-	 * 			then the world of this bullet must be set to null. --> Is dit waar?
+	 *			|	(ship == null && getSourceShip() != null && getSourceShip().hasFired(this)))
 	 */
 	@Raw @Model
 	void setSourceShip(Ship ship) throws IllegalMethodCallException {
