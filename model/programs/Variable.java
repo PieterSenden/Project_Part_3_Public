@@ -98,7 +98,6 @@ public class Variable {
 		}
 		return false;
 	}
-	//TODO nadenken over het nodig zijn van isValidSupportedType (controleren niet null en type al niet in supportedReferenceTypes).
 	private static final Set<Class<?>> supportedValueTypes = new HashSet<>(Arrays.asList(Double.class, Boolean.class));
 	
 	@Immutable
@@ -124,6 +123,4 @@ public class Variable {
 		result.addAll(supportedReferenceTypes);
 		return result;
 	}
-	
-	//TODO: equals en hashcode overriden?
 }
