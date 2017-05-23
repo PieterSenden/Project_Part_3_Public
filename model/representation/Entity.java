@@ -122,16 +122,6 @@ public abstract class Entity {
 	}
 	
 	/**
-	 * Return a copy of this entity.
-	 * 
-	 * @return A copy of this entity
-	 * @throws TerminatedException
-	 * 			This entity is terminated.
-	 * 			| this.isTerminated()
-	 */
-	public abstract Entity copy() throws TerminatedException;
-	
-	/**
 	 * Terminate this entity.
 	 *
 	 * @post This entity is terminated.
@@ -381,7 +371,6 @@ public abstract class Entity {
 	 * 			| else
 	 * 			|	result == getVelocity().getSpeed()
 	 */
-	//TODO: big search in our crazy, fantastic project where we can use this method.
 	public double getSpeed() {
 		if (getVelocity() == null)
 			return 0;
@@ -425,8 +414,8 @@ public abstract class Entity {
 	 *			speed is the speed corresponding to the velocity with given xComponent and yComponent.
 	 *		 | if (PhysicalVector.isValidComponent(xComponent) && PhysicalVector.isValidComponent(yComponent) &&
 	 *		 |			 ! this.canHaveAsVelocity(new Velocity(xComponent, yComponent))
-	 *		 | 		then (new.getVelocity().getxComponent() == xComponent * getSpeedLimit / Math.hypot(xComponent, yComponent))
-	 *		 |			&& (new.getVelocity().getyComponent() == yComponent * getSpeedLimit / Math.hypot(xComponent, yComponent))
+	 *		 | 		then (new.getVelocity().getxComponent() == xComponent * getSpeedLimit() / Math.hypot(xComponent, yComponent))
+	 *		 |			&& (new.getVelocity().getyComponent() == yComponent * getSpeedLimit() / Math.hypot(xComponent, yComponent))
 	 * @post	If the current velocity of this entity is not effective and the given xComponent or yComponent are valid components
 	 * 			for any physical vector, then the new velocity of this entity is equal to a velocity with 0 as its xComponent and yComponent.
 	 * 		 | if (getVelocity() == null && (!PhysicalVector.isValidComponent(xComponent) || !PhysicalVector.isValidComponent(yComponent))
@@ -1200,10 +1189,10 @@ public abstract class Entity {
 	public abstract void resolveCollision(Entity other) throws IllegalMethodCallException, TerminatedException, NullPointerException;
 	
 	/**
-	 * Let this entity bounce of the other given entity.
+	 * Let this entity bounce off the other given entity.
 	 * 
 	 * @param other
-	 * 			The other entity to bounce of.
+	 * 			The other entity to bounce off.
 	 * @effect The velocities of this entity and the given entity are adjusted according to the physical laws regarding conservation
 	 * 			of momentum and energy. 
 	 * 			| @see implementation
@@ -1215,7 +1204,7 @@ public abstract class Entity {
 	 * 			| this.isTerminated() || other.isTerminated()
 	 */
 	@Model
-	void bounceOf(Entity other) throws IllegalMethodCallException, TerminatedException {
+	void bounceOff(Entity other) throws IllegalMethodCallException, TerminatedException {
 		if (!Entity.apparentlyCollide(this, other))
 			throw new IllegalMethodCallException();
 		double dx, dy, dvx, dvy, sumOfRadii, dvDotdr, m1, m2;
@@ -1237,25 +1226,24 @@ public abstract class Entity {
 	}
 	
 	/** 
-	 * Make this entity bounce of the boundary of its world.
+	 * Make this entity bounce off the boundary of its world.
 	 * 
 	 * @effect	If this entity apparently collides with a horizontal boundary of its world, then the y component of this entity's
-	 * 			velocity is negated.
+	 * 			velocity is negated, or it is terminated, but not both.
 	 * 			| if (apparentlyCollidesWithHorizontalBoundary())
-	 * 			|	then setVelocity(getVelocity().getxComponent(), -getVelocity().getyComponent())
+	 * 			|	then setVelocity(getVelocity().getxComponent(), -getVelocity().getyComponent()) ^ terminate()
 	 * @effect	If this entity apparently collides with a vertical boundary of its world, then the x component of this entity's
-	 * 			velocity is negated.
+	 * 			velocity is negated, or it is terminated, but not both.
 	 * 			| if (apparentlyCollidesWithVerticalBoundary())
-	 * 			|	then setVelocity(-getVelocity().getxComponent(), getVelocity().getyComponent())
+	 * 			|	then setVelocity(-getVelocity().getxComponent(), getVelocity().getyComponent()) ^ terminate()
 	 * @throws	TerminatedException
 	 * 			This entity is terminated.
 	 * 			| this.isTerminated()
 	 * @throws	IllegalMethodCallException
 	 * 			This entity is not associated to a world or this entity does not collide with the boundary of its world.
 	 * 			| getWorld() == null || !apparentlyCollidesWithBoundary()
-	 * TODO Liskov met Bullet in orde brengen (terminate()...)
 	 */
-	public void bounceOfBoundary() throws IllegalMethodCallException, TerminatedException {
+	public void bounceOffBoundary() throws IllegalMethodCallException, TerminatedException {
 		if (isTerminated())
 			throw new TerminatedException();
 		if (getWorld() == null || !apparentlyCollidesWithBoundary())

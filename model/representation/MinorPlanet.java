@@ -42,16 +42,6 @@ public abstract class MinorPlanet extends Entity {
 	 */
 	public static double MINIMAL_RADIUS = 5;
 	
-	/**
-	 * Return a copy of this minor planet.
-	 * 
-	 * @return A copy of this minor planet.
-	 * @throws TerminatedException
-	 * 			This minor planet is terminated.
-	 * 			| this.isTerminated()
-	 */
-	@Override
-	public abstract MinorPlanet copy() throws TerminatedException;
 	
 	/**
 	 * Check whether this minor planet can have the given density as its density.
@@ -75,7 +65,7 @@ public abstract class MinorPlanet extends Entity {
 	 * @effect	| if (other instanceof Bullet)
 	 * 			|	then this.terminate() && other.terminate()
 	 * @effect	| if (other instanceof MinorPlanet)
-	 * 			|	then this.bounceOf(other)
+	 * 			|	then this.bounceOff(other)
 	 * @throws IllegalMethodCallException
 	 * 			Either this minor planet or the other entity is not associated to a world, this minor planet and the other entity are not associated
 	 *			to the same world or this minor planet and the other entity do not apparently collide.
@@ -98,7 +88,7 @@ public abstract class MinorPlanet extends Entity {
 			this.terminate();
 		}
 		else if (other instanceof MinorPlanet) {
-			bounceOf(other);
+			bounceOff(other);
 		}
 	}
 	
