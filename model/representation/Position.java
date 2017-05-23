@@ -152,7 +152,7 @@ public class Position extends PhysicalVector {
 	}
 	
 	/**
-	 * Return the hash code for this physical vector.
+	 * Return the hash code for this position.
 	 */
 	@Override
 	public int hashCode() {
