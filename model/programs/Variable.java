@@ -98,6 +98,7 @@ public class Variable {
 		}
 		return false;
 	}
+  
 	private static final Set<Class<?>> supportedValueTypes = new HashSet<>(Arrays.asList(Double.class, Boolean.class));
 	
 	@Immutable
@@ -121,6 +122,23 @@ public class Variable {
 	public static Set<Class<?>> getSupportedTypes() {
 		Set<Class<?>> result = new HashSet<>(supportedValueTypes);
 		result.addAll(supportedReferenceTypes);
+		return result;
+	}
+	
+	@Override
+	public boolean equals(Object other) {
+		if (!(other instanceof Variable))
+			return false;
+		Variable otherAsVariable = (Variable)other;
+		return getType() == otherAsVariable.getType() && getValue() == otherAsVariable.getValue();
+	}
+	
+	@Override
+	public int hashCode() {
+		final int prime = 41;
+		int result = 1;
+		result = prime * result + ((type == null) ? 0 : type.hashCode());
+		result = prime * result + ((value == null) ? 0 : value.hashCode());
 		return result;
 	}
 }

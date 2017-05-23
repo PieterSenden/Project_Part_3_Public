@@ -216,7 +216,7 @@ public class Bullet extends Entity {
 	
 	
 	/**
-	 * Make this bullet bounce of the boundary of its world.
+	 * Make this bullet bounce off the boundary of its world.
 	 * 
 	 * @effect	| if (getNbOfBouces() >= getMaximalNbOfBounces())
 	 * 			|	then terminate()

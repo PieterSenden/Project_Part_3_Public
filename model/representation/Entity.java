@@ -4,7 +4,7 @@ import asteroids.model.exceptions.*;
 import be.kuleuven.cs.som.annotate.*;
 
 /**
- * A class representing an entity floating in outer space.
+ * A class representing an entity floating in outer space involving a position, a velocity, radius and density.
  * 
  * @invar  Each entity can have its position as position.
  *       	| canHaveAsPosition(this.getPosition())
@@ -32,7 +32,7 @@ import be.kuleuven.cs.som.annotate.*;
 public abstract class Entity {
 	
 	/**
-	 * Initialize this new entity with given position, velocity, radius and mass.
+	 * Initialize this new entity with given position, velocity, radius, mass, minimal radius and minimal density.
 	 * 
 	 * @param xComPos
 	 * 			The xComponent of the position of this new entity.
@@ -46,23 +46,33 @@ public abstract class Entity {
 	 * 			The radius of this new entity.
 	 * @param mass
 	 * 			The mass of this new entity.
+	 * @param minimalDensity
+	 * 			The minimal density for this new entity.
+	 * @param minimalRadius
+	 * 			The minimal radius for this new entity.
 	 * @effect The position of this new entity is set to the position with given xComponent and yComponent.
 	 * 			| setPosition(xComPos, yComPos)
 	 * @effect The velocity of this new entity is set to the velocity with given xComponent and yComponent.
 	 * 			| setVelocity(xComVel, yComVel)
-	 * @post The radius of this new entity is equal to the given radius.
-	 * 			| new.getRadius() == radius
+	 * @post The minimal radius of this entity is equal to the given minimal radius.
+	 * 			| new.getMinimalRadius() == minimalRadius
+	 * @post The intitial radius of this entity is equal to the given radius.
+	 * 			| new.getInitialRadius() == radius
+	 * @effect The radius of this new entity is set to the given radius.
+	 * 			| setRadius(radius)
+	 * @post The minimal density of this entity is equal to the given minimal density.
+	 * 			| new.getMinimalDensity() == minimalDensity
 	 * @effect If this entity can have the density given by the given mass divided by the volume of this new entity as its density, then 
 	 * 			the density of this new entity is set to the density given by the given mass divided by the volume of this new entity.
 	 * 		   Else, the density of this new entity is set to getMinimalDensity() 
-	 * 			| if canHaveAsDensity(mass / new.getVolume())
+	 * 			| if new.canHaveAsDensity(mass / new.getVolume())
 	 * 			|	then setDensity(mass / new.getVolume())
 	 * 			| else setDensity(getMinimalDensity())
 	 * @throws IllegalRadiusException
-	 * 			The given radius is not a valid radius for any entity
-	 * 			| ! isValidRadius(radius)
+	 * 			This entity cannot have the given radius as initial radius or the given minimal radius is not a valid minimal radius for
+	 * 			any entity.
+	 * 			| ! canHaveAsInitialRadius(radius) || ! isValidMinimalRadius(minimalRadius)
 	 */
-	//TODO : specs in orde brengen.
 	public Entity(double xComPos, double yComPos, double xComVel, double yComVel, double radius, double mass, double minimalDensity,
 			double minimalRadius) throws IllegalComponentException, IllegalPositionException, IllegalRadiusException {
 		setPosition(xComPos, yComPos);
@@ -85,7 +95,7 @@ public abstract class Entity {
 	}
 	
 	/**
-	 * Initialize this new entity with given position, velocity and radius.
+	 * Initialize this new entity with given position, velocity, radius, minimal radius and minimal density.
 	 * 
 	 * @param xComPos
 	 * 			The xComponent of the position of this new entity.
@@ -97,25 +107,12 @@ public abstract class Entity {
 	 * 			The yComponent of the velocity of this new entity.
 	 * @param radius
 	 * 			The radius of this new entity.
-	 * @param mass
-	 * 			The mass of this new entity.
-	 * @effect The position of this new entity is set to the position with given xComponent and yComponent.
-	 * 			| setPosition(xComPos, yComPos)
-	 * @effect The velocity of this new entity is set to the velocity with given xComponent and yComponent.
-	 * 			| setVelocity(xComVel, yComVel)
-	 * @post The radius of this new entity is equal to the given radius.
-	 * 			| new.getRadius() == radius
-	 * @effect If this entity can have the density given by the given mass divided by the volume of this new entity as its density, then 
-	 * 			the density of this new entity is set to the density given by the given mass divided by the volume of this new entity.
-	 * 		   Else, the density of this new entity is set to getMinimalDensity() 
-	 * 			| if canHaveAsDensity(mass / new.getVolume())
-	 * 			|	then setDensity(mass / new.getVolume())
-	 * 			| else setDensity(getMinimalDensity())
-	 * @throws IllegalRadiusException
-	 * 			The given radius is not a valid radius for any entity
-	 * 			| ! isValidRadius(radius)
+	 * @effect This new entity is initialized with the given position coordinates as its position coordinates, the given velocity components
+	 * 			as its velocity components, the given radius as radius, the given minimal density times the volume of this new entity as its
+	 * 			density, the given minimal density as its minimal density and the given minimal radius as its minimal radius.
+	 * 			| this(xComPos, yComPos, xComVel, yComVel, radius, minimalDensity * (4.0 / 3) * Math.pow(radius, 3), 
+	 * 							minimalDensity, minimalRadius)
 	 */
-	//TODO : specs in orde brengen.
 	public Entity(double xComPos, double yComPos, double xComVel, double yComVel, double radius, double minimalDensity,
 			double minimalRadius) throws IllegalComponentException, IllegalPositionException, IllegalRadiusException {
 		this(xComPos, yComPos, xComVel, yComVel, radius, minimalDensity * (4.0 / 3) * Math.pow(radius, 3), minimalDensity, minimalRadius);
@@ -152,7 +149,7 @@ public abstract class Entity {
 	private boolean isTerminated = false;
 	
 	/**
-	 * Variable registering an accuracy factor.
+	 * Constant registering an accuracy factor.
 	 */
 	public static final double ACCURACY_FACTOR = 0.99;
 	
@@ -161,8 +158,6 @@ public abstract class Entity {
 	 */
 	@Basic @Raw
 	public Position getPosition() {
-		if (this.position == null)
-			return null;
 		return this.position;
 	}
 	
@@ -189,30 +184,30 @@ public abstract class Entity {
 	 * @param yComponent
 	 * 			The yComponent to check.
 	 * @return true iff the world of this entity is not effective or (the world of this entity is effective and
-	 * 			the world of this entity fully surrounds this entity.
+	 * 			the world of this entity fully surrounds this entity (up to ACCURACY_FACTOR)).
 	 * 			| @see implementation
 	 */
 	public boolean canHaveAsPosition(double xComponent, double yComponent) {
 		if (getWorld() == null)
 			return true;
-		return getWorld().boundariesSurround(this);
+		return (xComponent >= getRadius() * ACCURACY_FACTOR) && (yComponent >= getRadius() * ACCURACY_FACTOR)
+				&& (getWorld().getHeight() - yComponent >= getRadius() * ACCURACY_FACTOR)
+				&& (getWorld().getWidth() - xComponent >= getRadius() * ACCURACY_FACTOR);
 	}
 	
-	
 	/**
-	 * Move this entity during a given time duration.
+	 * Move this entity during a given duration.
 	 * 
 	 * @param duration
 	 * 			The length of the time interval during which the entity is moved.
 	 * @effect The new position of this entity is set to the position that is the result of the position of this entity moved with
 	 * 			the velocity of this entity and during the given duration.
-	 * 			| @see implementation
+	 * 			| setPosition(getPosition().move(getVelocity(), duration))
 	 * @effect If this entity is contained in a world, the position of this entity in its world is updated.
 	 * 			| if (getWorld() != null)
 	 * 			|	then getWorld().updatePosition(this)
-	 * @throws IllegalArgumentException
-	 * 			The given duration is strictly less than 0.
-	 * 			| duration < 0
+	 * @effect The total travelled distance of this entity is increased with the distance the entity moved during the given duration.
+	 * 			| addToTotalTravelledDistance(duration * getSpeed());
 	 * @throws TerminatedException
 	 * 			This entity is terminated
 	 * 			| this.isTerminated()
@@ -357,8 +352,6 @@ public abstract class Entity {
 	 */
 	@Basic @Raw
 	public Velocity getVelocity() {
-		if (this.velocity == null)
-			return null;
 		return this.velocity;
 	}
 	

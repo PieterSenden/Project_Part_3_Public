@@ -42,7 +42,6 @@ public abstract class MinorPlanet extends Entity {
 	 */
 	public static double MINIMAL_RADIUS = 5;
 	
-	
 	/**
 	 * Check whether this minor planet can have the given density as its density.
 	 *  

@@ -156,13 +156,13 @@ public class Position extends PhysicalVector {
 	 */
 	@Override
 	public int hashCode() {
-		final int prime = 31;
+		final int prime = 37;
 		int result = 1;
 		long temp;
 		temp = Double.doubleToLongBits(getxComponent());
-		result = prime * result + (int) (temp ^ (temp >>> 32));
+		result = prime * result + (int) (temp ^ (temp >>> 38));
 		temp = Double.doubleToLongBits(getyComponent());
-		result = prime * result + (int) (temp ^ (temp >>> 32));
+		result = prime * result + (int) (temp ^ (temp >>> 38));
 		return result;
 	}
 }

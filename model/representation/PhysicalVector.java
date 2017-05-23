@@ -158,12 +158,12 @@ class PhysicalVector {
 	 * 			The given other physical vector does not have the same dynamic type as this physical vector.
 	 * 			| this.getClass() != other.getClass()
 	 */
-public PhysicalVector vectorPlus(PhysicalVector other) throws NullPointerException, IllegalComponentException,
+	public PhysicalVector vectorPlus(PhysicalVector other) throws NullPointerException, IllegalComponentException,
 																						IllegalArgumentException {
 		if (this.getClass() != other.getClass())
 			throw new IllegalArgumentException();
 		return new PhysicalVector(getxComponent() + other.getxComponent(), getyComponent() + other.getyComponent());
-}
+	}
 	
 	/**
 	 * Return the scalar multiple of this physical vector with the given factor.
@@ -181,5 +181,35 @@ public PhysicalVector vectorPlus(PhysicalVector other) throws NullPointerExcepti
 		if (! Double.isFinite(factor))
 			throw new IllegalArgumentException();
 		return new PhysicalVector(getxComponent() * factor, getyComponent() * factor);
+	}
+	
+	/**
+	 * Check whether this physical vector is equal to the given object.
+	 * 
+	 * @return True iff other is an instance of the class PhysicalVector, 
+	 * 			and both xComponents are equal and both yComponents are equal.
+	 * 			| @see implementation
+	 */
+	@Override
+	public boolean equals(Object other) {
+		if (! (other instanceof PhysicalVector))
+			return false;
+		PhysicalVector otherAsPhysicalVector = (PhysicalVector)other;
+		return getxComponent() == otherAsPhysicalVector.getxComponent() && getyComponent() == otherAsPhysicalVector.getyComponent();
+	}
+	
+	/**
+	 * Return the hash code for this position.
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		long temp;
+		temp = Double.doubleToLongBits(getxComponent());
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(getyComponent());
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		return result;
 	}
 }
