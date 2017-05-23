@@ -98,7 +98,7 @@ public class Variable {
 		}
 		return false;
 	}
-	
+  
 	private static final Set<Class<?>> supportedValueTypes = new HashSet<>(Arrays.asList(Double.class, Boolean.class));
 	
 	@Immutable

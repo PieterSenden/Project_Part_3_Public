@@ -10,18 +10,14 @@ import be.kuleuven.cs.som.annotate.*;
  * @invar The minimal radius of each bullet must be a valid minimal radius for any bullet.
  *       | isValidMinimalRadius(getMinimalRadius())
  * @invar Each bullet can have its nbOfBounces as nbOfBounces
- * 		 | canHaveAsNbOfBounces(getNbOfBounces)
+ * 		 | canHaveAsNbOfBounces(getNbOfBounces())
  * @invar Each bullet can have its maximal number of bounces as maximal number of bounces.
  *       | canHaveAsMaximalNbOfBounces(this.getMaximalNbOfBounces())
  * @invar Each bullet must have a proper ship.
  * 		 | hasProperShip()
- * @note In this class, when we state 'this bullet is associated to a ship', we mean that
- * 			the bullet is either loaded in the magazine of the ship or has been fired by the ship.
- * 			In the former case, the bullet is not associated to a world. In the latter case,
- * 			it is associated to a world (implemented in the superclass Entity).
  * 
  * @author Joris Ceulemans & Pieter Senden
- * @version 2.0
+ * @version 3.0
  */
 
 public class Bullet extends Entity {
@@ -65,9 +61,9 @@ public class Bullet extends Entity {
 	 */
 	@Raw
 	public Bullet(double xComPos, double yComPos, double xComVel, double yComVel, double radius) throws IllegalComponentException, 
-																				IllegalPositionException, IllegalRadiusException{
+																				IllegalPositionException, IllegalRadiusException {
 		this(xComPos, yComPos, xComVel, yComVel, radius, 10e20);
-		//The value of the mass appears to be set to 10e=20. However, this value is changed to the only possible mass for a bullet
+		//The value of the mass appears to be set to 10e20. However, this value is changed to the only possible mass for a bullet
 		//with a given radius in the constructor of Entity.
 	}
 	
@@ -77,34 +73,15 @@ public class Bullet extends Entity {
 	public static final double MINIMAL_DENSITY = 7.8e12;
 	
 	/**
-	 * A constant  registering the minimal radius for any bullet. 
+	 * A constant registering the minimal radius for any bullet. 
 	 */
 	public static final double MINIMAL_RADIUS = 1;
-	
-	
-	
-//	/**
-//	 * Return a copy of this bullet.
-//	 * 
-//	 * @return A copy of this bullet.
-//	 * 			| @see implementation
-//	 * @throws TerminatedException
-//	 * 			| this.isTerminated()
-//	 */
-//	@Override
-//	public Bullet copy() throws TerminatedException {
-//		if (isTerminated())
-//			throw new TerminatedException();
-//		return new Bullet(getPosition().getxComponent(), getPosition().getyComponent(), getVelocity().getxComponent(),
-//				getVelocity().getyComponent(), getRadius(), getMass());
-//	}
-	
 	
 	/**
 	 * Terminate this bullet.
 	 * 
-	 * @effect	| if (!isTerminated() && getContainingShip != null)
-	 * 			| super.terminate()
+	 * @effect	| if (!isTerminated())
+	 * 			| 	then super.terminate()
 	 * @effect	| if (!isTerminated() && getContainingShip != null)
 	 * 			|	then getShip.removeBullet(this)
 	 */
@@ -118,7 +95,7 @@ public class Bullet extends Entity {
 	}
 	
 	/** 
-	 * Check whether this bullet can have the given density as its density
+	 * Check whether this bullet can have the given density as its density.
 	 * 
 	 * @return True iff the given density is equal to getMinimalDensity()
 	 * 			| @see implementation
@@ -127,8 +104,6 @@ public class Bullet extends Entity {
 	public boolean canHaveAsDensity(double density) {
 		return density == getMinimalDensity();
 	}
-	
-	
 	
 	/**
 	 * Check whether this bullet can have the given radius as its radius.
@@ -143,28 +118,6 @@ public class Bullet extends Entity {
 	public boolean canHaveAsRadius(double radius) {
 		return super.canHaveAsRadius(radius) && (radius == getInitialRadius());
 	}
-	
-	
-//	/**
-//	 * Check whether this bullet can have the given radius as its initial radius.
-//	 * @param radius
-//	 * 			The radius to check.
-//	 * @return True iff the given radius is greater than or equal to the minimal radius of this bullet
-//	 * 			and the given radius is finite.
-//	 * 			| @see implementation
-//	 */
-//	@Override
-//	public boolean canHaveAsInitialRadius(double radius) {
-//		return radius >= getMinimalRadius() && Double.isFinite(radius);
-//	}
-	
-//	/**
-//	 * Return the minimal radius of any bullet.
-//	 */
-//	@Basic @Raw
-//	public static double getMinimalRadius() {
-//		return minimalRadius;
-//	}	
 	
 	/**
 	 * Return the number of bounces of this bullet against a boundary of its world.
@@ -401,10 +354,9 @@ public class Bullet extends Entity {
 	}
 	
 	/**
-	 * Check whether this bullet has a proper ship.
+	 * Check whether this bullet has a proper containing ship.
 	 * 
-	 * @return 
-	 * 			| if (canHaveAsContainingShip(getContainingShip())
+	 * @return	| if (canHaveAsContainingShip(getContainingShip())
 	 * 			|	if (getContainingShip() == null)
 	 * 			|		then result == true
 	 * 			|	else
@@ -423,10 +375,9 @@ public class Bullet extends Entity {
 	}
 	
 	/**
-	 * Check whether this bullet has a proper ship.
+	 * Check whether this bullet has a proper source ship.
 	 * 
-	 * @return 
-	 * 			| if (canHaveAsSourceShip(getSourceShip())
+	 * @return 	| if (canHaveAsSourceShip(getSourceShip())
 	 * 			|	if (getSourceShip() == null)
 	 * 			|		then result == true
 	 * 			|	else
@@ -520,7 +471,7 @@ public class Bullet extends Entity {
 	 * 			| ( (ship != null && ! (ship.hasFired(this) || getContainingShip()!= null)) ||
 				|	(ship == null && getSourceShip() != null && getSourceShip().hasFired(this)))
 	 * @note If this method is invoked with an effective ship and does not throw an exception,
-	 * 			then the world of this bullet must be set to null.
+	 * 			then the world of this bullet must be set to null. --> Is dit waar?
 	 */
 	@Raw @Model
 	void setSourceShip(Ship ship) throws IllegalMethodCallException {

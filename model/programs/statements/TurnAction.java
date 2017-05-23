@@ -14,7 +14,7 @@ public class TurnAction extends Action<Double> {
 	public void execute(ProgramExecutor executor) {
 		super.execute(executor);
 		try {
-//			double turnAngle = ;
+//			double turnAngle = evaluateExpression(executor);
 //			turnAngle = InternalUtils.toProperAngleDelta(executor.getShip().getOrientation(), turnAngle);
 //			executor.getShip().turn(turnAngle);
 			executor.getShip().turn(evaluateExpression(executor));
