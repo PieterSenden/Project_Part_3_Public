@@ -14,9 +14,10 @@ public class TurnAction extends Action<Double> {
 	public void execute(ProgramExecutor executor) {
 		super.execute(executor);
 		try {
-			double turnAngle = evaluateExpression(executor);
-			turnAngle = InternalUtils.toProperAngleDelta(executor.getShip().getOrientation(), turnAngle);
-			executor.getShip().turn(turnAngle);
+//			double turnAngle = evaluateExpression(executor);
+//			turnAngle = InternalUtils.toProperAngleDelta(executor.getShip().getOrientation(), turnAngle);
+//			executor.getShip().turn(turnAngle);
+			executor.getShip().turn(evaluateExpression(executor));
 		}
 		catch (AssertionError err) {
 			//By using toProperAngleDelta, this assertion error should not be thrown. We include this catcher as a safety measure.

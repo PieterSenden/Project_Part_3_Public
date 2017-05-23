@@ -7,7 +7,6 @@ import be.kuleuven.cs.som.annotate.*;
 /**
  * @invar | hasProperEnclosingStatement()
  * @invar | hasProperExecutable()
- * TODO invar: canHaveAsEric
  * 
  * @author Joris Ceulemans & Pieter Senden
  * @version 3.0
@@ -15,7 +14,7 @@ import be.kuleuven.cs.som.annotate.*;
  */
 public abstract class Statement {
 	
-	public abstract void execute(ProgramExecutor executor);//TODO: evt nog zeggen dat niet uitgevoerd kan worden als statement niet in progr. of functie zit.
+	public abstract void execute(ProgramExecutor executor);
 	
 	public Executable getExecutable() {
 		if (getEnclosingStatement() == null)
@@ -53,7 +52,6 @@ public abstract class Statement {
 	}
 	
 	private Executable eric;
-	//TODO: betere naam verzinnen
 	
 	@Basic
 	public ComposedStatement getEnclosingStatement() {
@@ -69,7 +67,6 @@ public abstract class Statement {
 	}
 	
 	/*
-	 * TODO: method call check toevoegen aan documentatie
 	 * The enclosing statement of this statement is only set to the given enclosing statement if
 	 * the enclosing statement of this statement is still null.
 	 */
