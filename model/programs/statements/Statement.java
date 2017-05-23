@@ -6,8 +6,7 @@ import be.kuleuven.cs.som.annotate.*;
 
 /**
  * @invar | hasProperEnclosingStatement()
- * @invar | hasProperExecutable()
- * TODO invar: canHaveAsEric
+ * @invar | hasProperDirectExecutable()
  * 
  * @author Joris Ceulemans & Pieter Senden
  * @version 3.0
@@ -15,11 +14,11 @@ import be.kuleuven.cs.som.annotate.*;
  */
 public abstract class Statement {
 	
-	public abstract void execute(ProgramExecutor executor);//TODO: evt nog zeggen dat niet uitgevoerd kan worden als statement niet in progr. of functie zit.
+	public abstract void execute(ProgramExecutor executor);
 	
 	public Executable getExecutable() {
 		if (getEnclosingStatement() == null)
-			return getEric();
+			return getDirectExecutable();
 		return getEnclosingStatement().getExecutable();
 	}
 	
@@ -28,32 +27,33 @@ public abstract class Statement {
 	}
 	
 	@Basic
-	public Executable getEric() {
-		return this.eric;
+	public Executable getDirectExecutable() {
+		return this.directExecutable;
 	}
 	
-	public boolean canHaveAsEric(Executable exe) {
+	public boolean canHaveAsDirectExecutable(Executable exe) {
 		return (exe == null) || Executable.isValidBodyStatement(this);
 	}
 	
-	public boolean hasProperEric() {
-		if (getEric() == null)
+	public boolean hasProperDirectExecutable() {
+		if (getDirectExecutable() == null)
 			return true;
-		return getEric().getBodyStatement() == this;
+		if (!canHaveAsDirectExecutable(getDirectExecutable()))
+			return false;
+		return getDirectExecutable().getBodyStatement() == this;
 	}
 	
 	
-	public void setEric(Executable executable) throws IllegalArgumentException, IllegalMethodCallException {
-		if (! canHaveAsEric(executable))
+	public void setDirectExecutable(Executable executable) throws IllegalArgumentException, IllegalMethodCallException {
+		if (! canHaveAsDirectExecutable(executable))
 			throw new IllegalArgumentException();
 		if (executable.getBodyStatement() != this || getExecutable() != null || getEnclosingStatement() != null)
 			throw new IllegalMethodCallException();
-		this.eric = executable;
+		this.directExecutable = executable;
 		
 	}
 	
-	private Executable eric;
-	//TODO: betere naam verzinnen
+	private Executable directExecutable;
 	
 	@Basic
 	public ComposedStatement getEnclosingStatement() {
@@ -65,13 +65,13 @@ public abstract class Statement {
 	}
 	
 	public boolean hasProperEnclosingStatement() {
-		return (getEnclosingStatement() == null) || (getEnclosingStatement().hasAsEnclosedStatement(this) && getEric() == null);
+		return (getEnclosingStatement() == null) || (getEnclosingStatement().hasAsEnclosedStatement(this) && getDirectExecutable() == null);
 	}
 	
 	/*
-	 * TODO: method call check toevoegen aan documentatie
 	 * The enclosing statement of this statement is only set to the given enclosing statement if
-	 * the enclosing statement of this statement is still null.
+	 * the enclosing statement of this statement is still null. In this way, the enclosing statement of this statement cannot change after
+	 * it has been assigned a statement that is not null.
 	 */
 	void setEnclosingStatement(ComposedStatement enclosingStatement) throws IllegalArgumentException, IllegalMethodCallException {
 		if (enclosingStatement != null && ! enclosingStatement.hasAsEnclosedStatement(this))
