@@ -50,8 +50,8 @@ public abstract class MinorPlanet extends Entity {
 	 * 			This minor planet is terminated.
 	 * 			| this.isTerminated()
 	 */
-	@Override
-	public abstract MinorPlanet copy() throws TerminatedException;
+//	@Override
+//	public abstract MinorPlanet copy() throws TerminatedException;
 	
 	/**
 	 * Check whether this minor planet can have the given density as its density.
@@ -98,7 +98,7 @@ public abstract class MinorPlanet extends Entity {
 			this.terminate();
 		}
 		else if (other instanceof MinorPlanet) {
-			bounceOf(other);
+			bounceOff(other);
 		}
 	}
 	

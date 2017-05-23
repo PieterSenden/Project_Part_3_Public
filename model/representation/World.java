@@ -637,7 +637,7 @@ public class World {
 					//It is possible that entity is terminated in a previous collision (that is handled in this invocation of resolveCollsions),
 					// such that it still belongs to the collisionSet.
 					showCollision(collisionListener, entity);
-					entity.bounceOfBoundary();
+					entity.bounceOffBoundary();
 				}
 			}
 			else if (collision.size() == 2) {

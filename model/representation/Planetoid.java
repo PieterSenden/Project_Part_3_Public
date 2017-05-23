@@ -94,21 +94,21 @@ public class Planetoid extends MinorPlanet {
 		}
 	}
 	
-	/**
-	 * Return a copy of this planetoid.
-	 * 
-	 * @return A copy of this planetoid.
-	 * 			| @see implementation
-	 * @throws TerminatedException
-	 * 			| this.isTerminated()
-	 */
-	@Override
-	public Planetoid copy() throws TerminatedException {
-		if (isTerminated())
-			throw new TerminatedException();
-		return new Planetoid(getPosition().getxComponent(), getPosition().getyComponent(), getVelocity().getxComponent(),
-				getVelocity().getyComponent(), getRadius());
-	}
+//	/**
+//	 * Return a copy of this planetoid.
+//	 * 
+//	 * @return A copy of this planetoid.
+//	 * 			| @see implementation
+//	 * @throws TerminatedException
+//	 * 			| this.isTerminated()
+//	 */
+//	@Override
+//	public Planetoid copy() throws TerminatedException {
+//		if (isTerminated())
+//			throw new TerminatedException();
+//		return new Planetoid(getPosition().getxComponent(), getPosition().getyComponent(), getVelocity().getxComponent(),
+//				getVelocity().getyComponent(), getRadius());
+//	}
 	
 	/**
 	 * Resolve a collision between this planetoid and another entity.

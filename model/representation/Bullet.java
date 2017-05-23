@@ -83,21 +83,21 @@ public class Bullet extends Entity {
 	
 	
 	
-	/**
-	 * Return a copy of this bullet.
-	 * 
-	 * @return A copy of this bullet.
-	 * 			| @see implementation
-	 * @throws TerminatedException
-	 * 			| this.isTerminated()
-	 */
-	@Override
-	public Bullet copy() throws TerminatedException {
-		if (isTerminated())
-			throw new TerminatedException();
-		return new Bullet(getPosition().getxComponent(), getPosition().getyComponent(), getVelocity().getxComponent(),
-				getVelocity().getyComponent(), getRadius(), getMass());
-	}
+//	/**
+//	 * Return a copy of this bullet.
+//	 * 
+//	 * @return A copy of this bullet.
+//	 * 			| @see implementation
+//	 * @throws TerminatedException
+//	 * 			| this.isTerminated()
+//	 */
+//	@Override
+//	public Bullet copy() throws TerminatedException {
+//		if (isTerminated())
+//			throw new TerminatedException();
+//		return new Bullet(getPosition().getxComponent(), getPosition().getyComponent(), getVelocity().getxComponent(),
+//				getVelocity().getyComponent(), getRadius(), getMass());
+//	}
 	
 	
 	/**
@@ -263,7 +263,7 @@ public class Bullet extends Entity {
 	
 	
 	/**
-	 * Make this bullet bounce of the boundary of its world.
+	 * Make this bullet bounce off the boundary of its world.
 	 * 
 	 * @effect	| if (getNbOfBouces() >= getMaximalNbOfBounces())
 	 * 			|	then terminate()
@@ -273,10 +273,9 @@ public class Bullet extends Entity {
 	 * 			| isTerminated()
 	 * @throws	IllegalMethodCallException
 	 * 			| getWorld() == null || !apparentlyCollidesWithBoundary()
-	 * TODO Liskov in orde brengen (terminate()...) (speciaal voor jou Pieter, deze haakjes...)
 	 */
 	@Override
-	public void bounceOfBoundary() throws TerminatedException, IllegalMethodCallException {
+	public void bounceOffBoundary() throws TerminatedException, IllegalMethodCallException {
 		if (isTerminated())
 			throw new TerminatedException();
 		if (getWorld() == null || !apparentlyCollidesWithBoundary())
@@ -285,7 +284,7 @@ public class Bullet extends Entity {
 			terminate();
 		else {
 			stepNbOfBounces();
-			super.bounceOfBoundary();
+			super.bounceOffBoundary();
 		}
 	}
 	
@@ -324,14 +323,10 @@ public class Bullet extends Entity {
 				terminate();
 				other.terminate();
 			}
-		else if (other instanceof Bullet) {
+		else {
 			terminate();
 			other.terminate();
 		}
-		else {
-			other.resolveCollision(this);
-		}
-		//TODO: De opgave zegt dat bij een botsing met een bullet altijd beide entities getermineerd worden...
 	}
 	
 	/**

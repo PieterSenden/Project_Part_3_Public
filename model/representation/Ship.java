@@ -150,21 +150,21 @@ public class Ship extends Entity {
 		this(xComPos, yComPos, 0, 0, radius, 0);
 	}
 	
-	/**
-	 * Return a copy of this ship.
-	 * 
-	 * @return A copy of this ship.
-	 * 			| @see implementation
-	 * @throws TerminatedException
-	 * 			| this.isTerminated()
-	 */
-	@Override
-	public Ship copy() throws TerminatedException {
-		if (isTerminated())
-			throw new TerminatedException();
-		return new Ship(getPosition().getxComponent(), getPosition().getyComponent(), getVelocity().getxComponent(),
-				getVelocity().getyComponent(), getRadius(), getOrientation(), getMass(), hasThrusterActivated());
-	}
+//	/**
+//	 * Return a copy of this ship.
+//	 * 
+//	 * @return A copy of this ship.
+//	 * 			| @see implementation
+//	 * @throws TerminatedException
+//	 * 			| this.isTerminated()
+//	 */
+//	@Override
+//	public Ship copy() throws TerminatedException {
+//		if (isTerminated())
+//			throw new TerminatedException();
+//		return new Ship(getPosition().getxComponent(), getPosition().getyComponent(), getVelocity().getxComponent(),
+//				getVelocity().getyComponent(), getRadius(), getOrientation(), getMass(), hasThrusterActivated());
+//	}
 	
 	/**
 	 * Terminate this ship.
@@ -486,7 +486,7 @@ public class Ship extends Entity {
 		if (getWorld() == null || getWorld() != other.getWorld() || !Entity.apparentlyCollide(this, other))
 			throw new IllegalMethodCallException();
 		if (other instanceof Ship)
-			this.bounceOf(other);
+			this.bounceOff(other);
 			//The method bounceOf only throws an exception under the conditions specified in the throws clauses
 			// in the documentation of this method.
 		else {

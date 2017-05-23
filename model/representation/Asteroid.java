@@ -64,21 +64,21 @@ public class Asteroid extends MinorPlanet {
 	 */
 	public static final double MINIMAL_DENSITY = 2.65e12;
 	
-	/**
-	 * Return a copy of this asteroid.
-	 * 
-	 * @return A copy of this asteroid.
-	 * 			| @see implementation
-	 * @throws TerminatedException
-	 * 			| this.isTerminated()
-	 */
-	@Override
-	public Asteroid copy() throws TerminatedException {
-		if (isTerminated())
-			throw new TerminatedException();
-		return new Asteroid(getPosition().getxComponent(), getPosition().getyComponent(), getVelocity().getxComponent(),
-				getVelocity().getyComponent(), getRadius());
-	}
+//	/**
+//	 * Return a copy of this asteroid.
+//	 * 
+//	 * @return A copy of this asteroid.
+//	 * 			| @see implementation
+//	 * @throws TerminatedException
+//	 * 			| this.isTerminated()
+//	 */
+//	@Override
+//	public Asteroid copy() throws TerminatedException {
+//		if (isTerminated())
+//			throw new TerminatedException();
+//		return new Asteroid(getPosition().getxComponent(), getPosition().getyComponent(), getVelocity().getxComponent(),
+//				getVelocity().getyComponent(), getRadius());
+//	}
 	
 
 	/**
