@@ -212,4 +212,15 @@ class PhysicalVector {
 		result = prime * result + (int) (temp ^ (temp >>> 32));
 		return result;
 	}
+	
+	/**
+	 * Return a text representation of this physical vector.
+	 * 
+	 * @return A textual representation of this physical vector, consisting of its xComponent and yComponent.
+	 * 			| @see implementation
+	 */
+	@Override
+	public String toString() {
+		return "(" + getxComponent() + ", " + getyComponent() + ")";
+	}
 }

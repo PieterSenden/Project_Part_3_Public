@@ -166,7 +166,7 @@ public abstract class Entity {
 	 *  
 	 * @param  position
 	 *         The position to check.
-	 * @return true iff the given position is effective and this entity can have the xComponent and yComponent of the given position
+	 * @return True iff the given position is effective and this entity can have the xComponent and yComponent of the given position
 	 * 			as the xComponent and yComponent of its position.
 	 *       | result == (position != null) && canHaveAsPosition(position.getxComponent(), position.getyComponent())
 	 */
@@ -277,7 +277,7 @@ public abstract class Entity {
 	 * @post The new position of this entity is equal to the given position.
 	 * 		 | new.getPosition().equals(position)
 	 * @throws IllegalPositionException
-	 * 			This entity cannot have this position as its position.
+	 * 			This entity cannot have the given position as its position.
 	 * 		 | ! canHaveAsPosition(position)
 	 */
 	@Raw @Model
@@ -302,13 +302,15 @@ public abstract class Entity {
 	}
 	
 	/**
-	 * Check whether the given distance is a valid distance for any entity.
+	 * Check whether this entity can have the given distance as its total travelled distance.
+	 * 
 	 * @param distance
 	 * 			The distance to check.
-	 * @return	true iff the given distance is greater than or equal to the current total travelled distance and finite.
+	 * @return	True iff the given distance is greater than or equal to the current total travelled distance and finite.
+	 * 			| distance >= getTotalTravelledDistance() && Double.isFinite(distance)
 	 */
 	@Raw
-	public boolean isValidTotalTravelledDistance(double distance) {
+	public boolean canHaveAsTotalTravelledDistance(double distance) {
 		return distance >= getTotalTravelledDistance() && Double.isFinite(distance);
 	}
 	
@@ -317,13 +319,13 @@ public abstract class Entity {
 	 * 
 	 * @param distance
 	 * 			The distance to add to the total travelled distance of this entity.
-	 * @effect	If the current total travelled distance increased with the given distance is not a valid total travelled distance for any
-	 * 			entity, the total travelled distance of this entity is increased with the given distance.
-	 * 			| if (isValidTotalTravelledDistance(getTotalTravelledDistance() + distance))
+	 * @effect	If this entity can have the current total travelled distance increased with the given distance as its total travelled distance,
+	 * 			the total travelled distance of this entity is increased with the given distance.
+	 * 			| if (canHaveAsTotalTravelledDistance(getTotalTravelledDistance() + distance))
 	 * 			|	then setTotalTravelledDistance(getTotalTravelledDistance() + distance)
 	 */
 	protected void addToTotalTravelledDistance(double distance) {
-		if (isValidTotalTravelledDistance(getTotalTravelledDistance() + distance))
+		if (canHaveAsTotalTravelledDistance(getTotalTravelledDistance() + distance))
 			setTotalTravelledDistance(getTotalTravelledDistance() + distance);
 	}
 	
@@ -332,12 +334,13 @@ public abstract class Entity {
 	 * 
 	 * @param distance
 	 * 			The new total travelled distance for this entity.
-	 * @post	If the given distance is a valid distance for any entity, the total travelled distance is equal to the given distance.
-	 * 			| if (isValidTotalTravelledDistance(distance))
+	 * @post	If this entity can have the given distance as its total travelled distance, the total travelled distance is equal to the
+	 * 			given distance.
+	 * 			| if (canHaveAsTotalTravelledDistance(distance))
 	 * 			|	then new.getTotalTravelledDistance == distance
 	 */
 	private void setTotalTravelledDistance(double distance) {
-		if (isValidTotalTravelledDistance(distance))
+		if (canHaveAsTotalTravelledDistance(distance))
 			totalTravelledDistance = distance;
 	}
 	
@@ -375,7 +378,7 @@ public abstract class Entity {
 	 *  
 	 * @param  velocity
 	 *         The velocity to check.
-	 * @return true iff the given velocity is effective and the associated speed does not exceed
+	 * @return True iff the given velocity is effective and the associated speed does not exceed
 	 *		the speedLimit of this entity.
 	 *       | @see implementation
 	 */
@@ -399,23 +402,23 @@ public abstract class Entity {
 	 *       | if (this.canHaveAsVelocity(new Velocity(xComponent,yComponent))
 	 *       | 		then new.getVelocity().equals(new Velocity(xComponent, yComponent))
 	 * @post   If this entity cannot have the velocity with the given xComponent and  given yComponent as its velocity, and
-	 * 			the given xComponent and yComponent are valid components for any physical vector, then the new velocity of this entity 
-	 * 			is equal to a velocity such that the direction corresponds with the velocity with given xComponent and yComponent,
+	 * 			the given xComponent and yComponent are valid components for any physical vector and are finite, then the new velocity of this
+	 * 			entity is equal to a velocity such that the direction corresponds with the velocity with given xComponent and yComponent,
 	 * 			but the speed is set to the speedLimit.
 	 * 			More concretely, the xComponent of the new velocity of this entity is set to (xComponent * getSpeedLimit() / speed) and the
 	 *			yComponent of the new velocity of this entity is set to (yComponent * getSpeedLimit() / speed), where
 	 *			speed is the speed corresponding to the velocity with given xComponent and yComponent.
-	 *		 | if (PhysicalVector.isValidComponent(xComponent) && PhysicalVector.isValidComponent(yComponent) &&
-	 *		 |			 ! this.canHaveAsVelocity(new Velocity(xComponent, yComponent))
+	 *		 | if (PhysicalVector.isValidComponent(xComponent) && Double.isFinite(xComponent) && PhysicalVector.isValidComponent(yComponent) &&
+	 *		 |			 Double.isFinite(yComponent) && ! this.canHaveAsVelocity(new Velocity(xComponent, yComponent))
 	 *		 | 		then (new.getVelocity().getxComponent() == xComponent * getSpeedLimit() / Math.hypot(xComponent, yComponent))
 	 *		 |			&& (new.getVelocity().getyComponent() == yComponent * getSpeedLimit() / Math.hypot(xComponent, yComponent))
-	 * @post	If the current velocity of this entity is not effective and the given xComponent or yComponent are valid components
-	 * 			for any physical vector, then the new velocity of this entity is equal to a velocity with 0 as its xComponent and yComponent.
-	 * 		 | if (getVelocity() == null && (!PhysicalVector.isValidComponent(xComponent) || !PhysicalVector.isValidComponent(yComponent))
-	 * 		 |		then new.getVelocity().equals(new Velocity(0, 0)
-	 * TODO specs
+	 * @post	If the current velocity of this entity is not effective and the given xComponent or yComponent are invalid components
+	 * 			for any physical vector or are not finite, then the new velocity of this entity is equal to a velocity with 0 as its xComponent
+	 * 			and yComponent.
+	 * 		 | if (getVelocity() == null && (!PhysicalVector.isValidComponent(xComponent) || !PhysicalVector.isValidComponent(yComponent) ||
+	 * 		 |			!Double.isFinite(xComponent) || !Double.isFinite(yComponent)))
+	 * 		 |		then new.getVelocity().equals(new Velocity(0, 0))
 	 */
-	// TODO: specs in orde brengen.
 	@Raw @Model
 	protected void setVelocity(double xComponent, double yComponent) {
 		Velocity tempVelocity;
@@ -478,10 +481,18 @@ public abstract class Entity {
 	public static final double SPEED_OF_LIGHT = 300000;
 	
 	/**
+	 * Return the density of this entity.
+	 */
+	@Basic @Raw
+	public double getDensity() {
+		return this.density;
+	}
+	
+	/**
 	 * Return the mass of this entity.
 	 * 
 	 * @return The volume of this entity multiplied by the density of this entity.
-	 * 			| @see implementation
+	 * 			| getVolume() * getDensity();
 	 */
 	@Raw
 	public double getMass() {
@@ -500,30 +511,6 @@ public abstract class Entity {
 	}
 	
 	/**
-	 * Set the density of this entity to the given density.
- 	 *
-	 * @param density
-	 * 		The new density for this entity.
-	 * @post If this entity can have the given density as its density,
-	 * 			the new density of this entity equals the given density.
-	 * 		| if (canHaveAsDensity(density))
-	 * 		|	then new.getDensity() == density
-	 */
-	@Basic @Raw
-	public void setDensity(double density) {
-		if (canHaveAsDensity(density))
-			this.density = density;
-	}
-	
-	/**
-	 * Return the density of this entity.
-	 */
-	@Basic @Raw
-	public double getDensity() {
-		return this.density;
-	}
-	
-	/**
 	 * Check whether this entity can have the given density as its density.
 	 *  
 	 * @param  density
@@ -538,6 +525,21 @@ public abstract class Entity {
 	@Raw
 	public boolean canHaveAsDensity(double density) {
 		return density >= getMinimalDensity() && Double.isFinite(density);
+	}
+	
+	/**
+	 * Set the density of this entity to the given density.
+	 *
+	 * @param density
+	 * 		The new density for this entity.
+	 * @post If this entity can have the given density as its density,
+	 * 			the new density of this entity equals the given density.
+	 * 		| if (canHaveAsDensity(density))
+	 * 		|	then new.getDensity() == density
+	 */
+	public void setDensity(double density) {
+		if (canHaveAsDensity(density))
+			this.density = density;
 	}
 	
 	/**
@@ -598,11 +600,11 @@ public abstract class Entity {
 	}
 	
 	/**
-	 * Check whether this entity can have the given radius as radius.
+	 * Check whether this entity can have the given radius as its radius.
 	 *  
 	 * @param  radius
 	 *         The radius to check.
-	 * @return false if this entity cannot have the given radius as its initial radius.
+	 * @return False if this entity cannot have the given radius as its initial radius.
 	 * 			| if (! canHaveAsInitialRadius(radius))
 	 * 			|	then result == false
 	 */
@@ -612,6 +614,8 @@ public abstract class Entity {
 	}
 	
 	/**
+	 * Calculate the volume of this entity.
+	 * 
 	 * @return The volume of this entity.
 	 * 			| @see implementation
 	 */
@@ -622,6 +626,7 @@ public abstract class Entity {
 	
 	/**
 	 * Set the radius of this entity to the given radius.
+	 * 
 	 * @param radius
 	 * 			The new radius of this entity.
 	 * @post The new radius of this entity is equal to the given radius.
@@ -651,6 +656,7 @@ public abstract class Entity {
 	
 	/**
 	 * Check whether this entity can have the given radius as its initial radius.
+	 * 
 	 * @param radius
 	 * 			The radius to check.
 	 * @return False if the given radius is strictly less than the minimal radius of this entity.
@@ -670,6 +676,14 @@ public abstract class Entity {
 	private final double initialRadius;
 	
 	/**
+	 * Return the minimal radius of this entity.
+	 */
+	@Basic @Raw @Immutable
+	public double getMinimalRadius() {
+		return this.minimalRadius;
+	}
+	
+	/**
 	 * Check whether this entity can have the given radius as its minimal radius.
 	 * 
 	 * @param radius
@@ -682,15 +696,7 @@ public abstract class Entity {
 	}
 	
 	/**
-	 * Return the minimal radius of this entity.
-	 */
-	@Basic @Raw @Immutable
-	public double getMinimalRadius() {
-		return this.minimalRadius;
-	}
-	
-	/**
-	 * Variable registering the minimal radius of this ship. 
+	 * Variable registering the minimal radius of this entity. 
 	 */
 	private final double minimalRadius;
 	
@@ -744,10 +750,9 @@ public abstract class Entity {
 	 * @param entity2
 	 * 			The second entity
 	 * @return If the two entities are effective and different, true iff the distance between their two centres is less than or equal
-	 * 			to ACCURACY_FACTOR times the sum of their radii.
+	 * 			to (ACCURACY_FACTOR - 1) times the sum of their radii.
 	 * 			| If ((entity1 != null) && (entity2!= null) && (entity1 != entity2))
-	 * 			|	then result == (Entity.getDistanceBetween(entity1, entity2) <= (ACCURACY_FACTOR - 1) * (entity1.getRadius() +
-	 * 			|																								 entity2.getRadius())
+	 * 			|	then result == (Entity.getDistanceBetween(entity1, entity2) <= (ACCURACY_FACTOR - 1) * getSumOfRadii(entity1, entity2))
 	 * @return If the two entities are effective and identical, true.
 	 * 			| If ((entity1 != null) && (entity1 == entity2))
 	 * 			|	then result == true
@@ -756,7 +761,7 @@ public abstract class Entity {
 	 * 			| (entity1 == null) || (entity2 == null)
 	 * @throws TerminatedException
 	 * 			One of the entities is terminated
-	 * 			| (entity1.isTerminated() || entity2.isTerminated())
+	 * 			| entity1.isTerminated() || entity2.isTerminated()
 	 */
 	public static boolean overlap(Entity entity1, Entity entity2) throws NullPointerException, TerminatedException {
 		if (entity1.isTerminated() || entity2.isTerminated())
@@ -771,7 +776,7 @@ public abstract class Entity {
 	 * 
 	 * @param other
 	 * 			The entity to check.
-	 * @return True iff minimal distance between the centre of the given entity and a point on the boundary of this entity
+	 * @return True iff the minimal distance between the centre of the given entity and a point on the boundary of this entity
 	 * 			is greater than or equal to the radius of the given entity times the ACCURACY_FACTOR.
 	 * 		| result == (min{ pos in Position | Position.getDistanceBetween(pos, this.getPosition()) == this.getRadius()
 	 * 		|					: Position.getDistanceBetween(pos, other.getPosition())}) >= other.getRadius() * ACCURACY_FACTOR)
@@ -780,7 +785,7 @@ public abstract class Entity {
 	 * 		| other == null
 	 * @throws TerminatedException
 	 * 			One of the entities is terminated
-	 * 			| (entity1.isTerminated() || entity2.isTerminated())
+	 * 		| this.isTerminated() || other.isTerminated()
 	 */
 	public boolean surrounds(Entity other) throws NullPointerException, TerminatedException {
 		if (this.isTerminated() || other.isTerminated())
@@ -794,13 +799,13 @@ public abstract class Entity {
 	 * @param other
 	 * 			The entity to check.
 	 * @return True iff the radius of this entity is greater than or equal to the radius of the given entity.
-	 * 		| result == (getRadius() >= other.getRadius())
+	 * 			| result == (getRadius() >= other.getRadius())
 	 * @throws NullPointerException
 	 * 			The given entity is not effective
-	 * 		| other == null
+	 * 			| other == null
 	 * @throws TerminatedException
 	 * 			One of the entities is terminated
-	 * 			| (entity1.isTerminated() || entity2.isTerminated())
+	 * 			| this.isTerminated() || other.isTerminated()
 	 */
 	public boolean canSurround(Entity other) throws NullPointerException, TerminatedException {
 		if (this.isTerminated() || other.isTerminated())
@@ -816,17 +821,17 @@ public abstract class Entity {
 	 * 			The first entity
 	 * @param entity2
 	 * 			The second entity
-	 * @return false if one of the entities is not effective, is not associated to a world or if they are not associated to the same world.
+	 * @return False if one of the entities is not effective, is not associated to a world or if they are not associated to the same world.
 	 * 			| if (entity1 == null || entity2 == null || entity1.getWorld() == null || entity2.getWorld() == null ||
 	 * 			|																					 entity1.getWorld() != entity2.getWorld())
 	 * 			|	then result == false.
-	 * @return true if both entities are effective and associated to the same world and if the distance between the centres of the entities
+	 * @return True if both entities are effective and associated to the same world and if the distance between the centres of the entities
 	 * 			lies within the range determined by the sum of their radii multiplied with ACCURACY_FACTOR and 2 - ACCURACY_FACTOR respectively,
 	 * 			and if both entities are moving towards each other.
 	 * 			| @see implementation
 	 * @throws TerminatedException
 	 * 			One of the entities is terminated
-	 * 			| (entity1.isTerminated() || entity2.isTerminated())
+	 * 			| entity1.isTerminated() || entity2.isTerminated()
 	 */
 	public static boolean apparentlyCollide(Entity entity1, Entity entity2) throws TerminatedException {
 		if (entity1 == null || entity2 == null)
@@ -851,14 +856,14 @@ public abstract class Entity {
 	 * @param entity2
 	 * 			The second entity
 	 * @param duration
-	 * 			The duration during which the entities must be moved.
-	 * @return false if one of the entities is not effective, is not associated to a world or if they are not associated to the same world.
+	 * 			The duration during which the entities must (hypothetically) be moved.
+	 * @return False if one of the entities is not effective, is not associated to a world or if they are not associated to the same world.
 	 * 			| if (entity1 == null || entity2 == null || entity1.getWorld() == null || entity2.getWorld() == null ||
 	 * 			|																					 entity1.getWorld() != entity2.getWorld())
 	 * 			|	then result == false.
-	 * @return true if both entities are effective and associated to the same world and if they collide when their positions
-	 * 			are set as if they moved during the given duration. It does not matter whether they collide during the
-	 * 			process of moving the entities. Only the final positions are important.
+	 * @return True if both entities are effective and associated to the same world and if they collide when their positions
+	 * 			are set as if they moved during the given duration with their current velocity. It does not matter whether they collide during
+	 * 			the	process of moving the entities. Only the final positions are important.
 	 * 			| if ((entity1 != null) && (entity2!= null) && (entity1 != entity2) && (entity1.getWorld() != null) 
 	 * 			|																	&& (entity1.getWorld() == entity2.getWorld()))
 	 * 			|	then result == (getSumOfRadii(entity1, entity2) == 
@@ -882,17 +887,17 @@ public abstract class Entity {
 	}
 	
 	/**
-	 * Check whether this entity will collide if it is moved during a certain duration.
+	 * Check whether this entity will collide with the boundary of its world if it is moved during a certain duration.
 	 * 
 	 * @param duration
 	 * 			The duration during which this entity must be moved.
-	 * @return false if this entity is not contained in a world.
+	 * @return False if this entity is not contained in a world.
 	 * 			| if (getWorld() == null)
 	 * 			|	then result == false
 	 * @return true if this entity is contained in a world and if it will collide with the boundary of its world when it is moved during the
 	 * 			given duration.
 	 * 			| if (getWorld() != null)
-	 * 			| then result == ( (getPosition().move(getVelocity(), duration).getyComponent() <= getRadius()) ||
+	 * 			| 	then result == ( (getPosition().move(getVelocity(), duration).getyComponent() <= getRadius()) ||
 	 * 								(getWorld().getHeight() - getPosition().move(getVelocity(), duration).getyComponent() <= getRadius()) ||
 	 * 								(getPosition().move(getVelocity(), duration).getxComponent() <= getRadius()) ||
 	 * 								(getWorld().getWidth() - getPosition().move(getVelocity(), duration).getxComponent() <= getRadius()) )
@@ -938,7 +943,7 @@ public abstract class Entity {
 	 * 			This exception is included as an additional safety check. 
 	 * @throws TerminatedException
 	 * 			One of the entities is terminated.
-	 * 			| (entity1.isTerminated() || entity2.isTerminated())
+	 * 			| entity1.isTerminated() || entity2.isTerminated()
 	 */
 	public static double getTimeToCollision(Entity entity1, Entity entity2) throws NullPointerException, OverlapException, TerminatedException {
 		if (entity1.isTerminated() || entity2.isTerminated())
@@ -976,7 +981,7 @@ public abstract class Entity {
 	 * 			The first entity.
 	 * @param entity2
 	 * 			The second entity.
-	 * @return null, if the entities will not collide
+	 * @return null, if the entities will not collide.
 	 * 			| if (getTimeToCollision(entity1, entity2) == Double.POSITIVE_INFINITY)
 	 * 			|	then result == null 
 	 * @return If the entities will collide, the result satisfies the following condition:
@@ -998,7 +1003,7 @@ public abstract class Entity {
 	 * 			This exception is included as an additional safety check. 
 	 * @throws TerminatedException
 	 * 			One of the entities is terminated
-	 * 			| (entity1.isTerminated() || entity2.isTerminated())
+	 * 			| entity1.isTerminated() || entity2.isTerminated()
 	 */
 	public static Position getCollisionPosition(Entity entity1, Entity entity2) throws NullPointerException, IllegalMethodCallException,
 																OverlapException, TerminatedException {
@@ -1030,7 +1035,6 @@ public abstract class Entity {
 		
 		return new Position( (position1.getxComponent() * radius2 + position2.getxComponent() * radius1) / sumOfRadii, 
 				(position1.getyComponent() * radius2 + position2.getyComponent() * radius1) / sumOfRadii);
-		
 	}
 	
 	/**
@@ -1038,8 +1042,7 @@ public abstract class Entity {
 	 * 
 	 * @return True iff the world of this entity is effective and
 	 * 			the distance between the centre of this entity and a horizontal boundary of its world is less than or equal to
-	 * 				(2 - ACCURACY_FACTOR) times the radius of this entity, and
-	 * 			this entity is moving towards the closest horizontal boundary.
+	 * 			(2 - ACCURACY_FACTOR) times the radius of this entity, and this entity is moving towards the closest horizontal boundary.
 	 * 			| @see implementation
 	 * @throws TerminatedException
 	 * 			This entity is terminated.
@@ -1060,8 +1063,7 @@ public abstract class Entity {
 	 * 
 	 * @return True iff the world of this entity is effective and
 	 * 			the distance between the centre of this entity and a vertical boundary of its world is less than or equal to
-	 * 				(2 - ACCURACY_FACTOR) times the radius of this entity, and
-	 * 			this entity is moving towards the closest vertical boundary.
+	 * 			(2 - ACCURACY_FACTOR) times the radius of this entity, and this entity is moving towards the closest vertical boundary.
 	 * 			| @see implementation
 	 * @throws TerminatedException
 	 * 			This entity is terminated.
@@ -1080,7 +1082,7 @@ public abstract class Entity {
 	/**
 	 * Check whether this entity apparently collides with the boundary of its world.
 	 * 
-	 * @return true iff this entity apparently collides with a horizontal or vertical boundary.
+	 * @return True iff the world of this entity is effective and this entity apparently collides with a horizontal or vertical boundary.
 	 * 			| @see implementation
 	 * @throws TerminatedException
 	 * 			This entity is terminated.
@@ -1106,8 +1108,8 @@ public abstract class Entity {
 	 * @return If this entity is associated to a world and it will collide with the boundary of its world, the result is the smallest
 	 *			positive real number for which collidesWithBoundaryAfterMove(result) is true.
 	 * 			| if (getWorld() != null)
-	 * 			|	then (for each t in { x in Real Number | 0 <= x < result }: ! collidesWithBoundaryAfterMove(t) &&
-	 * 			|		 collidesWithBoundaryAfterMove(result))
+	 * 			|	then (for each t in { x in Real Number | 0 <= x < result }: ! collidesWithBoundaryAfterMove(t)) &&
+	 * 			|		 collidesWithBoundaryAfterMove(result)
 	 * @throws TerminatedException
 	 * 			This entity is terminated.
 	 * 			| this.isTerminated()
@@ -1197,7 +1199,7 @@ public abstract class Entity {
 	 * 			| this.isTerminated() || other.isTerminated()
 	 */
 	@Model
-	void bounceOff(Entity other) throws IllegalMethodCallException, TerminatedException {
+	void bounceOff(Entity other) throws IllegalMethodCallException, TerminatedException, NullPointerException {
 		if (!Entity.apparentlyCollide(this, other))
 			throw new IllegalMethodCallException();
 		double dx, dy, dvx, dvy, sumOfRadii, dvDotdr, m1, m2;
@@ -1257,15 +1259,25 @@ public abstract class Entity {
 	public abstract boolean mustShowCollisionWith(Entity other);
 	
 	/**
+	 * Return the world in which this entity is contained.
+	 */
+	@Basic @Raw
+	public World getWorld() {
+		return this.world;
+	}
+	
+	/**
 	 * Check whether this entity can have the given world as world.
 	 * 
 	 * @param world
 	 * 			The world to check.
 	 * @return If this entity is terminated, true iff the given world is null.
-	 * 			| @see implementation
+	 * 			| if (isTerminated())
+	 * 			|	then result == (world == null)
 	 * @return If this entity is not terminated, true iff the given world is null or
 	 * 			the given world is effective and can have this entity as entity.
-	 * 			| @see implementation
+	 * 			| if (!isTerminated())
+	 * 			|	then result == ((world == null) || world.canHaveAsEntity(this))
 	 */
 	public boolean canHaveAsWorld(World world) {
 		if (isTerminated())
@@ -1281,7 +1293,7 @@ public abstract class Entity {
 	 * 			| if (this.isTerminated())
 	 * 			|	then result == (getWorld() == null)
 	 * @return If this entity is not terminated, true iff the world associated to this entity is null or contains this entity at this
-	 * 			entity's position.
+	 * 			entity's position, but at no other position.
 	 * 			| if (!this.isTerminated())
 	 * 			|	then result == (getWorld() == null) || (getWorld().getEntityAt(this.getPosition()) == this && 
 	 * 			|				(for each position in getWorld().getOccupiedPositions():
@@ -1303,14 +1315,6 @@ public abstract class Entity {
 			}
 		}
 		return true;
-	}
-	
-	/**
-	 * Return the world in which this entity is contained.
-	 */
-	@Basic @Raw
-	public World getWorld() {
-		return this.world;
 	}
 	
 	/**

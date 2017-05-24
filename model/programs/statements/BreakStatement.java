@@ -1,5 +1,6 @@
 package asteroids.model.programs.statements;
 
+import asteroids.model.exceptions.IllegalMethodCallException;
 import asteroids.model.exceptions.programExceptions.BreakException;
 import asteroids.model.programs.ProgramExecutor;
 
@@ -10,7 +11,7 @@ public class BreakStatement extends Statement {
 	}
 	
 	@Override
-	public void execute(ProgramExecutor executor) throws BreakException {
+	public void execute(ProgramExecutor executor) throws IllegalMethodCallException, NullPointerException, BreakException {
 		throw new BreakException();
 	}
 
