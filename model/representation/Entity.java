@@ -433,7 +433,6 @@ public abstract class Entity {
 			else
 				tempVelocity = getVelocity();
 		}
-		//TODO Misschien beter de try-catch vervangen door een gewoon ifstatement.
 		if (!canHaveAsVelocity(tempVelocity)) {
 			double speed = tempVelocity.getSpeed();
 			xComponent = xComponent * getSpeedLimit() / speed;
@@ -833,7 +832,6 @@ public abstract class Entity {
 	 * @throws TerminatedException
 	 * 			One of the entities is terminated
 	 * 			| entity1.isTerminated() || entity2.isTerminated()
-	 * TODO Waarom een exception voor terminated maar false voor null?
 	 */
 	public static boolean apparentlyCollide(Entity entity1, Entity entity2) throws TerminatedException {
 		if (entity1 == null || entity2 == null)
@@ -874,7 +872,6 @@ public abstract class Entity {
 	 * @throws TerminatedException
 	 * 			One of the entities is terminated
 	 * 			| (entity1.isTerminated() || entity2.isTerminated())
-	 * TODO Waarom een exception voor terminated maar false voor null?
 	 */
 	public static boolean collideAfterMove(Entity entity1, Entity entity2, double duration) throws TerminatedException {
 		if (entity1 == null || entity2 == null)
