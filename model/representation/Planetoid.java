@@ -15,7 +15,7 @@ import be.kuleuven.cs.som.annotate.Raw;
 public class Planetoid extends MinorPlanet {
 	
 	/**
-	 * Initialize this new planetoid with given position, velocity and radius.
+	 * Initialize this new planetoid with given position, velocity, radius and total travelled distance.
 	 * 
 	 * @param xComPos
 	 * 			The xComponent of the position of this new planetoid.
@@ -27,9 +27,13 @@ public class Planetoid extends MinorPlanet {
 	 * 			The yComponent of the velocity of this new planetoid.
 	 * @param radius
 	 * 			The radius of this new planetoid.
-	 * @effect This new planetoid is initialized with the given position as its position, the given velocity as its velocity and
-	 * 			the given radius as its radius. After that, it is shrunk with an amount of totalTravelledDistance * SHRINK_FACTOR.
-	 * 			| super(xComPos, yComPos, xComVel, yComVel, radius) && shrink(totalTravelledDistance * SHRINK_FACTOR);
+	 * @param totalTravelledDistance
+	 * 			The total travelled distance of this new planetoid.
+	 * @effect This new planetoid is initialized as a new minor planet with the given position as its position, the given velocity as its
+	 * 			velocity and the given radius as its radius. After that, it is shrunk with an amount of totalTravelledDistance * SHRINK_FACTOR
+	 * 			and the given total travelled distance is added to total travelled distance of this planetoid.
+	 * 			| super(xComPos, yComPos, xComVel, yComVel, radius) && shrink(totalTravelledDistance * SHRINK_FACTOR) && 
+	 * 			|														addToTotalTravelledDistance(totalTravelledDistance)
 	 */
 	@Raw 
 	public Planetoid(double xComPos, double yComPos, double xComVel, double yComVel, double radius, double totalTravelledDistance)
@@ -114,6 +118,7 @@ public class Planetoid extends MinorPlanet {
 	 * @throws NullPointerException
 	 * 			The given other entity is not effective.
 	 * 			| other == null
+	 * TODO nodig?
 	 */
 	@Override
 	public void resolveCollision(Entity other) throws IllegalMethodCallException, TerminatedException, NullPointerException {

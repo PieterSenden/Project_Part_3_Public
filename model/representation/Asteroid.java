@@ -27,8 +27,8 @@ public class Asteroid extends MinorPlanet {
 	 * 			The yComponent of the velocity of this new asteroid.
 	 * @param radius
 	 * 			The radius of this new asteroid.
-	 * @effect This new asteroid is initialized with the given position as its position, the given velocity as its velocity and
-	 * 			the given radius as its radius.
+	 * @effect This new asteroid is initialized as a new minor planet with the given position as its position, the given velocity as its
+	 * 			velocity, the given radius as its radius and MINIMAL_DENSITY as its minimal density.
 	 * 			| super(xComPos, yComPos, xComVel, yComVel, radius)
 	 */
 	@Raw 
@@ -98,6 +98,7 @@ public class Asteroid extends MinorPlanet {
 	 * @throws NullPointerException
 	 * 			The given other entity is not effective.
 	 * 			| other == null
+	 * TODO nodig?
 	 */
 	@Override
 	public void resolveCollision(Entity other) throws IllegalMethodCallException, TerminatedException, NullPointerException {

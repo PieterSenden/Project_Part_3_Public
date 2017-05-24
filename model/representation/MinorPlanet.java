@@ -14,7 +14,7 @@ import be.kuleuven.cs.som.annotate.*;
 public abstract class MinorPlanet extends Entity {
 	
 	/**
-	 * Initialize this new minor planet with given position, velocity and radius.
+	 * Initialize this new minor planet with given position, velocity, radius and minimal density.
 	 * 
 	 * @param xComPos
 	 * 			The xComponent of the position of this new minor planet.
@@ -26,11 +26,12 @@ public abstract class MinorPlanet extends Entity {
 	 * 			The yComponent of the velocity of this new minor planet.
 	 * @param radius
 	 * 			The radius of this new minor planet.
-	 * @effect This new minor planet is initialized with the given position as its position, the given velocity as its velocity and
-	 * 			the given radius as its radius.
-	 * 			| super(xComPos, yComPos, xComVel, yComVel, radius, mass)
+	 * @param minimalDensity
+	 * 			The minimal density of this new minor planet.
+	 * @effect This new minor planet is initialized as a new entity with the given position as its position, the given velocity as its velocity,
+	 * 			the given radius as its radius, the given minimal density as its minimal density and MINIMAL_RADIUS as its minimal radius..
+	 * 			| super(xComPos, yComPos, xComVel, yComVel, radius, minimalDensity, MINIMAL_RADIUS)
 	 */
-	// TODO: specs in orde brengen.
 	@Raw 
 	public MinorPlanet(double xComPos, double yComPos, double xComVel, double yComVel, double radius, double minimalDensity)
 			throws IllegalComponentException, IllegalPositionException, IllegalRadiusException {
@@ -55,7 +56,6 @@ public abstract class MinorPlanet extends Entity {
 		return density == getMinimalDensity();
 	}
 	
-	
 	/**
 	 * Resolve a collision between this minor planet and another entity.
 	 * 
@@ -66,8 +66,8 @@ public abstract class MinorPlanet extends Entity {
 	 * @effect	| if (other instanceof MinorPlanet)
 	 * 			|	then this.bounceOff(other)
 	 * @throws IllegalMethodCallException
-	 * 			Either this minor planet or the other entity is not associated to a world, this minor planet and the other entity are not associated
-	 *			to the same world or this minor planet and the other entity do not apparently collide.
+	 * 			Either this minor planet or the other entity is not associated to a world, this minor planet and the other entity are not
+	 * 			associated to the same world or this minor planet and the other entity do not apparently collide.
 	 * 			| (getWorld() == null) || (getWorld() != other.getWorld()) || !Entity.apparentlyCollide(this, other)
 	 * @throws TerminatedException
 	 * 			This minor planet or the other entity is terminated
