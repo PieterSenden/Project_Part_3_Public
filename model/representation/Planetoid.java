@@ -108,17 +108,9 @@ public class Planetoid extends MinorPlanet {
 	 * 			|	then other.teleport()
 	 * @effect	| if (!(other instanceof Ship) && !(other instanceof Bullet) && !(other instanceof MinorPlanet))
 	 * 			|	then other.resolveCollision(this)
-	 * @throws IllegalMethodCallException
-	 * 			Either this planetoid or the other entity is not associated to a world, this planetoid and the other entity are not associated
-	 *			to the same world or this planetoid and the other entity do not apparently collide.
-	 * 			| (getWorld() == null) || (getWorld() != other.getWorld()) || !Entity.apparentlyCollide(this, other)
-	 * @throws TerminatedException
-	 * 			This planetoid or the other entity is terminated
-	 * 			| this.isTerminated() || other.isTerminated()
 	 * @throws NullPointerException
 	 * 			The given other entity is not effective.
 	 * 			| other == null
-	 * TODO nodig?
 	 */
 	@Override
 	public void resolveCollision(Entity other) throws IllegalMethodCallException, TerminatedException, NullPointerException {
