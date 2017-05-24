@@ -1,6 +1,10 @@
 package asteroids.model.programs.statements;
 
 import asteroids.model.exceptions.IllegalMethodCallException;
+import asteroids.model.exceptions.programExceptions.BreakException;
+import asteroids.model.exceptions.programExceptions.HoldException;
+import asteroids.model.exceptions.programExceptions.NoReturnException;
+import asteroids.model.exceptions.programExceptions.ReturnException;
 import asteroids.model.programs.*;
 import be.kuleuven.cs.som.annotate.*;
 
@@ -14,7 +18,8 @@ import be.kuleuven.cs.som.annotate.*;
  */
 public abstract class Statement {
 	
-	public abstract void execute(ProgramExecutor executor);
+	public abstract void execute(ProgramExecutor executor) throws IllegalMethodCallException, HoldException, NullPointerException,
+																	BreakException, ReturnException, NoReturnException ;
 	
 	public Executable getExecutable() {
 		if (getEnclosingStatement() == null)

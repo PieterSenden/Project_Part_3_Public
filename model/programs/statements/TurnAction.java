@@ -1,8 +1,10 @@
 package asteroids.model.programs.statements;
 
+import asteroids.model.exceptions.IllegalMethodCallException;
+import asteroids.model.exceptions.programExceptions.HoldException;
 import asteroids.model.programs.ProgramExecutor;
 import asteroids.model.programs.expressions.Expression;
-import asteroids.util.internal.InternalUtils;
+//import asteroids.util.internal.InternalUtils;
 
 public class TurnAction extends Action<Double> {
 	
@@ -11,7 +13,7 @@ public class TurnAction extends Action<Double> {
 	}
 	
 	@Override
-	public void execute(ProgramExecutor executor) {
+	public void execute(ProgramExecutor executor) throws IllegalMethodCallException, HoldException, NullPointerException {
 		super.execute(executor);
 		try {
 //			double turnAngle = evaluateExpression(executor);

@@ -26,7 +26,7 @@ public abstract class Action<T> extends SingleExpressionStatement<T> {
 	}
 	
 	@Override
-	public void execute(ProgramExecutor executor) throws IllegalMethodCallException, HoldException {
+	public void execute(ProgramExecutor executor) throws IllegalMethodCallException, HoldException, NullPointerException {
 		if (!(getExecutable() instanceof Program))
 			throw new IllegalMethodCallException();
 		if (getTimeToExecute() > executor.getRemainingExecutionTime())
