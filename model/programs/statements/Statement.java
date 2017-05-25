@@ -9,6 +9,8 @@ import asteroids.model.programs.*;
 import be.kuleuven.cs.som.annotate.*;
 
 /**
+ * A class representing a statement.
+ * 
  * @invar | hasProperEnclosingStatement()
  * @invar | hasProperDirectExecutable()
  * 
@@ -18,7 +20,7 @@ import be.kuleuven.cs.som.annotate.*;
  */
 public abstract class Statement {
 	
-	public abstract void execute(ProgramExecutor executor) throws IllegalMethodCallException, HoldException, NullPointerException, IndexOutOfBoundsException
+	public abstract void execute(ProgramExecutor executor) throws IllegalMethodCallException, HoldException, NullPointerException, IndexOutOfBoundsException,
 																	BreakException, ReturnException, NoReturnException, IllegalArgumentException;
 	
 	public Executable getExecutable() {

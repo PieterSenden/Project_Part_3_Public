@@ -9,6 +9,7 @@ import asteroids.model.programs.ProgramExecutor;
 import be.kuleuven.cs.som.annotate.*;
 
 /**
+ * A class representing a sequence statement.
  * 
  * @author Joris Ceulemans & Pieter Senden
  * @version 3.0

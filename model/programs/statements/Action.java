@@ -8,6 +8,7 @@ import be.kuleuven.cs.som.annotate.*;
 
 
 /**
+ * A class representing an action.
  * 
  * @author Joris Ceulemans & Pieter Senden
  * @version 3.0

@@ -6,6 +6,13 @@ import asteroids.model.programs.ProgramExecutor;
 import asteroids.model.programs.expressions.Expression;
 import be.kuleuven.cs.som.annotate.*;
 
+/**
+ * A class representing a while statement.
+ * 
+ * @author Joris Ceulemans & Pieter Senden
+ * @version 3.0
+ * 
+ */
 public class WhileStatement extends SingleExpressionStatement<Boolean> implements ComposedStatement {
 	
 	
@@ -39,19 +46,11 @@ public class WhileStatement extends SingleExpressionStatement<Boolean> implement
 	private static final int EXECUTING_BODY = 1;
 	private static final int NOT_EXECUTING_BODY = 0;
 	
-	
-//	@Basic
-//	public boolean isExecutingBody() {
-//		return this.isExecutingBody;
-//	}
-//	
 	private void setIsExecutingBody(int state, ProgramExecutor executor) throws IllegalArgumentException {
 		if (state != EXECUTING_BODY && state != NOT_EXECUTING_BODY)
 			throw new IllegalArgumentException();
 		executor.setExecutionPositionAt(getDepth(), state);
 	}
-//	
-//	private boolean isExecutingBody;
 	
 	@Override
 	public boolean hasAsSubStatement(Statement statement) {

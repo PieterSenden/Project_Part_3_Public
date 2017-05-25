@@ -6,7 +6,8 @@ import asteroids.model.programs.expressions.Expression;
 import be.kuleuven.cs.som.annotate.*;
 
 /**
- * 
+ * A class representing an assignment statement.
+ *  
  * @author Joris Ceulemans & Pieter Senden
  * @version 3.0
  * 

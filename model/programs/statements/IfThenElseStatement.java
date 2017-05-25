@@ -9,6 +9,14 @@ import asteroids.model.programs.ProgramExecutor;
 import asteroids.model.programs.expressions.Expression;
 import be.kuleuven.cs.som.annotate.*;
 
+/**
+ * A class representing an if-then-else statement.
+ * 
+ * @author Joris Ceulemans & Pieter Senden
+ * @version 3.0
+ * 
+ * @invar	| hasProperEnclosedStatements()
+ */
 public class IfThenElseStatement extends SingleExpressionStatement<Boolean> implements ComposedStatement {
 	
 	public IfThenElseStatement(Expression<Boolean> condition, Statement ifStatement, Statement elseStatement) throws IllegalArgumentException {
