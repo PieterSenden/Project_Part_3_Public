@@ -12,7 +12,7 @@ import be.kuleuven.cs.som.annotate.*;
  *       | isValidComponent(getyComponent())
  *       
  *       
- * @version 2.0
+ * @version 3.0
  * @author Joris Ceulemans & Pieter Senden
  */
 @Value

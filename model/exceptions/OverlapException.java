@@ -7,7 +7,7 @@ import be.kuleuven.cs.som.annotate.*;
  * A class of exceptions signaling the overlapping state of two entities.
  * 
  * @author Joris Ceulemans & Pieter Senden
- * @version 2.0
+ * @version 3.0
  */
 public class OverlapException extends RuntimeException {
 	

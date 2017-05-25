@@ -8,6 +8,7 @@ import be.kuleuven.cs.som.annotate.*;
 
 
 /**
+ * A class representing an action.
  * 
  * @author Joris Ceulemans & Pieter Senden
  * @version 3.0
@@ -32,6 +33,8 @@ public abstract class Action<T> extends SingleExpressionStatement<T> {
 		if (getTimeToExecute() > executor.getRemainingExecutionTime())
 			throw new HoldException();
 		executor.decreaseRemainingTime(getTimeToExecute());
+		// decreaseRemainingTime() cannot throw an IllegalArgumentException: it only throws such an exception if
+		// executor.getRemainingExecutionTime() - getTimeToExecute() is less than zero; but this is already checked by the previous if-statement.
 	}
 	
 	@Basic @Raw

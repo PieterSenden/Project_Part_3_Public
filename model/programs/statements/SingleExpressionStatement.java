@@ -3,6 +3,14 @@ package asteroids.model.programs.statements;
 import asteroids.model.programs.ProgramExecutor;
 import asteroids.model.programs.expressions.Expression;
 
+/**
+ * A class representing a statement containing a single expression.
+ * 
+ * @author Joris Ceulemans & Pieter Senden
+ * @version 3.0
+ * 
+ * @invar | canHaveAsExpression(getExpression())
+ */
 public abstract class SingleExpressionStatement<T> extends Statement {
 	
 	public SingleExpressionStatement(Expression<? extends T> expression) throws IllegalArgumentException {

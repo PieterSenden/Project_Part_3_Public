@@ -112,7 +112,6 @@ public class TestShip {
 		ship1.loadBullet(ownBullet1);
 		assertTrue(ship1.hasLoadedInMagazine(ownBullet1));
 		assertEquals(ownBullet1.getContainingShip(), ship1);
-		assertNull(ownBullet1.getSourceShip());
 		assertNull(ownBullet1.getWorld());
 	}
 	
@@ -187,7 +186,28 @@ public class TestShip {
 	}
 	
 	@Test
-	public void bounceOfBoundary_HorizontalBoundary() {
+	public void removeBullet_EffectiveCase() {
+		ship1.loadBullet(ownBullet1);
+		ship1.removeBullet(ownBullet1);
+		assertNull(ownBullet1.getSourceShip());
+		assertNull(ownBullet1.getContainingShip());
+		assertEquals(0, ship1.getNbOfBulletsInMagazine(), EPSILON);
+		assertEquals(0, ship1.getNbOfFiredBullets(), EPSILON);
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void removeBullet_BulletNotLoadedOnShip() {
+		ship1.removeBullet(ownBullet1);
+	}
+	
+	@Test(expected = TerminatedException.class)
+	public void removeBullet_TerminatedShipCase() {
+		ship1.terminate();
+		ship1.removeBullet(ownBullet1);
+	}
+	
+	@Test
+	public void bounceOffBoundary_HorizontalBoundary() {
 		shipAtBoundary = new Ship(100, 990, 20, 10, 10, 0);
 		world1.addEntity(shipAtBoundary);
 		shipAtBoundary.bounceOffBoundary();
@@ -195,7 +215,7 @@ public class TestShip {
 	}
 	
 	@Test
-	public void bounceOfBoundary_VerticalBoundary() {
+	public void bounceOffBoundary_VerticalBoundary() {
 		shipAtBoundary = new Ship(990, 100, 20, 10, 10, 0);
 		world1.addEntity(shipAtBoundary);
 		shipAtBoundary.bounceOffBoundary();
@@ -203,7 +223,7 @@ public class TestShip {
 	}
 	
 	@Test(expected = TerminatedException.class)
-	public void bounceOfBoundary_TerminatedShipCase() {
+	public void bounceOffBoundary_TerminatedShipCase() {
 		shipAtBoundary = new Ship(990, 100, 20, 10, 10, 0);
 		world1.addEntity(shipAtBoundary);
 		shipAtBoundary.terminate();
@@ -211,13 +231,13 @@ public class TestShip {
 	}
 	
 	@Test(expected = IllegalMethodCallException.class)
-	public void bounceOfBoundary_NonEffectiveWorldCase() {
+	public void bounceOffBoundary_NonEffectiveWorldCase() {
 		shipAtBoundary = new Ship(990, 100, 20, 10, 10, 0);
 		shipAtBoundary.bounceOffBoundary();
 	}
 	
 	@Test(expected = IllegalMethodCallException.class)
-	public void bounceOfBoundary_NoCollisionCase() {
+	public void bounceOffBoundary_NoCollisionCase() {
 		shipAtBoundary = new Ship(200, 100, 20, 10, 10, 0);
 		world1.addEntity(shipAtBoundary);
 		shipAtBoundary.bounceOffBoundary();

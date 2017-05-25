@@ -7,7 +7,7 @@ import be.kuleuven.cs.som.annotate.Value;
  * A class representing the position of an entity.
  * 
  * @author Joris Ceulemans & Pieter Senden
- * @version 2.0
+ * @version 3.0
  * 
  */
 @Value

@@ -208,9 +208,9 @@ public class TestWorld {
 		assertFalse(Entity.collideAfterMove(ship1, ship2, time - EPSILON));
 	}
 	
-	@Test(expected=IllegalMethodCallException.class)
+	@Test
 	public void getTimeToFirstCollision_NoEntities() {
-		anotherWorld.getTimeToFirstCollision();
+		assertEquals(Double.POSITIVE_INFINITY, anotherWorld.getTimeToFirstCollision(), EPSILON);
 	}
 	
 	@Test(expected=TerminatedException.class)

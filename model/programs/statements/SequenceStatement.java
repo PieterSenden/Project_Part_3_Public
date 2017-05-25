@@ -1,9 +1,15 @@
 package asteroids.model.programs.statements;
 
+import asteroids.model.exceptions.IllegalMethodCallException;
+import asteroids.model.exceptions.programExceptions.BreakException;
+import asteroids.model.exceptions.programExceptions.HoldException;
+import asteroids.model.exceptions.programExceptions.NoReturnException;
+import asteroids.model.exceptions.programExceptions.ReturnException;
 import asteroids.model.programs.ProgramExecutor;
 import be.kuleuven.cs.som.annotate.*;
 
 /**
+ * A class representing a sequence statement.
  * 
  * @author Joris Ceulemans & Pieter Senden
  * @version 3.0
@@ -14,7 +20,7 @@ import be.kuleuven.cs.som.annotate.*;
 
 public class SequenceStatement extends Statement implements ComposedStatement {
 	@Raw
-	public SequenceStatement(Statement... enclosedStatements) {
+	public SequenceStatement(Statement... enclosedStatements) throws IllegalArgumentException {
 		if (enclosedStatements == null || enclosedStatements.length == 0)
 			throw new IllegalArgumentException();
 		for (Statement statement : enclosedStatements)
@@ -23,10 +29,12 @@ public class SequenceStatement extends Statement implements ComposedStatement {
 		this.enclosedStatements = enclosedStatements;
 		for (Statement statement : enclosedStatements)
 			statement.setEnclosingStatement(this);
+		// setEnclosingStatement() cannot throw an IllegalMethodCallException since getExecutable() is at this point still null.
 	}
 	
 	@Override
-	public void execute(ProgramExecutor executor) {
+	public void execute(ProgramExecutor executor) throws IllegalMethodCallException, HoldException, NullPointerException, IndexOutOfBoundsException,
+															BreakException, ReturnException, NoReturnException, IllegalArgumentException {
 		if (executor.getCurrentExecutionListLength() <= getDepth())
 			executor.setExecutionPositionAt(getDepth(), 1);
 		for (int i = executor.getExecutionPositionAt(getDepth()); i <= getNbOfEnclosedStatements(); i++) {
@@ -36,30 +44,9 @@ public class SequenceStatement extends Statement implements ComposedStatement {
 		executor.removeExecutionPosition();
 	}
 	
-//	@Basic
-//	public int getExecutionPosition() {
-//		return executionPosition;
-//	}
-//	
-//	public boolean canHaveAsExecutionPosition(int executionPosition) {
-//		return (0 <= executionPosition) && (executionPosition < enclosedStatements.length);
-//	}
-//	
-//	private void setExecutionPosition(int executionPosition) throws IllegalArgumentException {
-//		if (!canHaveAsExecutionPosition(executionPosition))
-//			throw new IllegalArgumentException();
-//		this.executionPosition = executionPosition;
-//	}
-//	
 	private void stepExecutionPosition(ProgramExecutor executor) throws IllegalArgumentException {
 		executor.setExecutionPositionAt(getDepth(), executor.getExecutionPositionAt(getDepth()) + 1);
 	}
-//	
-//	private void resetExecutionPosition() {
-//		setExecutionPosition(0);
-//	}
-//	
-//	private int executionPosition = 0;
 	
 	@Override
 	public boolean hasAsSubStatement(Statement statement) {

@@ -4,6 +4,13 @@ import asteroids.model.programs.ProgramExecutor;
 import asteroids.model.programs.expressions.Expression;
 import asteroids.util.internal.InternalUtils;
 
+/**
+ * A class representing a turn action.
+ * 
+ * @author Joris Ceulemans & Pieter Senden
+ * @version 3.0
+ * 
+ */
 public class TurnAction extends Action<Double> {
 	
 	public TurnAction(Expression<Double> angleExpression) {
