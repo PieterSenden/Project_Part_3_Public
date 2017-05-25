@@ -5,6 +5,13 @@ import java.util.Stack;
 import asteroids.model.exceptions.IllegalMethodCallException;
 import be.kuleuven.cs.som.annotate.*;
 
+/**
+ * A class representing a container to store parameters.
+ * 
+ * @author Joris Ceulemans & Pieter Senden
+ * @version 3.0
+ * 
+ */
 public class ParameterContainer {
 	
 	@Basic

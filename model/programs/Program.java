@@ -4,13 +4,21 @@ import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 
+import asteroids.model.exceptions.IllegalMethodCallException;
 import asteroids.model.programs.statements.Statement;
 import be.kuleuven.cs.som.annotate.*;
 
+/**
+ * A class representing a program.
+ * 
+ * @author Joris Ceulemans & Pieter Senden
+ * @version 3.0
+ * 
+ */
 public class Program extends Executable {
 	
 	@Raw
-	public Program(Statement bodyStatement, List<Function> functions) throws IllegalArgumentException {
+	public Program(Statement bodyStatement, List<Function> functions) throws IllegalArgumentException, IllegalMethodCallException {
 		super(bodyStatement);
 		for (Function function : functions) {
 			addFunction(function);
@@ -21,7 +29,6 @@ public class Program extends Executable {
 	public Program getProgram() {
 		return this;
 	}
-	
 	
 	/**
 	 * @param name
