@@ -5,6 +5,10 @@ import java.util.HashSet;
 import java.util.List;
 
 import asteroids.model.exceptions.*;
+import asteroids.model.exceptions.programExceptions.BreakException;
+import asteroids.model.exceptions.programExceptions.HoldException;
+import asteroids.model.exceptions.programExceptions.NoReturnException;
+import asteroids.model.exceptions.programExceptions.ReturnException;
 import asteroids.model.programs.Program;
 import asteroids.model.programs.ProgramExecutor;
 import be.kuleuven.cs.som.annotate.*;
@@ -194,12 +198,9 @@ public class Ship extends Entity {
 	 * @post Each bullet in the magazine of this ship has the given position as its position.
 	 * 		| for each bullet in new.getMagazine():
 	 * 		|	(new bullet).getPosition().equals(position)
-	 * @throws IllegalPositionException
-	 * 		 This ship cannot have this position as its position.
-	 * 		| ! canHaveAsPosition(position)
 	 */
 	@Override
-	protected void setPosition(Position position) throws IllegalPositionException {
+	protected void setPosition(Position position) throws IllegalPositionException, IllegalComponentException {
 		super.setPosition(position);
 		if (this.magazine != null) {
 			// When initializing this ship, it is possible that magazine == null and we still want to invoke this method.
@@ -815,8 +816,7 @@ public class Ship extends Entity {
 					Ship containingShip = bulletToFire.getContainingShip();
 					bulletToFire.setContainingShip(null);
 					addAsFiredBullet(bulletToFire);
-					// Cannot throw IllegalBulletException, since canHaveAsLoadedBullet(bulletToFire) was already true by class invariant
-					// and canHaveAsLoadedBullet(bulletToFire) implies canHaveAsFiredBullet(bulletToFire).
+					// Cannot throw IllegalBulletException, since canHaveAsFiredBullet(bulletToFire) was already true by class invariant.
 					bulletToFire.setSourceShip(containingShip);
 					try {
 						getWorld().addEntity(bulletToFire);
@@ -874,10 +874,10 @@ public class Ship extends Entity {
 		if (hasFired(bullet))
 			removeAsFiredBullet(bullet);
 		addAsLoadedBullet(bullet);
+		bullet.setSourceShip(null);
 		bullet.setContainingShip(this);
 		//Cannot throw IllegalMethodCallException because this ship is effective and the given bullet has been loaded in the magazine.
 		//Cannot throw TerminatedException because canHaveAsLoadedBullet(bullet) implies !bullet.isTerminated().
-		bullet.setSourceShip(null);
 		if (bullet.getWorld() != null)
 			getWorld().removeEntity(bullet);
 			//The method removeEntity() cannot throw an exception because all conditions to throw exceptions are false in this case.
@@ -1059,7 +1059,8 @@ public class Ship extends Entity {
 	 * 			This ship is terminated.
 	 * 			| isTerminated()
 	 */
-	public List<Object> executeProgram(double duration) throws IllegalMethodCallException, TerminatedException {
+	public List<Object> executeProgram(double duration) throws HoldException, NullPointerException, IndexOutOfBoundsException,
+				BreakException, ReturnException, NoReturnException, IllegalArgumentException, ArithmeticException, IllegalMethodCallException, TerminatedException {
 		if (getProgramExecutor() == null)
 			throw new IllegalMethodCallException();
 		if (isTerminated())
