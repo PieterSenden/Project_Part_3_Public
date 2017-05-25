@@ -14,7 +14,7 @@ import be.kuleuven.cs.som.annotate.*;
  */
 public class AssignmentStatement extends SingleExpressionStatement<Object> {
 	@Raw
-	public AssignmentStatement(String variableName, Expression<?> value) {
+	public AssignmentStatement(String variableName, Expression<?> value) throws IllegalArgumentException {
 		super(value);
 		if (!isValidVariableName(variableName))
 			throw new IllegalArgumentException("Illegal variable name.");
@@ -22,7 +22,7 @@ public class AssignmentStatement extends SingleExpressionStatement<Object> {
 	}
 	
 	@Override
-	public void execute(ProgramExecutor executor) throws IllegalMethodCallException, NullPointerException {
+	public void execute(ProgramExecutor executor) throws IllegalMethodCallException, NullPointerException, IllegalArgumentException {
 		executor.getVariableContainer().assignVariable(variableName, evaluateExpression(executor));
 	}
 	

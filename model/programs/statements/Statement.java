@@ -18,8 +18,8 @@ import be.kuleuven.cs.som.annotate.*;
  */
 public abstract class Statement {
 	
-	public abstract void execute(ProgramExecutor executor) throws IllegalMethodCallException, HoldException, NullPointerException,
-																	BreakException, ReturnException, NoReturnException ;
+	public abstract void execute(ProgramExecutor executor) throws IllegalMethodCallException, HoldException, NullPointerException, IndexOutOfBoundsException
+																	BreakException, ReturnException, NoReturnException, IllegalArgumentException;
 	
 	public Executable getExecutable() {
 		if (getEnclosingStatement() == null)

@@ -15,7 +15,7 @@ public class PrintStatement extends SingleExpressionStatement<Object> {
 	public void execute(ProgramExecutor executor) throws IllegalMethodCallException {
 		if (! (getExecutable() instanceof Program))
 			throw new IllegalMethodCallException();
-		Object evaluation = getExpression().evaluate(executor);
+		Object evaluation = evaluateExpression(executor);
 		if (evaluation == null)
 			System.out.println("null");
 		else

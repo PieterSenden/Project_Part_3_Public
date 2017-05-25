@@ -1,5 +1,6 @@
 package asteroids.model.programs.statements;
 
+import asteroids.model.exceptions.IllegalMethodCallException;
 import asteroids.model.exceptions.programExceptions.*;
 import asteroids.model.programs.ProgramExecutor;
 import asteroids.model.programs.expressions.Expression;
@@ -14,10 +15,12 @@ public class WhileStatement extends SingleExpressionStatement<Boolean> implement
 			throw new IllegalArgumentException();
 		this.bodyStatement = bodyStatement;
 		bodyStatement.setEnclosingStatement(this);
+		// setEnclosingStatement() cannot throw an IllegalMethodCallException since getExecutable() is at this point still null.
 	}
 	
 	@Override
-	public void execute(ProgramExecutor executor) {
+	public void execute(ProgramExecutor executor) throws IllegalMethodCallException, HoldException, NullPointerException, IndexOutOfBoundsException,
+															ReturnException, NoReturnException, IllegalArgumentException {
 		if (executor.getCurrentExecutionListLength() <= getDepth())
 			executor.setExecutionPositionAt(getDepth(), NOT_EXECUTING_BODY);
 		while (evaluateExpression(executor) || executor.getExecutionPositionAt(getDepth()) == EXECUTING_BODY) {

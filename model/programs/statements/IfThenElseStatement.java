@@ -1,5 +1,10 @@
 package asteroids.model.programs.statements;
 
+import asteroids.model.exceptions.IllegalMethodCallException;
+import asteroids.model.exceptions.programExceptions.BreakException;
+import asteroids.model.exceptions.programExceptions.HoldException;
+import asteroids.model.exceptions.programExceptions.NoReturnException;
+import asteroids.model.exceptions.programExceptions.ReturnException;
 import asteroids.model.programs.ProgramExecutor;
 import asteroids.model.programs.expressions.Expression;
 import be.kuleuven.cs.som.annotate.*;
@@ -18,7 +23,8 @@ public class IfThenElseStatement extends SingleExpressionStatement<Boolean> impl
 	}
 	
 	@Override
-	public void execute(ProgramExecutor executor) {
+	public void execute(ProgramExecutor executor) throws IllegalMethodCallException, HoldException, NullPointerException, IndexOutOfBoundsException,
+													BreakException, ReturnException, NoReturnException, IllegalArgumentException {
 		if (executor.getCurrentExecutionListLength() <= getDepth())
 			executor.setExecutionPositionAt(getDepth(), CONDITION);
 		if (evaluateExpression(executor) || executor.getExecutionPositionAt(getDepth()) == IF) {
