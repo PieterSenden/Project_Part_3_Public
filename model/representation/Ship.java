@@ -810,7 +810,7 @@ public class Ship extends Entity {
 					Ship containingShip = bulletToFire.getContainingShip();
 					bulletToFire.setContainingShip(null);
 					addAsFiredBullet(bulletToFire);
-					// Cannot throw IllegalBulletException, since canHaveAsFiredBullet(bulletToFire) was already true by class invariant
+					// Cannot throw IllegalBulletException, since canHaveAsLoadedBullet(bulletToFire) was already true by class invariant
 					// and canHaveAsLoadedBullet(bulletToFire) implies canHaveAsFiredBullet(bulletToFire).
 					bulletToFire.setSourceShip(containingShip);
 					try {
