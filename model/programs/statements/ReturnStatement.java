@@ -1,5 +1,6 @@
 package asteroids.model.programs.statements;
 
+import asteroids.model.exceptions.IllegalMethodCallException;
 import asteroids.model.exceptions.programExceptions.ReturnException;
 import asteroids.model.programs.ProgramExecutor;
 import asteroids.model.programs.expressions.Expression;
@@ -19,7 +20,8 @@ public class ReturnStatement extends SingleExpressionStatement<Object> {
 	}
 	
 	@Override
-	public void execute(ProgramExecutor executor) throws ReturnException {
+	public void execute(ProgramExecutor executor) throws ReturnException, NullPointerException, IllegalMethodCallException,
+													IndexOutOfBoundsException, ArithmeticException {
 		throw new ReturnException(evaluateExpression(executor));
 	}
 	
