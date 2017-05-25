@@ -5,7 +5,7 @@ import be.kuleuven.cs.som.annotate.*;
 
 /**
  * A class representing a circular minor planet dealing with
- * position, velocity, radius, density and mass.
+ * position, velocity, radius and density.
  * 
  * @author Joris Ceulemans & Pieter Senden
  * @version 3.0
@@ -29,7 +29,7 @@ public abstract class MinorPlanet extends Entity {
 	 * @param minimalDensity
 	 * 			The minimal density of this new minor planet.
 	 * @effect This new minor planet is initialized as a new entity with the given position as its position, the given velocity as its velocity,
-	 * 			the given radius as its radius, the given minimal density as its minimal density and MINIMAL_RADIUS as its minimal radius..
+	 * 			the given radius as its radius, the given minimal density as its minimal density and MINIMAL_RADIUS as its minimal radius.
 	 * 			| super(xComPos, yComPos, xComVel, yComVel, radius, minimalDensity, MINIMAL_RADIUS)
 	 */
 	@Raw 

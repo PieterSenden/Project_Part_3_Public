@@ -432,8 +432,8 @@ public class Bullet extends Entity {
 			//This method must only be invoked in the method loadBullet() of the class Ship, therefore the containing ship of this bullet
 			//is already set.
 			setPosition(getContainingShip().getPosition());
-			//Cannot throw IllegalComponentException or IllegalPositionException because getShip() is on a legal position (and if this bullet
-			//is associated to a world, getContainingShip() is associated to the same world because of the class invariant).
+			//Cannot throw IllegalComponentException or IllegalPositionException because getContainingShip() is on a legal position (and if this
+			//bullet is associated to a world, getContainingShip() is associated to the same world because of the class invariant).
 			setVelocity(0, 0);
 			resetNbOfBounces();
 		}
