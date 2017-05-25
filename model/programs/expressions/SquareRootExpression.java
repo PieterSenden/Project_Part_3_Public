@@ -1,7 +1,15 @@
 package asteroids.model.programs.expressions;
 
+import asteroids.model.exceptions.IllegalMethodCallException;
 import asteroids.model.programs.ProgramExecutor;
 
+/**
+ * A class representing an expression evaluating to the square root of its subexpression.
+ * 
+ * @author Joris Ceulemans & Pieter Senden
+ * @version 3.0
+ * 
+ */
 public class SquareRootExpression extends UnaryExpression<Double, Double> {
 	
 	public SquareRootExpression(Expression<? extends Double> radicandExpression) {
@@ -13,7 +21,7 @@ public class SquareRootExpression extends UnaryExpression<Double, Double> {
 	}
 	
 	@Override
-	public Double evaluate(ProgramExecutor executor) {
+	public Double evaluate(ProgramExecutor executor) throws IllegalMethodCallException, IndexOutOfBoundsException, ArithmeticException {
 		double radicand = evaluateSubExpression(executor);
 		if (radicand < 0)
 			throw new ArithmeticException("Square root of negative number.");

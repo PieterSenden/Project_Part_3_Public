@@ -123,6 +123,9 @@ public abstract class Entity {
 	 *
 	 * @post This entity is terminated.
 	 *       | new.isTerminated()
+	 * @post If this entity is associated to a world, the new number of entities in that world is greater than or equal to
+	 * 			(the old number of entities in that world minus 1).
+	 * 		 | (new getWorld()).getEntities().size >= getWorld().getEntities().size - 1
 	 * @effect If this entity is associated to a world, this entity is removed from its world.
 	 * 		 | @see implementation
 	 */
@@ -200,6 +203,8 @@ public abstract class Entity {
 	 * 
 	 * @param duration
 	 * 			The length of the time interval during which the entity is moved.
+	 * @post The new radius of this entity is less than or equal to the old radius of this entity.
+	 * 			| new.getRadius() <= getRadius()
 	 * @effect The new position of this entity is set to the position that is the result of the position of this entity moved with
 	 * 			the velocity of this entity and during the given duration.
 	 * 			| setPosition(getPosition().move(getVelocity(), duration))
@@ -208,6 +213,8 @@ public abstract class Entity {
 	 * 			|	then getWorld().updatePosition(this)
 	 * @effect The total travelled distance of this entity is increased with the distance the entity moved during the given duration.
 	 * 			| addToTotalTravelledDistance(duration * getSpeed());
+	 * @effect It is possible that this entity is terminated.
+	 * 			| ; ^ terminate()
 	 * @throws TerminatedException
 	 * 			This entity is terminated
 	 * 			| this.isTerminated()

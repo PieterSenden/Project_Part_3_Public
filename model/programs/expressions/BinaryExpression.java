@@ -1,10 +1,13 @@
 package asteroids.model.programs.expressions;
 
+import asteroids.model.exceptions.IllegalMethodCallException;
 import asteroids.model.programs.ProgramExecutor;
 
 /**
+ * A class representing a binary expression consisting of a left-hand expression and a right-hand expression.
  * 
  * @author Joris Ceulemans & Pieter Senden
+ * @version 3.0
  *
  * @param <T> Return type of this.evaluate()
  * @param <L> Return type of evaluateLeftSubExpression()
@@ -35,7 +38,7 @@ public abstract class BinaryExpression<T, L, R> extends ComposedExpression<T> {
 		return this.leftSubExpression;
 	}
 	
-	public L evaluateLeftSubExpression(ProgramExecutor executor) {
+	public L evaluateLeftSubExpression(ProgramExecutor executor) throws IllegalMethodCallException, IndexOutOfBoundsException, ArithmeticException {
 		return getLeftSubExpression().evaluate(executor);
 	}
 	
@@ -46,7 +49,7 @@ public abstract class BinaryExpression<T, L, R> extends ComposedExpression<T> {
 		return this.rightSubExpression;
 	}
 	
-	public R evaluateRightSubExpression(ProgramExecutor executor) {
+	public R evaluateRightSubExpression(ProgramExecutor executor) throws IllegalMethodCallException, IndexOutOfBoundsException, ArithmeticException {
 		return getRightSubExpression().evaluate(executor);
 	}
 	

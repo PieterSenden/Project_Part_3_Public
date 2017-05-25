@@ -34,7 +34,7 @@ public class SequenceStatement extends Statement implements ComposedStatement {
 	
 	@Override
 	public void execute(ProgramExecutor executor) throws IllegalMethodCallException, HoldException, NullPointerException, IndexOutOfBoundsException,
-															BreakException, ReturnException, NoReturnException, IllegalArgumentException {
+															BreakException, ReturnException, NoReturnException, IllegalArgumentException, ArithmeticException  {
 		if (executor.getCurrentExecutionListLength() <= getDepth())
 			executor.setExecutionPositionAt(getDepth(), 1);
 		for (int i = executor.getExecutionPositionAt(getDepth()); i <= getNbOfEnclosedStatements(); i++) {
@@ -44,7 +44,7 @@ public class SequenceStatement extends Statement implements ComposedStatement {
 		executor.removeExecutionPosition();
 	}
 	
-	private void stepExecutionPosition(ProgramExecutor executor) throws IllegalArgumentException {
+	private void stepExecutionPosition(ProgramExecutor executor) throws NullPointerException, IllegalArgumentException {
 		executor.setExecutionPositionAt(getDepth(), executor.getExecutionPositionAt(getDepth()) + 1);
 	}
 	

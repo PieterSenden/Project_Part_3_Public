@@ -4,7 +4,7 @@ import asteroids.model.exceptions.IllegalComponentException;
 import be.kuleuven.cs.som.annotate.Value;
 
 /**
- * A class representing the position of an entity.
+ * A class representing a 2-dimensional position vector.
  * 
  * @author Joris Ceulemans & Pieter Senden
  * @version 3.0
@@ -97,8 +97,8 @@ public class Position extends PhysicalVector {
 	 * 
 	 * @param other
 	 * 			The second position vector.
-	 * @return The sum of this position vector an the given other physical vector.
-	 * 			| result == (Position)(super.vectorPlus(other))
+	 * @return The sum of this position vector and the given other physical vector.
+	 * 			| @see implementation
 	 * @throws NullPointerException
 	 * 			The given other physical vector is not effective.
 	 * 			| other == null
@@ -122,7 +122,7 @@ public class Position extends PhysicalVector {
 	 * @param factor
 	 * 			The scalar factor.
 	 * @return The scalar multiple of this position vector with the given factor.
-	 * 			| result == (Position)(super.scalarMultiple(factor))
+	 * 			| @see implementation
 	 * @throws IllegalComponentException
 	 * 			getxComponent() * factor or getyComponent() * factor is not a valid component for any position.
 	 * 			| !isValidComponent(getxComponent() * factor) || !isValidComponent(getyComponent() * factor)

@@ -23,7 +23,8 @@ public class AssignmentStatement extends SingleExpressionStatement<Object> {
 	}
 	
 	@Override
-	public void execute(ProgramExecutor executor) throws IllegalMethodCallException, NullPointerException, IllegalArgumentException {
+	public void execute(ProgramExecutor executor) throws IllegalMethodCallException, NullPointerException, IllegalArgumentException, 
+												IndexOutOfBoundsException, ArithmeticException  {
 		executor.getVariableContainer().assignVariable(variableName, evaluateExpression(executor));
 	}
 	

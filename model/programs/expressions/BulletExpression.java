@@ -8,6 +8,13 @@ import asteroids.model.exceptions.IllegalMethodCallException;
 import asteroids.model.programs.ProgramExecutor;
 import asteroids.model.representation.Bullet;
 
+/**
+ * A class representing an expression evaluating to a random bullet of the ship of a program executor.
+ * 
+ * @author Joris Ceulemans & Pieter Senden
+ * @version 3.0
+ * 
+ */
 public class BulletExpression extends Expression<Bullet> {
 	
 	public Stream<Bullet> stream(ProgramExecutor executor) throws IllegalMethodCallException {

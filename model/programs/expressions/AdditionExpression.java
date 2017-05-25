@@ -1,7 +1,15 @@
 package asteroids.model.programs.expressions;
 
+import asteroids.model.exceptions.IllegalMethodCallException;
 import asteroids.model.programs.ProgramExecutor;
 
+/**
+ * A class representing an addition expression consisting of a left-hand subexpression and a right-hand subexpression.
+ * 
+ * @author Joris Ceulemans & Pieter Senden
+ * @version 3.0
+ * 
+ */
 public class AdditionExpression extends BinaryExpression<Double, Double, Double> {
 	
 	public AdditionExpression(Expression<? extends Double> leftSubExpression,
@@ -25,7 +33,7 @@ public class AdditionExpression extends BinaryExpression<Double, Double, Double>
 	}
 	
 	@Override
-	public Double evaluate(ProgramExecutor executor) {
+	public Double evaluate(ProgramExecutor executor)  throws IllegalMethodCallException, IndexOutOfBoundsException, ArithmeticException {
 		return evaluateLeftSubExpression(executor) + evaluateRightSubExpression(executor);
 	}
 }

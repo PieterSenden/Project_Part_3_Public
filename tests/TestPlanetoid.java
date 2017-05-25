@@ -34,6 +34,16 @@ public class TestPlanetoid {
 		collidingBullet = new Bullet(340, 330, -100, -100, 40);
 	}
 	
+	@Test
+	public void mostExtendedConstructor() {
+		Planetoid planetoid = new Planetoid(200, 300, 40, 50, 10, 10e6);
+		assertEquals(planetoid.getPosition(), new Position(200, 300));
+		assertEquals(planetoid.getVelocity(), new Velocity(40, 50));
+		assertEquals(planetoid.getRadius(), 10, EPSILON);
+		assertEquals(planetoid.getTotalTravelledDistance(), 10e6, EPSILON);
+		assertEquals(planetoid.getMass(), 10 * 10 * 10 * 4.0 / 3 * Math.PI * Planetoid.MINIMAL_DENSITY, EPSILON);
+	}
+	
 	@Test(expected = IllegalArgumentException.class)
 	public void shrink_NegativeAmount() {
 		largePlanetoid.shrink(-1);

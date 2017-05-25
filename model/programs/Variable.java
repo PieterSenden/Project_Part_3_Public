@@ -6,8 +6,10 @@ import java.util.Set;
 
 import asteroids.model.representation.Entity;
 import be.kuleuven.cs.som.annotate.*;
+
  /**
-  * 
+  * A class representing a variable with a type and a value.
+  *  
   * @author Joris Ceulemans & Pieter Senden
   * @version 3.0
   * 

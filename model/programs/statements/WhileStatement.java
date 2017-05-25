@@ -27,7 +27,7 @@ public class WhileStatement extends SingleExpressionStatement<Boolean> implement
 	
 	@Override
 	public void execute(ProgramExecutor executor) throws IllegalMethodCallException, HoldException, NullPointerException, IndexOutOfBoundsException,
-															ReturnException, NoReturnException, IllegalArgumentException {
+															ReturnException, NoReturnException, IllegalArgumentException, ArithmeticException  {
 		if (executor.getCurrentExecutionListLength() <= getDepth())
 			executor.setExecutionPositionAt(getDepth(), NOT_EXECUTING_BODY);
 		while (evaluateExpression(executor) || executor.getExecutionPositionAt(getDepth()) == EXECUTING_BODY) {
@@ -46,7 +46,7 @@ public class WhileStatement extends SingleExpressionStatement<Boolean> implement
 	private static final int EXECUTING_BODY = 1;
 	private static final int NOT_EXECUTING_BODY = 0;
 	
-	private void setIsExecutingBody(int state, ProgramExecutor executor) throws IllegalArgumentException {
+	private void setIsExecutingBody(int state, ProgramExecutor executor) throws NullPointerException, IllegalArgumentException {
 		if (state != EXECUTING_BODY && state != NOT_EXECUTING_BODY)
 			throw new IllegalArgumentException();
 		executor.setExecutionPositionAt(getDepth(), state);

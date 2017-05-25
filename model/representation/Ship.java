@@ -5,6 +5,10 @@ import java.util.HashSet;
 import java.util.List;
 
 import asteroids.model.exceptions.*;
+import asteroids.model.exceptions.programExceptions.BreakException;
+import asteroids.model.exceptions.programExceptions.HoldException;
+import asteroids.model.exceptions.programExceptions.NoReturnException;
+import asteroids.model.exceptions.programExceptions.ReturnException;
 import asteroids.model.programs.Program;
 import asteroids.model.programs.ProgramExecutor;
 import be.kuleuven.cs.som.annotate.*;
@@ -194,12 +198,9 @@ public class Ship extends Entity {
 	 * @post Each bullet in the magazine of this ship has the given position as its position.
 	 * 		| for each bullet in new.getMagazine():
 	 * 		|	(new bullet).getPosition().equals(position)
-	 * @throws IllegalPositionException
-	 * 		 This ship cannot have this position as its position.
-	 * 		| ! canHaveAsPosition(position)
 	 */
 	@Override
-	protected void setPosition(Position position) throws IllegalPositionException {
+	protected void setPosition(Position position) throws IllegalPositionException, IllegalComponentException {
 		super.setPosition(position);
 		if (this.magazine != null) {
 			// When initializing this ship, it is possible that magazine == null and we still want to invoke this method.
@@ -531,15 +532,12 @@ public class Ship extends Entity {
 	 * @throws IllegalBulletException
 	 * 			The given bullet is not loaded on this ship.
 	 * 		| ! hasLoadedInMagazine(bullet)
-//	 * @throws NullPointerException
-//	 * 			The given bullet is not effective.
-//	 * 		| bullet == null
 	 * @throws TerminatedException
 	 * 			This ship is terminated
 	 * 			| this.isTerminated()
 	 */
 	@Raw
-	private void removeAsLoadedBullet(Bullet bullet) throws IllegalBulletException, NullPointerException, TerminatedException {
+	private void removeAsLoadedBullet(Bullet bullet) throws IllegalBulletException, TerminatedException {
 		if (this.isTerminated())
 			throw new TerminatedException();
 		if (! hasLoadedInMagazine(bullet))
@@ -591,15 +589,12 @@ public class Ship extends Entity {
 	 * @throws IllegalBulletException
 	 * 			The given bullet has not been fired by this ship.
 	 * 		| ! hasFired(bullet)
-//	 * @throws NullPointerException
-//	 * 			The given bullet is not effective.
-//	 * 		| bullet == null
 	 * @throws TerminatedException
 	 * 		This ship is terminated
 	 * 		| this.isTerminated()
 	 */
 	@Raw
-	private void removeAsFiredBullet(Bullet bullet) throws IllegalBulletException, NullPointerException, TerminatedException {
+	private void removeAsFiredBullet(Bullet bullet) throws IllegalBulletException, TerminatedException {
 		if (this.isTerminated())
 			throw new TerminatedException();
 		if (! hasFired(bullet))
@@ -752,7 +747,7 @@ public class Ship extends Entity {
 	}
 	
 	/**
-	 * Return the number of bullets fires by this ship that are not destroyed. 
+	 * Return the number of bullets fired by this ship. 
 	 */
 	@Basic @Raw
 	public int getNbOfFiredBullets() {
@@ -768,7 +763,7 @@ public class Ship extends Entity {
 	}
 	
 	/**
-	 * Return the set of all fired, non-terminated bullets by this ship.
+	 * Return the set of all fired bullets by this ship.
 	 */
 	@Basic
 	public Set<Bullet> getFiredBullets() {
@@ -874,10 +869,10 @@ public class Ship extends Entity {
 		if (hasFired(bullet))
 			removeAsFiredBullet(bullet);
 		addAsLoadedBullet(bullet);
+		bullet.setSourceShip(null);
 		bullet.setContainingShip(this);
 		//Cannot throw IllegalMethodCallException because this ship is effective and the given bullet has been loaded in the magazine.
 		//Cannot throw TerminatedException because canHaveAsLoadedBullet(bullet) implies !bullet.isTerminated().
-		bullet.setSourceShip(null);
 		if (bullet.getWorld() != null)
 			getWorld().removeEntity(bullet);
 			//The method removeEntity() cannot throw an exception because all conditions to throw exceptions are false in this case.
@@ -1059,7 +1054,8 @@ public class Ship extends Entity {
 	 * 			This ship is terminated.
 	 * 			| isTerminated()
 	 */
-	public List<Object> executeProgram(double duration) throws IllegalMethodCallException, TerminatedException {
+	public List<Object> executeProgram(double duration) throws HoldException, NullPointerException, IndexOutOfBoundsException,
+				BreakException, ReturnException, NoReturnException, IllegalArgumentException, ArithmeticException, IllegalMethodCallException, TerminatedException {
 		if (getProgramExecutor() == null)
 			throw new IllegalMethodCallException();
 		if (isTerminated())

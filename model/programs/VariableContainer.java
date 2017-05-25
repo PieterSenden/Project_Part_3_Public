@@ -10,9 +10,12 @@ import be.kuleuven.cs.som.annotate.Basic;
 
 
 /**
+ * A class representing a container to store objects of the class Variable.
+ * 
  * @author Joris Ceulemans & Pieter Senden
  * @version 3.0
  * 
+ *
  * @invar | hasProperProgramExecutor()
  *
  */
@@ -20,7 +23,7 @@ import be.kuleuven.cs.som.annotate.Basic;
 public class VariableContainer {
 	
 	public VariableContainer(ProgramExecutor executor) throws IllegalMethodCallException {
-		if (executor.getVariableContainer() != null)
+		if (! isValidProgramExecutor(executor) || executor.getVariableContainer() != null)
 			throw new IllegalMethodCallException();
 		this.programExecutor = executor;
 	}

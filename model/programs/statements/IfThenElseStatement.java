@@ -32,7 +32,7 @@ public class IfThenElseStatement extends SingleExpressionStatement<Boolean> impl
 	
 	@Override
 	public void execute(ProgramExecutor executor) throws IllegalMethodCallException, HoldException, NullPointerException, IndexOutOfBoundsException,
-													BreakException, ReturnException, NoReturnException, IllegalArgumentException {
+													BreakException, ReturnException, NoReturnException, IllegalArgumentException, ArithmeticException  {
 		if (executor.getCurrentExecutionListLength() <= getDepth())
 			executor.setExecutionPositionAt(getDepth(), CONDITION);
 		if (evaluateExpression(executor) || executor.getExecutionPositionAt(getDepth()) == IF) {
@@ -56,7 +56,7 @@ public class IfThenElseStatement extends SingleExpressionStatement<Boolean> impl
 //		return this.executionPosition;
 //	}
 //	
-	private void setExecutionPosition(int executionPosition, ProgramExecutor executor) throws IllegalArgumentException {
+	private void setExecutionPosition(int executionPosition, ProgramExecutor executor) throws NullPointerException, IllegalArgumentException {
 		if (executionPosition != CONDITION && executionPosition != IF && executionPosition != ELSE)
 			throw new IllegalArgumentException();
 		executor.setExecutionPositionAt(getDepth(), executionPosition);

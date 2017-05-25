@@ -4,6 +4,13 @@ import asteroids.model.exceptions.IllegalMethodCallException;
 import asteroids.model.programs.ProgramExecutor;
 import asteroids.model.representation.Entity;
 
+/**
+ * A class representing an expression evaluating to a random entity.
+ * 
+ * @author Joris Ceulemans & Pieter Senden
+ * @version 3.0
+ * 
+ */
 public class AnyExpression extends Expression<Entity> {
 
 	@Override

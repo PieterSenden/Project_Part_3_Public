@@ -403,9 +403,16 @@ public class Bullet extends Entity {
 	 * 		 |		&& (new.getVelocity().getSpeed() == 250 && new.getVelocity().getyComponent() ==
 	 * 		 |			Math.tan(getContainingShip().getOrientation()) * new.getVelocity().getxComponent()
 	 * @note This method must only be invoked in the method fireBullet() of the class Ship
+	 * @throws IllegalPositionException
+	 * 		 | let
+	 * 		 |	newDistanceBetweenCentres = (1 + 5 * (1 - ACCURACY_FACTOR)) * Entity.getSumOfRadii(this, getContainingShip());
+	 *		 |	angle = getContainingShip().getOrientation();
+	 *		 | in
+	 *		 | 	! canHaveAsPosition(new Position(getContainingShip().getPosition().getxComponent() + newDistanceBetweenCentres * Math.cos(angle),
+	 *		 |		getContainingShip().getPosition().getyComponent() + newDistanceBetweenCentres * Math.sin(angle)));
 	 */
 	@Model
-	void setToFireConfiguration() throws IllegalComponentException, IllegalPositionException {
+	void setToFireConfiguration() throws IllegalPositionException {
 		if (!isTerminated() && getContainingShip() != null && getContainingShip().hasLoadedInMagazine(this)) {
 			double newDistanceBetweenCentres = (1 + 5 * (1 - ACCURACY_FACTOR)) * Entity.getSumOfRadii(this, getContainingShip());
 			double angle = getContainingShip().getOrientation();
