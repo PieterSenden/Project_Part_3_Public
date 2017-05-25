@@ -8,7 +8,7 @@ import asteroids.model.programs.ProgramExecutor;
  * 
  * @author Joris Ceulemans & Pieter Senden
  * @version 3.0
- *
+ * 
  */
 public abstract class Expression<T> {
 	

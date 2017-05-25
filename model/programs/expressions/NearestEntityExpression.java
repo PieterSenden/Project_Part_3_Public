@@ -8,6 +8,13 @@ import asteroids.model.programs.ProgramExecutor;
 import asteroids.model.representation.*;
 import be.kuleuven.cs.som.annotate.Basic;
 
+/**
+ * A class representing an expression evaluating to the nearest entity of a certain type.
+ * 
+ * @author Joris Ceulemans & Pieter Senden
+ * @version 3.0
+ * 
+ */
 public class NearestEntityExpression extends Expression<Entity> {
 	
 	public NearestEntityExpression(Class<? extends Entity> entityType) throws IllegalArgumentException {

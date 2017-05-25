@@ -4,7 +4,8 @@ import asteroids.model.exceptions.IllegalMethodCallException;
 import asteroids.model.programs.ProgramExecutor;
 
 /**
- * 
+ * A class representing an expression containing precisely one subexpression.
+ *  
  * @author Joris Ceulemans & Pieter Senden
  * @version 3.0
  *

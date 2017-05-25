@@ -19,7 +19,7 @@ public class PrintStatement extends SingleExpressionStatement<Object> {
 	}
 	
 	@Override
-	public void execute(ProgramExecutor executor) throws IllegalMethodCallException {
+	public void execute(ProgramExecutor executor) throws NullPointerException, IllegalMethodCallException, IndexOutOfBoundsException, ArithmeticException {
 		if (! (getExecutable() instanceof Program))
 			throw new IllegalMethodCallException();
 		Object evaluation = evaluateExpression(executor);

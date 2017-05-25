@@ -3,6 +3,13 @@ package asteroids.model.programs.expressions;
 import asteroids.model.exceptions.IllegalMethodCallException;
 import asteroids.model.programs.ProgramExecutor;
 
+/**
+ * A class representing an expression evaluating to the return value of a function.
+ * 
+ * @author Joris Ceulemans & Pieter Senden
+ * @version 3.0
+ * 
+ */
 public class FunctionCallExpression<T> extends UnknownTypeExpression<T> {
 
 	public FunctionCallExpression(String name, Expression<?>... actualArgumentExpressions) throws IllegalArgumentException {

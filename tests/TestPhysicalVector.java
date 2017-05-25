@@ -56,7 +56,26 @@ public class TestPhysicalVector {
 		assertEquals(position_34.getAsArray()[1], 4, 0.01);
 	}
 	
-	@Test(expected=NullPointerException.class)
+	@Test
+	public void scalarProductWith_LegalCase() {
+		assertEquals(position_34.scalarProductWith(position_56), 39, EPSILON);
+	}
+	
+	@Test
+	public void vectorPlus_LegalCase() {
+		assertEquals(position_34.vectorPlus(position_56), new Position(8, 10));
+	}
+	
+	@Test
+	public void vectorMinus_LegalCase() {
+		assertEquals(position_34.vectorMinus(position_56), new Position(-2, -2));
+	}
+	
+	@Test
+	public void vectorScalarMultiple_LegalCase() {
+		assertEquals(position_34.scalarMultiple(2), new Position(6, 8));
+
+  @Test(expected=NullPointerException.class)
 	public void scalarProductWith_NonEffectiveCase() {
 		position_34.scalarProductWith(null);
 	}

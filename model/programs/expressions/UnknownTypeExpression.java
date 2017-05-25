@@ -2,6 +2,13 @@ package asteroids.model.programs.expressions;
 
 import be.kuleuven.cs.som.annotate.*;
 
+/**
+ * A class representing an expression of which the type of the evaluation is unknown until runtime.
+ * 
+ * @author Joris Ceulemans & Pieter Senden
+ * @version 3.0
+ * 
+ */
 public abstract class UnknownTypeExpression<T> extends Expression<T> {
 	
 	public UnknownTypeExpression(String name) throws IllegalArgumentException {

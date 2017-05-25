@@ -4,6 +4,13 @@ import asteroids.model.exceptions.IllegalMethodCallException;
 import asteroids.model.programs.ProgramExecutor;
 import be.kuleuven.cs.som.annotate.*;
 
+/**
+ * A class representing an expression evaluating to the value of a certain parameter.
+ * 
+ * @author Joris Ceulemans & Pieter Senden
+ * @version 3.0
+ * 
+ */
 public class ReadParameterExpression<T> extends UnknownTypeExpression<T> {
 	
 	public ReadParameterExpression(String name) throws IllegalArgumentException {

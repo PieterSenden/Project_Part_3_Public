@@ -3,6 +3,13 @@ package asteroids.model.programs.expressions;
 import asteroids.model.exceptions.IllegalMethodCallException;
 import asteroids.model.programs.ProgramExecutor;
 
+/**
+ * A class representing a multiplication expression consisting of a left-hand subexpression and a right-hand subexpression.
+ * 
+ * @author Joris Ceulemans & Pieter Senden
+ * @version 3.0
+ * 
+ */
 public class MultiplicationExpression extends BinaryExpression<Double, Double, Double> {
 
 	public MultiplicationExpression(Expression<? extends Double> leftSubExpression,

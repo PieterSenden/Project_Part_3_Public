@@ -4,6 +4,7 @@ import asteroids.model.exceptions.IllegalMethodCallException;
 import asteroids.model.programs.ProgramExecutor;
 
 /**
+ * A class representing a binary expression consisting of a left-hand expression and a right-hand expression.
  * 
  * @author Joris Ceulemans & Pieter Senden
  * @version 3.0

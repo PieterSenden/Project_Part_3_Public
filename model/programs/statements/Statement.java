@@ -21,7 +21,7 @@ import be.kuleuven.cs.som.annotate.*;
 public abstract class Statement {
 	
 	public abstract void execute(ProgramExecutor executor) throws IllegalMethodCallException, HoldException, NullPointerException, IndexOutOfBoundsException,
-																	BreakException, ReturnException, NoReturnException, IllegalArgumentException;
+																	BreakException, ReturnException, NoReturnException, IllegalArgumentException, ArithmeticException;
 	
 	public Executable getExecutable() {
 		if (getEnclosingStatement() == null)

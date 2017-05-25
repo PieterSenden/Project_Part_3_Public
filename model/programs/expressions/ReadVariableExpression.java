@@ -2,6 +2,13 @@ package asteroids.model.programs.expressions;
 
 import asteroids.model.programs.ProgramExecutor;
 
+/**
+ * A class representing an expression evaluating to the value of a certain variable.
+ * 
+ * @author Joris Ceulemans & Pieter Senden
+ * @version 3.0
+ * 
+ */
 public class ReadVariableExpression<T> extends UnknownTypeExpression<T> {
 
 	public ReadVariableExpression(String name) throws IllegalArgumentException {

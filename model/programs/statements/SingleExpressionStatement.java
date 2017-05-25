@@ -1,5 +1,6 @@
 package asteroids.model.programs.statements;
 
+import asteroids.model.exceptions.IllegalMethodCallException;
 import asteroids.model.programs.ProgramExecutor;
 import asteroids.model.programs.expressions.Expression;
 
@@ -27,7 +28,7 @@ public abstract class SingleExpressionStatement<T> extends Statement {
 		return expression != null;
 	}
 	
-	public T evaluateExpression(ProgramExecutor executor) {
+	public T evaluateExpression(ProgramExecutor executor) throws IllegalMethodCallException, IndexOutOfBoundsException, ArithmeticException {
 		return getExpression().evaluate(executor);
 	}
 	
