@@ -1,8 +1,14 @@
 package asteroids.model.programs.expressions;
 
-import asteroids.model.exceptions.IllegalMethodCallException;
 import asteroids.model.programs.ProgramExecutor;
 
+/**
+ * A class representing an expression evaluating to the negation of its subexpression.
+ * 
+ * @author Joris Ceulemans & Pieter Senden
+ * @version 3.0
+ * 
+ */
 public class NotExpression extends UnaryExpression<Boolean, Boolean> {
 
 	public NotExpression(Expression<? extends Boolean> subExpression) throws IllegalArgumentException {
@@ -15,7 +21,7 @@ public class NotExpression extends UnaryExpression<Boolean, Boolean> {
 	
 
 	@Override
-	public Boolean evaluate(ProgramExecutor executor) throws IllegalMethodCallException, IndexOutOfBoundsException, ArithmeticException {
+	public Boolean evaluate(ProgramExecutor executor) {
 		return ! evaluateSubExpression(executor);
 	}
 	

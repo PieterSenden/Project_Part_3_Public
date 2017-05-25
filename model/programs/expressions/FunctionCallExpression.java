@@ -1,8 +1,14 @@
 package asteroids.model.programs.expressions;
 
-import asteroids.model.exceptions.IllegalMethodCallException;
 import asteroids.model.programs.ProgramExecutor;
 
+/**
+ * A class representing an expression evaluating to the return value of a function.
+ * 
+ * @author Joris Ceulemans & Pieter Senden
+ * @version 3.0
+ * 
+ */
 public class FunctionCallExpression<T> extends UnknownTypeExpression<T> {
 
 	public FunctionCallExpression(String name, Expression<?>... actualArgumentExpressions) throws IllegalArgumentException {
@@ -16,11 +22,11 @@ public class FunctionCallExpression<T> extends UnknownTypeExpression<T> {
 
 	@Override
 	public <S> FunctionCallExpression<S> convertToType(Class<S> type) {
-		return new FunctionCallExpression<S>(getName(), actualArgumentExpressions);
+		return new FunctionCallExpression<S>(getName());
 	}
 
 	@Override
-	public T evaluate(ProgramExecutor executor) throws IllegalMethodCallException, IndexOutOfBoundsException, ArithmeticException {
+	public T evaluate(ProgramExecutor executor) {
 		Object[] values = new Object[actualArgumentExpressions.length];
 		for (int i = 0; i < actualArgumentExpressions.length; i++) {
 			values[i] = actualArgumentExpressions[i].evaluate(executor);
