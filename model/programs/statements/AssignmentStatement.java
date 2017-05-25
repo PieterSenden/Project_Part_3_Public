@@ -1,6 +1,5 @@
 package asteroids.model.programs.statements;
 
-import asteroids.model.exceptions.IllegalMethodCallException;
 import asteroids.model.programs.ProgramExecutor;
 import asteroids.model.programs.expressions.Expression;
 import be.kuleuven.cs.som.annotate.*;
@@ -22,7 +21,7 @@ public class AssignmentStatement extends SingleExpressionStatement<Object> {
 	}
 	
 	@Override
-	public void execute(ProgramExecutor executor) throws IllegalMethodCallException, NullPointerException {
+	public void execute(ProgramExecutor executor) {
 		executor.getVariableContainer().assignVariable(variableName, evaluateExpression(executor));
 	}
 	
