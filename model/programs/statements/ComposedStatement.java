@@ -2,6 +2,13 @@ package asteroids.model.programs.statements;
 
 import asteroids.model.programs.Executable;
 
+/**
+ * An interface representing functionality for a composed statement.
+ * 
+ * @author Joris Ceulemans & Pieter Senden
+ * @version 3.0
+ * 
+ */
 interface ComposedStatement {
 	
 	boolean hasAsSubStatement(Statement statement);

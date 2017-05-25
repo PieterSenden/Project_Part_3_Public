@@ -5,6 +5,13 @@ import asteroids.model.programs.Program;
 import asteroids.model.programs.ProgramExecutor;
 import asteroids.model.programs.expressions.Expression;
 
+/**
+ * A class representing a print statement.
+ * 
+ * @author Joris Ceulemans & Pieter Senden
+ * @version 3.0
+ * 
+ */
 public class PrintStatement extends SingleExpressionStatement<Object> {
 	
 	public PrintStatement(Expression<Object> expression) {
@@ -15,7 +22,7 @@ public class PrintStatement extends SingleExpressionStatement<Object> {
 	public void execute(ProgramExecutor executor) throws IllegalMethodCallException {
 		if (! (getExecutable() instanceof Program))
 			throw new IllegalMethodCallException();
-		Object evaluation = getExpression().evaluate(executor);
+		Object evaluation = evaluateExpression(executor);
 		if (evaluation == null)
 			System.out.println("null");
 		else

@@ -9,12 +9,14 @@ import be.kuleuven.cs.som.annotate.*;
  * 
  * @invar The minimal radius of each bullet must be a valid minimal radius for any bullet.
  *       | isValidMinimalRadius(getMinimalRadius())
- * @invar Each bullet can have its nbOfBounces as nbOfBounces
+ * @invar Each bullet can have its number of bounces as number of bounces.
  * 		 | canHaveAsNbOfBounces(getNbOfBounces())
  * @invar Each bullet can have its maximal number of bounces as maximal number of bounces.
  *       | canHaveAsMaximalNbOfBounces(this.getMaximalNbOfBounces())
- * @invar Each bullet must have a proper ship.
- * 		 | hasProperShip()
+ * @invar Each bullet must have a proper containing ship.
+ * 		 | hasProperContainingShip()
+ * @invar Each bullet must have a proper source ship.
+ * 		 | hasProperSourceShip()
  * 
  * @author Joris Ceulemans & Pieter Senden
  * @version 3.0
@@ -83,7 +85,7 @@ public class Bullet extends Entity {
 	 * @effect	| if (!isTerminated())
 	 * 			| 	then super.terminate()
 	 * @effect	| if (!isTerminated() && getContainingShip != null)
-	 * 			|	then getShip.removeBullet(this)
+	 * 			|	then getContainingShip().removeBullet(this)
 	 */
 	@Override
 	public void terminate() {
@@ -135,7 +137,7 @@ public class Bullet extends Entity {
 	 * 
 	 * @param number
 	 * 			The number to check.
-	 * @return @see implementation.
+	 * @return | @see implementation.
 	 */
 	@Raw
 	public boolean canHaveAsNbOfBounces(int number) {
@@ -216,12 +218,12 @@ public class Bullet extends Entity {
 	
 	
 	/**
-	 * Make this bullet bounce of the boundary of its world.
+	 * Make this bullet bounce off the boundary of its world.
 	 * 
 	 * @effect	| if (getNbOfBouces() >= getMaximalNbOfBounces())
 	 * 			|	then terminate()
 	 * @effect	| if (getNbOfBouces() < getMaximalNbOfBounces())
-	 * 			|	then (stepNbOfBounces() && super.bounceOfBoundary())
+	 * 			|	then (stepNbOfBounces() && super.bounceOffBoundary())
 	 * @throws	TerminatedException
 	 * 			| isTerminated()
 	 * @throws	IllegalMethodCallException
@@ -250,11 +252,9 @@ public class Bullet extends Entity {
 	 * 			|	then if ((Ship)other).hasFired(this))
 	 * 			|		then ((Ship)other).loadBullet(this)
 	 * 			|	else
-	 * 			|		then this.terminate() && other.terminate()
-	 * @effect	| if (other instanceof Bullet)
-	 * 			|	then this.terminate() && other.terminate()
-	 * @effect	| if (!(other instanceof Ship) && !(other instanceof Bullet))
-	 * 			|	then other.resolveCollision(this)
+	 * 			|		this.terminate() && other.terminate()
+	 * 			| else
+	 * 			|	this.terminate() && other.terminate()
 	 * @throws	TerminatedException
 	 * 			| this.isTerminated() || other.isTerminated()
 	 * @throws	IllegalMethodCallException
@@ -283,7 +283,7 @@ public class Bullet extends Entity {
 	}
 	
 	/**
-	 * Check whether if a collision between this entity and the given other entity occurs, it must be shown.
+	 * Check whether, if a collision between this entity and the given other entity occurs, it must be shown.
 	 * This method does not check if this entity and the other entity collide, only whether the collision must be shown if they do.
 	 * 
 	 * @param other
@@ -310,7 +310,6 @@ public class Bullet extends Entity {
 		return true;
 	}
 	
-	
 	/**
 	 * Return the ship containing this bullet in its magazine.
 	 */
@@ -332,8 +331,7 @@ public class Bullet extends Entity {
 	 * 
 	 * @param ship
 	 * 		The ship to check.
-	 * @return 
-	 * 			| result == (ship == null) || (ship.canHaveAsLoadedBullet(this) && getWorld() == null)
+	 * @return | result == (ship == null) || (ship.canHaveAsLoadedBullet(this) && getWorld() == null)
 	 */
 	@Raw
 	public boolean canHaveAsContainingShip(Ship ship) {
@@ -345,8 +343,7 @@ public class Bullet extends Entity {
 	 * 
 	 * @param ship
 	 * 		The ship to check.
-	 * @return 
-	 * 			| result == ((ship == null) || ship.canHaveAsFiredBullet(this))
+	 * @return | result == ((ship == null) || ship.canHaveAsFiredBullet(this))
 	 */
 	@Raw
 	public boolean canHaveAsSourceShip(Ship ship) {
@@ -381,7 +378,7 @@ public class Bullet extends Entity {
 	 * 			|	if (getSourceShip() == null)
 	 * 			|		then result == true
 	 * 			|	else
-	 * 			|		then result == getSourceShip().hasFired(this) && getSourceShip() == null
+	 * 			|		then result == getSourceShip().hasFired(this) && getContainingShip() == null
 	 * 			| else
 	 * 			|	then result == false
 	 * 
@@ -432,8 +429,8 @@ public class Bullet extends Entity {
 			//This method must only be invoked in the method loadBullet() of the class Ship, therefore the containing ship of this bullet
 			//is already set.
 			setPosition(getContainingShip().getPosition());
-			//Cannot throw IllegalComponentException or IllegalPositionException because getShip() is on a legal position (and if this bullet
-			//is associated to a world, getContainingShip() is associated to the same world because of the class invariant).
+			//Cannot throw IllegalComponentException or IllegalPositionException because getContainingShip() is on a legal position (and if this
+			//bullet is associated to a world, getContainingShip() is associated to the same world because of the class invariant).
 			setVelocity(0, 0);
 			resetNbOfBounces();
 		}
@@ -446,7 +443,7 @@ public class Bullet extends Entity {
 	 * 		The new containing ship for this bullet.
 	 * @post    | new.getContainingShip() == ship
 	 * @throws IllegalMethodCallException
-	 * 			| ( (ship != null && (! ship.hasLoadedInMagazine(this) || getSourceShip()!= null)) ||
+	 * 			| ( (ship != null && (! ship.hasLoadedInMagazine(this) || getSourceShip() != null)) ||
 				|	(ship == null && getContainingShip() != null && getContainingShip().hasLoadedInMagazine(this)))
 	 * @note If this method is invoked with an effective ship and does not throw an exception,
 	 * 			then the world of this bullet must be set to null.
@@ -455,7 +452,7 @@ public class Bullet extends Entity {
 	void setContainingShip(Ship ship) throws IllegalMethodCallException {
 		if (isTerminated() && ship != null)
 			throw new TerminatedException();
-		if ((ship != null && ! (ship.hasLoadedInMagazine(this) || getSourceShip() != null)) ||
+		if ((ship != null && (!ship.hasLoadedInMagazine(this) || getSourceShip() != null)) ||
 				(ship == null && getContainingShip() != null && getContainingShip().hasLoadedInMagazine(this)))
 			throw new IllegalMethodCallException();
 		this.containingShip = ship;
@@ -468,14 +465,14 @@ public class Bullet extends Entity {
 	 * 		The new ship for this bullet.
 	 * @post    | new.getSourceShip() == ship
 	 * @throws IllegalMethodCallException
-	 * 			| ( (ship != null && ! (ship.hasFired(this) || getContainingShip()!= null)) ||
+	 * 			| ( (ship != null && (! ship.hasFired(this) || getContainingShip() != null)) ||
 	 *			|	(ship == null && getSourceShip() != null && getSourceShip().hasFired(this)))
 	 */
 	@Raw @Model
 	void setSourceShip(Ship ship) throws IllegalMethodCallException {
 		if (isTerminated() && ship != null)
 			throw new TerminatedException();
-		if ((ship != null && (! ship.hasFired(this) || getContainingShip() != null)) ||
+		if ((ship != null && (!ship.hasFired(this) || getContainingShip() != null)) ||
 				(ship == null && getSourceShip() != null && getSourceShip().hasFired(this)))
 			throw new IllegalMethodCallException();
 		this.sourceShip = ship;

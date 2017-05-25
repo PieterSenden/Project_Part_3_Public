@@ -4,7 +4,7 @@ import asteroids.model.exceptions.*;
 import be.kuleuven.cs.som.annotate.*;
 
 /**
- * A class representing a physical vector.
+ * A class representing a 2-dimensional physical vector.
  * 
  * @invar  The xComponent of each physical vector must be a valid xComponent for any physical vector.
  *       | isValidComponent(getxComponent())
@@ -12,13 +12,11 @@ import be.kuleuven.cs.som.annotate.*;
  *       | isValidComponent(getyComponent())
  *       
  *       
- * @version 2.0
+ * @version 3.0
  * @author Joris Ceulemans & Pieter Senden
  */
 @Value
 class PhysicalVector {
-
-
 	/**
 	 * Initialize this new physical vector with given xComponent and yComponent.
 	 *
@@ -57,6 +55,7 @@ class PhysicalVector {
 	public static boolean isValidComponent(double component) {
 		return ! Double.isNaN(component);
 	}
+	
 	/**
 	 * Return the xComponent of this physical vector.
 	 */
@@ -122,8 +121,9 @@ class PhysicalVector {
 	 * 
 	 * @param other
 	 * 			The second physical vector (after minus sign).
-	 * @return 	The difference of this physical vector and the given other physical vector.
-	 * 			| @see implementation
+	 * @return 	The difference of this physical vector and the given other physical vector. This is the sum of this physical vector
+	 * 			with the (-1)-multiple of the other physical vector.
+	 * 			| this.vectorPlus(other.scalarMultiple(-1))
 	 * @throws NullPointerException
 	 * 			The given other physical vector is not effective.
 	 * 			| other == null

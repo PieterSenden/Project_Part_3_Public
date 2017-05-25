@@ -4,7 +4,7 @@ package asteroids.model.exceptions;
  * A class for signaling an illegal method call.
  * 
  * @author Joris Ceulemans & Pieter Senden
- * @version 2.0
+ * @version 3.0
  */
 public class IllegalMethodCallException extends RuntimeException {
 	/**

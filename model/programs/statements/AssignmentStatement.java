@@ -6,7 +6,8 @@ import asteroids.model.programs.expressions.Expression;
 import be.kuleuven.cs.som.annotate.*;
 
 /**
- * 
+ * A class representing an assignment statement.
+ *  
  * @author Joris Ceulemans & Pieter Senden
  * @version 3.0
  * 
@@ -14,7 +15,7 @@ import be.kuleuven.cs.som.annotate.*;
  */
 public class AssignmentStatement extends SingleExpressionStatement<Object> {
 	@Raw
-	public AssignmentStatement(String variableName, Expression<?> value) {
+	public AssignmentStatement(String variableName, Expression<?> value) throws IllegalArgumentException {
 		super(value);
 		if (!isValidVariableName(variableName))
 			throw new IllegalArgumentException("Illegal variable name.");
@@ -22,7 +23,7 @@ public class AssignmentStatement extends SingleExpressionStatement<Object> {
 	}
 	
 	@Override
-	public void execute(ProgramExecutor executor) throws IllegalMethodCallException, NullPointerException {
+	public void execute(ProgramExecutor executor) throws IllegalMethodCallException, NullPointerException, IllegalArgumentException {
 		executor.getVariableContainer().assignVariable(variableName, evaluateExpression(executor));
 	}
 	

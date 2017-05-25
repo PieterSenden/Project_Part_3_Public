@@ -62,22 +62,12 @@ public class Variable {
 		return this.value;
 	}
 	
-//	public boolean canHaveAsValue(Object value) {
-//		if (value == null)
-//			return Variable.hasAsSupportedReferenceType(getType());
-//		return getType().isAssignableFrom(value.getClass());
-//	}
-	
 	private final Object value;
 	
 	@Basic
 	public Class<?> getType() {
 		return this.type;
 	}
-	
-//	public static boolean isValidType(Class<?> type) {
-//		return Variable.hasAsSupportedType(type);
-//	}
 	
 	private final Class<?> type;
 	
@@ -140,5 +130,10 @@ public class Variable {
 		result = prime * result + ((type == null) ? 0 : type.hashCode());
 		result = prime * result + ((value == null) ? 0 : value.hashCode());
 		return result;
+	}
+	
+	@Override
+	public String toString() {
+		return "Variable(type: " + getType().getName() + ", value: " + getValue().toString();
 	}
 }
