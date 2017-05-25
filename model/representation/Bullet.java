@@ -455,7 +455,7 @@ public class Bullet extends Entity {
 	void setContainingShip(Ship ship) throws IllegalMethodCallException {
 		if (isTerminated() && ship != null)
 			throw new TerminatedException();
-		if ((ship != null && ! (ship.hasLoadedInMagazine(this) || getSourceShip() != null)) ||
+		if ((ship != null && (!ship.hasLoadedInMagazine(this) || getSourceShip() != null)) ||
 				(ship == null && getContainingShip() != null && getContainingShip().hasLoadedInMagazine(this)))
 			throw new IllegalMethodCallException();
 		this.containingShip = ship;
@@ -475,7 +475,7 @@ public class Bullet extends Entity {
 	void setSourceShip(Ship ship) throws IllegalMethodCallException {
 		if (isTerminated() && ship != null)
 			throw new TerminatedException();
-		if ((ship != null && (! ship.hasFired(this) || getContainingShip() != null)) ||
+		if ((ship != null && (!ship.hasFired(this) || getContainingShip() != null)) ||
 				(ship == null && getSourceShip() != null && getSourceShip().hasFired(this)))
 			throw new IllegalMethodCallException();
 		this.sourceShip = ship;
