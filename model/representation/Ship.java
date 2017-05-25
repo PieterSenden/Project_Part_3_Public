@@ -532,15 +532,12 @@ public class Ship extends Entity {
 	 * @throws IllegalBulletException
 	 * 			The given bullet is not loaded on this ship.
 	 * 		| ! hasLoadedInMagazine(bullet)
-//	 * @throws NullPointerException
-//	 * 			The given bullet is not effective.
-//	 * 		| bullet == null
 	 * @throws TerminatedException
 	 * 			This ship is terminated
 	 * 			| this.isTerminated()
 	 */
 	@Raw
-	private void removeAsLoadedBullet(Bullet bullet) throws IllegalBulletException, NullPointerException, TerminatedException {
+	private void removeAsLoadedBullet(Bullet bullet) throws IllegalBulletException, TerminatedException {
 		if (this.isTerminated())
 			throw new TerminatedException();
 		if (! hasLoadedInMagazine(bullet))
@@ -592,15 +589,12 @@ public class Ship extends Entity {
 	 * @throws IllegalBulletException
 	 * 			The given bullet has not been fired by this ship.
 	 * 		| ! hasFired(bullet)
-//	 * @throws NullPointerException
-//	 * 			The given bullet is not effective.
-//	 * 		| bullet == null
 	 * @throws TerminatedException
 	 * 		This ship is terminated
 	 * 		| this.isTerminated()
 	 */
 	@Raw
-	private void removeAsFiredBullet(Bullet bullet) throws IllegalBulletException, NullPointerException, TerminatedException {
+	private void removeAsFiredBullet(Bullet bullet) throws IllegalBulletException, TerminatedException {
 		if (this.isTerminated())
 			throw new TerminatedException();
 		if (! hasFired(bullet))
@@ -753,7 +747,7 @@ public class Ship extends Entity {
 	}
 	
 	/**
-	 * Return the number of bullets fires by this ship that are not destroyed. 
+	 * Return the number of bullets fired by this ship. 
 	 */
 	@Basic @Raw
 	public int getNbOfFiredBullets() {
@@ -769,7 +763,7 @@ public class Ship extends Entity {
 	}
 	
 	/**
-	 * Return the set of all fired, non-terminated bullets by this ship.
+	 * Return the set of all fired bullets by this ship.
 	 */
 	@Basic
 	public Set<Bullet> getFiredBullets() {
