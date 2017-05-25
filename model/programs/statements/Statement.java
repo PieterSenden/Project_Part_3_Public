@@ -1,6 +1,10 @@
 package asteroids.model.programs.statements;
 
 import asteroids.model.exceptions.IllegalMethodCallException;
+import asteroids.model.exceptions.programExceptions.BreakException;
+import asteroids.model.exceptions.programExceptions.HoldException;
+import asteroids.model.exceptions.programExceptions.NoReturnException;
+import asteroids.model.exceptions.programExceptions.ReturnException;
 import asteroids.model.programs.*;
 import be.kuleuven.cs.som.annotate.*;
 
