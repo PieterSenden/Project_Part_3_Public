@@ -35,7 +35,7 @@ class PhysicalVector {
 	 * 		 | ! isValidComponent(xComponent) || ! isValidComponent(yComponent)
 	 */
 	@Raw
-	protected PhysicalVector(double xComponent, double yComponent) throws IllegalComponentException {
+	public PhysicalVector(double xComponent, double yComponent) throws IllegalComponentException {
 		if (! isValidComponent(xComponent))
 			throw new IllegalComponentException();
 		this.xComponent = xComponent;
@@ -132,7 +132,7 @@ class PhysicalVector {
 	 * 			| !isValidComponent(getxComponent() - other.getxComponent()) || !isValidComponent(getyComponent() - other.getyComponent())
 	 * @throws IllegalArgumentException
 	 * 			The given other physical vector does not have the same dynamic type as this physical vector.
-	 * 			| this.getClass() != other.getClass()
+	 * 			| false ? this.getClass() != other.getClass()
 	 */
 	public PhysicalVector vectorMinus(PhysicalVector other) throws NullPointerException, IllegalComponentException,
 																						IllegalArgumentException {
@@ -156,7 +156,7 @@ class PhysicalVector {
 	 * 			| !isValidComponent(getxComponent() + other.getxComponent()) || !isValidComponent(getyComponent() + other.getyComponent())
 	 * @throws IllegalArgumentException
 	 * 			The given other physical vector does not have the same dynamic type as this physical vector.
-	 * 			| this.getClass() != other.getClass()
+	 * 			| false ? this.getClass() != other.getClass()
 	 */
 	public PhysicalVector vectorPlus(PhysicalVector other) throws NullPointerException, IllegalComponentException,
 																						IllegalArgumentException {

@@ -591,9 +591,6 @@ public class Ship extends Entity {
 	 * @throws IllegalBulletException
 	 * 			The given bullet has not been fired by this ship.
 	 * 		| ! hasFired(bullet)
-//	 * @throws NullPointerException
-//	 * 			The given bullet is not effective.
-//	 * 		| bullet == null
 	 * @throws TerminatedException
 	 * 		This ship is terminated
 	 * 		| this.isTerminated()
@@ -752,7 +749,7 @@ public class Ship extends Entity {
 	}
 	
 	/**
-	 * Return the number of bullets fires by this ship that are not destroyed. 
+	 * Return the number of bullets fires by this ship. 
 	 */
 	@Basic @Raw
 	public int getNbOfFiredBullets() {
@@ -768,7 +765,7 @@ public class Ship extends Entity {
 	}
 	
 	/**
-	 * Return the set of all fired, non-terminated bullets by this ship.
+	 * Return the set of all fired, bullets by this ship.
 	 */
 	@Basic
 	public Set<Bullet> getFiredBullets() {
@@ -874,10 +871,10 @@ public class Ship extends Entity {
 		if (hasFired(bullet))
 			removeAsFiredBullet(bullet);
 		addAsLoadedBullet(bullet);
+		bullet.setSourceShip(null);
 		bullet.setContainingShip(this);
 		//Cannot throw IllegalMethodCallException because this ship is effective and the given bullet has been loaded in the magazine.
 		//Cannot throw TerminatedException because canHaveAsLoadedBullet(bullet) implies !bullet.isTerminated().
-		bullet.setSourceShip(null);
 		if (bullet.getWorld() != null)
 			getWorld().removeEntity(bullet);
 			//The method removeEntity() cannot throw an exception because all conditions to throw exceptions are false in this case.
