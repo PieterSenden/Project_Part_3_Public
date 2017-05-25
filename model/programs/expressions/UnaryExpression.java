@@ -1,5 +1,6 @@
 package asteroids.model.programs.expressions;
 
+import asteroids.model.exceptions.IllegalMethodCallException;
 import asteroids.model.programs.ProgramExecutor;
 
 /**
@@ -27,7 +28,7 @@ public abstract class UnaryExpression<T, S> extends ComposedExpression<T> {
 		return false;
 	}
 	
-	public S evaluateSubExpression(ProgramExecutor executor) {
+	public S evaluateSubExpression(ProgramExecutor executor) throws IllegalMethodCallException, IndexOutOfBoundsException, ArithmeticException {
 		return getSubExpression().evaluate(executor);
 	}
 	

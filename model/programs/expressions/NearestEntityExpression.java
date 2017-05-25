@@ -34,7 +34,9 @@ public class NearestEntityExpression extends Expression<Entity> {
 	}
 	
 	@Override
-	public Entity evaluate(ProgramExecutor executor) {
+	public Entity evaluate(ProgramExecutor executor) throws IllegalMethodCallException {
+		if (executor == null || executor.getShip() == null)
+			throw new IllegalMethodCallException();
 		Stream<Entity> entityStream = stream(executor);
 		Ship currentShip = executor.getShip();
 		Optional<Entity> result = entityStream.filter(e -> getEntityType().isAssignableFrom(e.getClass()))

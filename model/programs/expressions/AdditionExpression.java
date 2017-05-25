@@ -1,5 +1,6 @@
 package asteroids.model.programs.expressions;
 
+import asteroids.model.exceptions.IllegalMethodCallException;
 import asteroids.model.programs.ProgramExecutor;
 
 /**
@@ -32,7 +33,7 @@ public class AdditionExpression extends BinaryExpression<Double, Double, Double>
 	}
 	
 	@Override
-	public Double evaluate(ProgramExecutor executor) {
+	public Double evaluate(ProgramExecutor executor)  throws IllegalMethodCallException, IndexOutOfBoundsException, ArithmeticException {
 		return evaluateLeftSubExpression(executor) + evaluateRightSubExpression(executor);
 	}
 }

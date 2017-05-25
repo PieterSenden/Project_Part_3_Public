@@ -1,5 +1,6 @@
 package asteroids.model.programs.expressions;
 
+import asteroids.model.exceptions.IllegalMethodCallException;
 import asteroids.model.programs.ProgramExecutor;
 
 /**
@@ -21,7 +22,7 @@ public class NotExpression extends UnaryExpression<Boolean, Boolean> {
 	
 
 	@Override
-	public Boolean evaluate(ProgramExecutor executor) {
+	public Boolean evaluate(ProgramExecutor executor) throws IllegalMethodCallException, IndexOutOfBoundsException, ArithmeticException {
 		return ! evaluateSubExpression(executor);
 	}
 	

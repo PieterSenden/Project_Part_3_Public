@@ -1,5 +1,6 @@
 package asteroids.model.programs.expressions;
 
+import asteroids.model.exceptions.IllegalMethodCallException;
 import asteroids.model.programs.ProgramExecutor;
 
 /**
@@ -12,7 +13,7 @@ import asteroids.model.programs.ProgramExecutor;
 public class GetDirExpression extends Expression<Double> {
 		
 	@Override
-	public Double evaluate(ProgramExecutor executor) {
+	public Double evaluate(ProgramExecutor executor) throws IllegalMethodCallException {
 		return executor.getShip().getOrientation();
 	}
 	
