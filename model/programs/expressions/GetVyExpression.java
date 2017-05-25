@@ -1,5 +1,6 @@
 package asteroids.model.programs.expressions;
 
+import asteroids.model.exceptions.IllegalMethodCallException;
 import asteroids.model.programs.ProgramExecutor;
 import asteroids.model.representation.Entity;
 
@@ -14,7 +15,7 @@ public class GetVyExpression extends UnaryExpression<Double, Entity> {
 	}
 	
 	@Override
-	public Double evaluate(ProgramExecutor executor) {
+	public Double evaluate(ProgramExecutor executor) throws IllegalMethodCallException, IndexOutOfBoundsException, ArithmeticException {
 		return evaluateSubExpression(executor).getVelocity().getyComponent();
 	}
 }

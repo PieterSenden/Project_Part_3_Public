@@ -34,5 +34,4 @@ public class BulletExpression extends Expression<Bullet> {
 							});
 		return result.isPresent() ? result.get() : null;
 	}
-	
 }

@@ -1,5 +1,6 @@
 package asteroids.model.programs.expressions;
 
+import asteroids.model.exceptions.IllegalMethodCallException;
 import asteroids.model.programs.ProgramExecutor;
 import be.kuleuven.cs.som.annotate.*;
 
@@ -18,7 +19,7 @@ public class ReadParameterExpression<T> extends UnknownTypeExpression<T> {
 	}
 	
 	@Override
-	public T evaluate(ProgramExecutor executor) {
+	public T evaluate(ProgramExecutor executor) throws IllegalMethodCallException, IndexOutOfBoundsException {
 		return (T)executor.getParameterContainer().getParameterValueWithIndex(getParameterNumber());
 	}
 	
