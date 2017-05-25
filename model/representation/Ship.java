@@ -52,7 +52,7 @@ public class Ship extends Entity {
 	 * 			The thruster status of this new ship.
 	 * @effect The super constructor is called to initialize this new ship.
 	 * 			| super(xComPos, yComPos, xComVel, yComVel, radius, mass, MINIMAL_DENSITY, MINIMAL_RADIUS)
-	 * @effect The orientation of this new ship is set to the given orientation
+	 * @effect The orientation of this new ship is set to the given orientation.
 	 * 			| setOrientation(orientation)
 	 * @effect The thruster status of this new ship is set to the given thruster status.
 	 * 			| setThrust(thrusterStatus)
@@ -309,6 +309,7 @@ public class Ship extends Entity {
 	 * 			|	then result == getThrusterForce() / getTotalMass()
 	 * 			| else result == 0
 	 */
+	@Raw
 	public double getAcceleration() {
 		if (hasThrusterActivated())
 			return getThrusterForce() / getTotalMass();
@@ -398,7 +399,7 @@ public class Ship extends Entity {
 	private boolean thrusterStatus;
 	
 	/**
-	 * Change the velocity of this ship during the given time interval.
+	 * Accelerate this ship during the given time interval.
 	 * 
 	 * @param duration
 	 * 		The length of the time interval over which the ship has to be accelerated.
@@ -485,7 +486,6 @@ public class Ship extends Entity {
 			return false;
 		return true;
 	}
-	
 	
 	/**
 	 * Check whether this ship has loaded this bullet in its magazine.
@@ -710,9 +710,9 @@ public class Ship extends Entity {
 	 * 			| if (this.isTerminated())
 	 * 			|	result == (getMagazine().isEmpty() && getFiredBullets().isEmpty())
 	 * @return If this ship is not terminated, true iff each bullet in the magazine is effective, has not been fired by this ship, is not associated to any world
-	 * 			and references this ship as its ship, 
+	 * 			and references this ship as its containing ship, 
 	 * 			and each bullet that has been fired by this ship, is effective, is not loaded in the magazine of this ship,
-	 * 			is associated to the same world as this ship and references this ship as its ship.
+	 * 			references this ship as its source ship and (is terminated or is associated to the same world as this ship).
 	 * 			| if (!this.isTerminated())
 	 * 			| 	then result == 
 	 * 			| 	 	(for each bullet in getMagazine():
@@ -780,9 +780,9 @@ public class Ship extends Entity {
 	 * 
 	 * @post If this ship is not terminated and if the magazine of this ship is not empty and this ship is contained in a world,
 	 * 			then a random bullet randomBullet is removed from the magazine
-	 * 			and added to the world containing this ship, if any, and hasFired(randomBullet) is true.
+	 * 			and added to the world containing this ship and hasFired(randomBullet) is true.
 	 * 			| if (getNbOfBulletsInMagazine() != 0 && getWorld() != null)
-	 * 			|	then for precisely one bullet in getMagazine():
+	 * 			|	then for precisely one bullet randomBullet in getMagazine():
 	 * 			|		new.hasFired((new randomBullet)) && ! new.hasLoadedInMagazine((new randomBullet) &&
 	 * 			|		(new randomBullet).getWorld() == this.getWorld())
 	 * @effect If this ship is not terminated and if the magazine of this ship is not empty, said random bullet is set to fire configuration.
@@ -791,15 +791,15 @@ public class Ship extends Entity {
 	 * 			if said random bullet is placed partially outside the world of this ship after setting it to fire configuration,
 	 * 			then that random bullet is immediately destroyed.
 	 * 			| if (! getWorld().boundariesSurround((new randomBullet)))
-	 * 			|	then randomBullet.terminate();
+	 * 			|	then (new randomBullet).terminate();
 	 * @effect If this ship is not terminated and if the magazine of this ship is not empty and
 	 * 			if said random bullet is overlapping with another entity in the world of this ship after setting it to fire configuration,
 	 * 			then that random bullet and said entity are immediately destroyed.
 	 * 			| if ( for some entity in getWorld().getEntities() : overlap(new randomBullet, entity)) 
 	 * 			|	then entity.terminate()
-	 * 			|		and randomBullet.terminate()
+	 * 			|		and (new randomBullet).terminate()
 	 * @effect	The source ship of said random bullet is set to the containing ship of said random bullet.
-	 * 			| randomBullet.setSourceShip(getContainingShip())
+	 * 			| randomBullet.setSourceShip(randomBullet.getContainingShip())
 	 * @effect	The containing ship of said random bullet is set to null.
 	 * 			| randomBullet.setContainingShip(null)
 	 */
@@ -849,7 +849,7 @@ public class Ship extends Entity {
 	 * @effect The bullet is set to the load configuration.
 	 * 		| bullet.setToLoadConfiguration()
 	 * @post This ship has the given bullet loaded in its magazine and this ship has not fired this bullet.
-	 * 		| new.hasLoadedInMagazine(bullet) && ! new.hasFired(bullet)
+	 * 		| new.hasLoadedInMagazine(new bullet) && ! new.hasFired(new bullet)
 	 * @post The given bullet is not associated to any world.
 	 * 		| (new bullet).getWorld() == null
 	 * @throws IllegalBulletException
@@ -879,7 +879,7 @@ public class Ship extends Entity {
 		bullet.setSourceShip(null);
 		if (bullet.getWorld() != null)
 			getWorld().removeEntity(bullet);
-			//The method removeEntity cannot throw an exception because all conditions to throw exceptions are false in this case.
+			//The method removeEntity() cannot throw an exception because all conditions to throw exceptions are false in this case.
 		bullet.setToLoadConfiguration();
 	}
 	
@@ -890,7 +890,7 @@ public class Ship extends Entity {
 	 * 		The bullets to be loaded in the magazine of this ship.
 	 * @effect Every single bullet is loaded in the magazine of this ship.
 	 * 			| for each bullet in bullets:
-	 * 			|	loadBullet(bullets)
+	 * 			|	loadBullet(bullet)
 	 */
 	public void loadBullets(Bullet... bullets) throws TerminatedException {
 		if (isTerminated())

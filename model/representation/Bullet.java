@@ -85,7 +85,7 @@ public class Bullet extends Entity {
 	 * @effect	| if (!isTerminated())
 	 * 			| 	then super.terminate()
 	 * @effect	| if (!isTerminated() && getContainingShip != null)
-	 * 			|	then getShip.removeBullet(this)
+	 * 			|	then getContainingShip().removeBullet(this)
 	 */
 	@Override
 	public void terminate() {
@@ -378,7 +378,7 @@ public class Bullet extends Entity {
 	 * 			|	if (getSourceShip() == null)
 	 * 			|		then result == true
 	 * 			|	else
-	 * 			|		then result == getSourceShip().hasFired(this) && getSourceShip() == null
+	 * 			|		then result == getSourceShip().hasFired(this) && getContainingShip() == null
 	 * 			| else
 	 * 			|	then result == false
 	 * 
@@ -443,7 +443,7 @@ public class Bullet extends Entity {
 	 * 		The new containing ship for this bullet.
 	 * @post    | new.getContainingShip() == ship
 	 * @throws IllegalMethodCallException
-	 * 			| ( (ship != null && ! (ship.hasLoadedInMagazine(this) || getSourceShip() != null)) ||
+	 * 			| ( (ship != null && ! ship.hasLoadedInMagazine(this) && getSourceShip() == null)) ||
 				|	(ship == null && getContainingShip() != null && getContainingShip().hasLoadedInMagazine(this)))
 	 * @note If this method is invoked with an effective ship and does not throw an exception,
 	 * 			then the world of this bullet must be set to null.
@@ -452,7 +452,7 @@ public class Bullet extends Entity {
 	void setContainingShip(Ship ship) throws IllegalMethodCallException {
 		if (isTerminated() && ship != null)
 			throw new TerminatedException();
-		if ((ship != null && ! (ship.hasLoadedInMagazine(this) || getSourceShip() != null)) ||
+		if ((ship != null && ! ship.hasLoadedInMagazine(this)) || getSourceShip() != null ||
 				(ship == null && getContainingShip() != null && getContainingShip().hasLoadedInMagazine(this)))
 			throw new IllegalMethodCallException();
 		this.containingShip = ship;
@@ -465,14 +465,14 @@ public class Bullet extends Entity {
 	 * 		The new ship for this bullet.
 	 * @post    | new.getSourceShip() == ship
 	 * @throws IllegalMethodCallException
-	 * 			| ( (ship != null && ! (ship.hasFired(this) || getContainingShip() != null)) ||
+	 * 			| ( (ship != null && ! ship.hasFired(this)) || getContainingShip() != null ||
 	 *			|	(ship == null && getSourceShip() != null && getSourceShip().hasFired(this)))
 	 */
 	@Raw @Model
 	void setSourceShip(Ship ship) throws IllegalMethodCallException {
 		if (isTerminated() && ship != null)
 			throw new TerminatedException();
-		if ((ship != null && ! (ship.hasFired(this) || getContainingShip() != null)) ||
+		if ((ship != null && ! ship.hasFired(this)) || getContainingShip() != null ||
 				(ship == null && getSourceShip() != null && getSourceShip().hasFired(this)))
 			throw new IllegalMethodCallException();
 		this.sourceShip = ship;
