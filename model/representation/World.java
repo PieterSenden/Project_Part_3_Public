@@ -10,6 +10,8 @@ import asteroids.part2.CollisionListener;
 import be.kuleuven.cs.som.annotate.*;
 
 /**
+ * A class representing a world.
+ * 
  * @invar  The given height must be a valid height for any world.
  *       | isValidHeight(this.getHeight())
  * @invar  The given width must be a valid width for any world.
@@ -151,7 +153,6 @@ public class World {
 	 * Variable registering the width of this world.
 	 */
 	private final double width;
-	
 	
 	/**
 	 * Return the maximal width for any world.
@@ -325,7 +326,7 @@ public class World {
 	 * @throws IllegalArgumentException
 	 * 			| !canHaveAsEntity(entity) || (entity.getWorld() != null) || hasAsEntity(entity)
 	 * @throws OverlapException(entity, other)
-	 * 			| for some other in getEntities:
+	 * 			| for some other in getEntities():
 	 * 			|	(entity != other) && Entity.overlap(entity, other)
 	 */
 	public void addEntity(Entity entity) throws IllegalArgumentException, OverlapException {
@@ -423,12 +424,12 @@ public class World {
 	 * 			| 	if (! getEntities().isEmpty()) 
 	 * 			|		then for each time in { t in RealNumbers | 0 <= t < result} :
 	 * 			|			((for each entity in getEntities() : !entity.collidesWithBoudaryAfterMove(time)) &&
-	 * 			|			(for each entity1, entity2 in getEntities() : (entity1 == entity2) || !Entity.collideAfterMove(time)))
+	 * 			|			(for each entity1, entity2 in getEntities() : (entity1 == entity2) || !Entity.collideAfterMove(entity1, entity2, time)))
 	 * @return	| if (! Double.isFinite(result))
 	 * 			|	then (getEntities().isEmpty()) ||
 	 * 			|		for each time in { t in RealNumbers | true} :
 	 * 			|			((for each entity in getEntities() : !entity.collidesWithBoudaryAfterMove(time)) &&
-	 * 			|			(for each entity1, entity2 in getEntities() : (entity1 == entity2) || !Entity.collideAfterMove(time)))
+	 * 			|			(for each entity1, entity2 in getEntities() : (entity1 == entity2) || !Entity.collideAfterMove(entity1, entity2, time)))
 	 * @throws TerminatedException
 	 * 			| isTerminated()
 	 */
@@ -500,7 +501,7 @@ public class World {
 	/**
 	 * Return the set of all collisions occurring in this world.
 	 * A collision of an entity with the boundary of the world is represented as a set containing that entity.
-	 * A collision between to entities is represented as a set containing those two entities.
+	 * A collision between two entities is represented as a set containing those two entities.
 	 * 
 	 * @return | { entity in getEntities() | entity.collidesWithBoundary() : {entity} } union
 	 * 				{ (entity1, entity2) in getEntities() x getEntities() | Entity.apperentlyCollide(entity1, entity2) : {entity1, entity2} }
