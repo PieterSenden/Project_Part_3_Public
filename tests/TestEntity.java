@@ -68,10 +68,30 @@ public class TestEntity {
 	@Test
 	public void move_LegalAndEffectiveWorldCase() {
 		world1.addEntity(movingEntityInWorld1);
+		double oldTotalTravelledDistance = movingEntityInWorld1.getTotalTravelledDistance();
 		movingEntityInWorld1.move(1);
 		Position newPosition = new Position(103, 104);
 		assertEquals(movingEntityInWorld1.getPosition(), newPosition);
 		assertEquals(world1.getEntityAt(newPosition), movingEntityInWorld1);
+		assertEquals(oldTotalTravelledDistance + movingEntityInWorld1.getSpeed(), movingEntityInWorld1.getTotalTravelledDistance(), EPSILON);
+	}
+	
+	@Test
+	public void teleport_LegalCase() {
+		world1.addEntity(movingEntityInWorld1);
+		movingEntityInWorld1.teleport();
+		assertTrue(movingEntityInWorld1.canHaveAsPosition(movingEntityInWorld1.getPosition()));
+	}
+	
+	@Test(expected=IllegalMethodCallException.class)
+	public void teleport_NotInWorldCase() {
+		movingEntityInWorld1.teleport();
+	}
+	
+	@Test(expected=TerminatedException.class)
+	public void teleport_TerminatedCase() {
+		movingEntityInWorld1.terminate();
+		movingEntityInWorld1.teleport();
 	}
 	
 	@Test
@@ -147,6 +167,22 @@ public class TestEntity {
 	public void canSurround_TerminatedCase(){
 		bullet1.terminate();
 		staticEntity1.canSurround(bullet1);
+	}
+	
+	@Test
+	public void surrounds_TrueCase() {
+		assertTrue(entityOverlap1.surrounds(staticEntity1));
+	}
+	
+	@Test
+	public void surrounds_FalseCase() {
+		assertFalse(staticEntity1.surrounds(staticEntity2));
+	}
+	
+	@Test(expected=TerminatedException.class)
+	public void surrounds_TerminatedCase() {
+		staticEntity1.terminate();
+		staticEntity1.surrounds(staticEntity2);
 	}
 	
 	@Test

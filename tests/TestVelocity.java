@@ -36,7 +36,7 @@ public class TestVelocity {
 
 	@Test(expected=IllegalComponentException.class)
 	public void constructor_NonRegularCase() {
-		myVelocity = new Velocity(Double.POSITIVE_INFINITY, 10);
+		myVelocity = new Velocity(Double.NaN, 10);
 	}
 	
 	@Test
