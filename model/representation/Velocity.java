@@ -4,7 +4,7 @@ import asteroids.model.exceptions.IllegalComponentException;
 import be.kuleuven.cs.som.annotate.Value;
 
 /**
- * A class representing the velocity of an entity.
+ * A class representing a 2-dimensional velocity vector.
  * 
  * @author Joris Ceulemans & Pieter Senden
  * @version 3.0
@@ -67,8 +67,8 @@ public class Velocity extends PhysicalVector {
 	 * 
 	 * @param other
 	 * 			The second physical vector.
-	 * @return The sum of this velocity vector an the given other physical vector.
-	 * 			| result == new Velocity(getxComponent() + other.getxComponent(), getyComponent() + other.getyComponent())
+	 * @return The sum of this velocity vector and the given other physical vector.
+	 * 			| @see implementation
 	 * @throws NullPointerException
 	 * 			The given other physical vector is not effective.
 	 * 			| other == null
@@ -81,7 +81,7 @@ public class Velocity extends PhysicalVector {
 	 */
 	@Override
 	public Velocity vectorPlus(PhysicalVector other) throws NullPointerException, IllegalComponentException,
-	IllegalArgumentException {
+																					IllegalArgumentException {
 		PhysicalVector result = super.vectorPlus(other);
 		return new Velocity(result.getxComponent(), result.getyComponent());
 	}
@@ -92,7 +92,7 @@ public class Velocity extends PhysicalVector {
 	 * @param factor
 	 * 			The scalar factor.
 	 * @return The scalar multiple of this velocity vector with the given factor.
-	 * 			| result == new Velocity(getxComponent() * factor, getyComponent() * factor)
+	 * 			| @see implemenation
 	 * @throws IllegalComponentException
 	 * 			getxComponent() * factor or getyComponent() * factor is not a valid component for any velocity.
 	 * 			| !isValidComponent(getxComponent() * factor) || !isValidComponent(getyComponent() * factor)
