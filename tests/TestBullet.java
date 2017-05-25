@@ -176,7 +176,6 @@ public class TestBullet {
 		assertFalse(bullet.canBeRemovedFromWorld());
 	}
 	
-	
 	@Test
 	public void canBeRemovedFromWorld_BulletCollidesWithOwnShip() {
 		ship.fireBullet();

@@ -3,7 +3,6 @@ package asteroids.model.representation;
 import asteroids.model.exceptions.*;
 import be.kuleuven.cs.som.annotate.Raw;
 
-
 /**
  * A class representing a circular planetoid dealing with
  * position, velocity, radius, density and mass.
@@ -77,7 +76,15 @@ public class Planetoid extends MinorPlanet {
 	 * @effect	| if (! isTerminated() && getRadius() >= 30 && getWorld() != null)
 	 * 			|	then let
 	 * 			|		angle = Math.random() * 2 * Math.PI
-	 * 			|		asteroid1 = new Asteroid(
+	 * 			|	in 
+	 * 			|		asteroid1 = new Asteroid(getPosition().vectorPlus(new Position(Math.cos(angle), Math.sin(angle)).
+	 * 			|			scalarMultiple(getRadius() / 2)), (new Velocity(Math.cos(angle), Math.sin(angle))).scalarMultiple(1.5 * getSpeed()),
+	 * 			|			getRadius() / 2)
+	 * 			|		asteroid2 = new Asteroid(getPosition().vectorMinus(new Position(Math.cos(angle), Math.sin(angle)).
+	 * 			|			scalarMultiple(getRadius() / 2)), (new Velocity(Math.cos(angle), Math.sin(angle))).scalarMultiple(-1.5 * getSpeed()),
+	 * 			|			getRadius() / 2)
+	 * 			|		getWorld().addEntity(asteroid1)
+	 * 			|		getWorld().addEntity(asteroid2)
 	 * @effect	| if (! isTerminated())
 	 * 			|	then super.terminate()
 	 */
@@ -108,9 +115,6 @@ public class Planetoid extends MinorPlanet {
 	 * 			|	then other.teleport()
 	 * @effect	| if (!(other instanceof Ship) && !(other instanceof Bullet) && !(other instanceof MinorPlanet))
 	 * 			|	then other.resolveCollision(this)
-	 * @throws NullPointerException
-	 * 			The given other entity is not effective.
-	 * 			| other == null
 	 */
 	@Override
 	public void resolveCollision(Entity other) throws IllegalMethodCallException, TerminatedException, NullPointerException {

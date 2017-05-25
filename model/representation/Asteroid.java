@@ -69,7 +69,7 @@ public class Asteroid extends MinorPlanet {
 	 * 
 	 * @param  radius
 	 *         The radius to check.
-	 * @return true iff this asteroid can have the given radius as its initial radius and the given radius is equal to the initial radius
+	 * @return True iff this asteroid can have the given radius as its initial radius and the given radius is equal to the initial radius
 	 * 			of this asteroid.
 	 * 			| super.canHaveAsRadius(radius) && (radius == getInitialRadius())
 	 */
@@ -88,17 +88,6 @@ public class Asteroid extends MinorPlanet {
 	 * 			|	then other.terminate()
 	 * @effect	| if (!(other instanceof Ship) && !(other instanceof Bullet) && !(other instanceof MinorPlanet))
 	 * 			|	then other.resolveCollision(this)
-	 * @throws IllegalMethodCallException
-	 * 			Either this asteroid or the other entity is not associated to a world, this asteroid and the other entity are not associated
-	 *			to the same world or this asteroid and the other entity do not apparently collide.
-	 * 			| (getWorld() == null) || (getWorld() != other.getWorld()) || !Entity.apparentlyCollide(this, other)
-	 * @throws TerminatedException
-	 * 			This asteroid or the other entity is terminated
-	 * 			| this.isTerminated() || other.isTerminated()
-	 * @throws NullPointerException
-	 * 			The given other entity is not effective.
-	 * 			| other == null
-	 * TODO nodig?
 	 */
 	@Override
 	public void resolveCollision(Entity other) throws IllegalMethodCallException, TerminatedException, NullPointerException {
