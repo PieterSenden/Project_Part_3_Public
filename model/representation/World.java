@@ -377,14 +377,12 @@ public class World {
 	 * 			|	(for each position in { p in Position | new.hasWithinboundaries(p) } : 
 	 * 			|		(position == entity.getPosition() || new.getEntityAt(position) != entity)))
 	 * @throws	IllegalMethodCallException
-	 * 			| !hasAsentity(entity)
+	 * 			| !hasAsEntity(entity)
 	 * @throws	TerminatedException
 	 * 			| isTerminated()
-	 * @throws  IllegalStateException
-	 * 			| !new.hasProperEntities()
 	 */
 	@Raw
-	public void updatePosition(Entity entity) throws IllegalMethodCallException, TerminatedException, IllegalStateException {
+	public void updatePosition(Entity entity) throws IllegalMethodCallException, TerminatedException {
 		if (isTerminated())
 			throw new TerminatedException();
 		if (!hasAsEntity(entity))
@@ -491,7 +489,7 @@ public class World {
 					if (minimalTime >= Entity.getTimeToCollision(entity, other)) {
 						minimalTime = Entity.getTimeToCollision(entity, other);
 						result = Entity.getCollisionPosition(entity, other);
-						//The methods getTimeToCollision and getCollisionPosition cannot throw an exception because of the
+						//The methods getTimeToCollision() and getCollisionPosition() cannot throw an exception because of the
 						// class invariants of world.
 					}
 			}
@@ -504,7 +502,7 @@ public class World {
 	 * A collision of an entity with the boundary of the world is represented as a set containing that entity.
 	 * A collision between to entities is represented as a set containing those two entities.
 	 * 
-	 * @return | { entity in getEntities() | entity.collidesWithBoundary : {entity} } union
+	 * @return | { entity in getEntities() | entity.collidesWithBoundary() : {entity} } union
 	 * 				{ (entity1, entity2) in getEntities() x getEntities() | Entity.apperentlyCollide(entity1, entity2) : {entity1, entity2} }
 	 */
 	public Set<Set<Entity>> getCollisions() {
