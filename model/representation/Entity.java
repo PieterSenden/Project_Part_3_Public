@@ -4,7 +4,7 @@ import asteroids.model.exceptions.*;
 import be.kuleuven.cs.som.annotate.*;
 
 /**
- * A class representing an entity floating in outer space involving a position, a velocity, radius and density.
+ * A class representing an entity floating in outer space dealing with a position, velocity, radius and density.
  * 
  * @invar  Each entity can have its position as position.
  *       	| canHaveAsPosition(this.getPosition())

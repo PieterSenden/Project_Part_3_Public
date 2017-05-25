@@ -633,8 +633,6 @@ public class Ship extends Entity {
 			bullet.setContainingShip(null);
 			bullet.setSourceShip(null);
 			//Cannot throw IllegalMethodCallException because at this point certainly !hasAsBullet(bullet).
-			//Cannot throw TerminatedException because we have that this.hasAsBullet(bullet) and then the class invariant implies that
-			//	this.canHaveAsBullet(bullet).
 		}
 	}
 	
@@ -811,7 +809,8 @@ public class Ship extends Entity {
 					Ship containingShip = bulletToFire.getContainingShip();
 					bulletToFire.setContainingShip(null);
 					addAsFiredBullet(bulletToFire);
-					// Cannot throw IllegalBulletException, since canHaveAsBullet(bulletToFire) was already true by class invariant.
+					// Cannot throw IllegalBulletException, since canHaveAsLoadedBullet(bulletToFire) was already true by class invariant
+					// and canHaveAsLoadedBullet(bulletToFire) implies canHaveAsFiredBullet(bulletToFire).
 					bulletToFire.setSourceShip(containingShip);
 					try {
 						getWorld().addEntity(bulletToFire);
